@@ -31,6 +31,18 @@ python gcc_thinktank_scraper_v2.py --countries UAE "Saudi Arabia" --playwright
 
 # 调试模式（看到每个候选条目）
 python gcc_thinktank_scraper_v2.py --countries UAE --playwright --debug
+
+# 跑阈值对比测试
+python scoring_test.py
+
+# 分析实际数据
+python scoring_test.py --json output/gcc_research_20260414_1035.json
+
+# 跑抓取（默认50篇/站）
+python gcc_thinktank_scraper_v2.py --ai --playwright
+
+# 精读模式（30篇/站）
+python gcc_thinktank_scraper_v2.py --ai --playwright --max-per-tank 30
 ```
 
 ### 4. 输出文件

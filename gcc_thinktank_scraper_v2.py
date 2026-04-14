@@ -284,7 +284,7 @@ def fetch_rss_articles(feed_url,tank_name):
 
 RSS_MIN_THRESHOLD = 3  # RSS获取≥3篇则跳过HTML
 
-def scrape_think_tank(tank, use_playwright=False):
+def scrape_think_tank(tank, use_playwright=False, max_per_tank=50):
     nm, co, ti, bu = tank["name"], tank["country"], tank["tier"], tank["base_url"]
     log.info(f"📚 {nm} ({co}) [{ti}]")
     raw = []
@@ -345,12 +345,27 @@ def scrape_think_tank(tank, use_playwright=False):
             date=it.get("date"), snippet=sn, keyword_score=ks, content_type=ct,
             priority=pr, matched_keywords=mk, fetch_method=it.get("fetch_method", "html")))
 
+    # ── 按日期排序（最新优先），有日期的排前面 ──
+    def _sort_key(a):
+        d = a.date or ""
+        # 标准化日期用于排序（越新越靠前）
+        if re.match(r'\d{4}-\d{2}-\d{2}', d): return (0, d)  # 有标准日期
+        if re.match(r'\d{4}', d): return (0, d)               # 有年份
+        return (1, "")                                          # 无日期排最后
+    results.sort(key=_sort_key, reverse=True)
+
+    # ── 限制每站最大数量 ──
+    total_before = len(results)
+    if len(results) > max_per_tank:
+        results = results[:max_per_tank]
+        log.info(f"  ✂️  截取最新 {max_per_tank} 篇（共 {total_before} 篇通过筛选）")
+
     rss_n = sum(1 for r in results if r.fetch_method == "rss")
     html_n = len(results) - rss_n
-    log.info(f"  ✅ {nm}: {len(unique)} 篇候选 → {len(results)} 篇通过（RSS:{rss_n} HTML:{html_n}）\n")
+    log.info(f"  ✅ {nm}: {len(unique)} 篇候选 → {len(results)} 篇保留（RSS:{rss_n} HTML:{html_n}）\n")
     return results
 
-def run_scraper(tanks=None,use_playwright=False,enable_ai=False,api_key=None,countries=None):
+def run_scraper(tanks=None,use_playwright=False,enable_ai=False,api_key=None,countries=None,max_per_tank=50):
     if tanks is None:tanks=THINK_TANKS
     if countries:cl=[c.lower() for c in countries];tanks=[t for t in tanks if t["country"].lower() in cl]
     print("="*60)
@@ -358,10 +373,11 @@ def run_scraper(tanks=None,use_playwright=False,enable_ai=False,api_key=None,cou
     print(f"JS渲染: {'✅ Playwright' if use_playwright and HAS_PLAYWRIGHT else '❌ 仅requests'}")
     print(f"AI筛选: {'✅ 已启用' if enable_ai and HAS_ANTHROPIC else '❌ 未启用'}")
     print(f"RSS:    {'✅ feedparser' if HAS_FEEDPARSER else '❌ 未安装'}")
+    print(f"每站上限: {max_per_tank} 篇")
     print("="*60+"\n")
     all_a=[]
     for tk in tanks:
-        try:all_a.extend(scrape_think_tank(tk,use_playwright=use_playwright))
+        try:all_a.extend(scrape_think_tank(tk,use_playwright=use_playwright,max_per_tank=max_per_tank))
         except Exception as e:log.error(f"❌ 抓取 {tk['name']} 失败: {e}")
     if enable_ai:all_a=ai_classify_batch(all_a,api_key);all_a=[a for a in all_a if a.ai_verdict!="not_relevant"]
     po={"priority_read":0,"normal":1,"low":2};all_a.sort(key=lambda a:po.get(a.priority,1))
@@ -560,6 +576,7 @@ if __name__=="__main__":
     parser.add_argument("--ai",action="store_true",help="启用AI筛选、翻译、汇总")
     parser.add_argument("--api-key",default=None,help="Anthropic API Key")
     parser.add_argument("--output-dir",default="./output",help="输出目录")
+    parser.add_argument("--max-per-tank",type=int,default=50,help="每个智库最多保留条数（默认50）")
     parser.add_argument("--debug",action="store_true",help="调试日志")
     args=parser.parse_args()
     if args.debug:logging.getLogger("gcc_scraper").setLevel(logging.DEBUG)
@@ -574,7 +591,7 @@ if __name__=="__main__":
 
     # ── 抓取阶段 ──
     t_scrape=time.time()
-    articles=run_scraper(use_playwright=args.playwright,enable_ai=args.ai,api_key=args.api_key,countries=args.countries)
+    articles=run_scraper(use_playwright=args.playwright,enable_ai=args.ai,api_key=args.api_key,countries=args.countries,max_per_tank=args.max_per_tank)
     scrape_sec=time.time()-t_scrape
 
     if articles:
