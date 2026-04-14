@@ -170,7 +170,93 @@ def extract_articles_from_page(html,base_url,page_url,selectors,tank_name):
             pa=lk.parent;sn=""
             if pa:pt=pa.find_next_sibling("p") or pa.find("p");sn=pt.get_text(strip=True)[:500] if pt else ""
             articles.append({"title":t,"url":h,"snippet":sn,"date":None})
+    # 过滤导航项/非文章链接
+    articles=[a for a in articles if _is_likely_article(a["title"],a["url"])]
     return articles
+
+# 导航/菜单链接黑名单
+_NAV_EXACT={"publications","research","our experts","experts","advisory services",
+    "solutions","data portal","event calendar","events","job opportunities","jobs",
+    "careers","life at","work with us","newsroom","media center","about us","about",
+    "our offerings","school of public policy","today","story","our story","history",
+    "board of trustees","contact us","newsletter","subscribe","archives","library",
+    "programs","projects","blog","podcasts","podcast","videos","video","gallery","press",
+    "donate","faq","sitemap","resources","services","overview","mission","vision",
+    "team","staff","fellows","scholars","partnerships","sponsors","annual report",
+    "annual reports","journal","journals","books","book","magazine","proceedings",
+    "commentary","opinion","editorial","press releases","media","news","all news",
+    "more","read more","see more","view all","show more","load more","next","previous",
+    "research & commentary","diversity, equity, and inclusion","analysis",
+    "policy briefs","opinions","workshops","interviews","multimedia","infographics",
+    "recent news","all articles","all publications","all research","all reports",
+    "political transformations","security studies","economic trends",
+    "technological developments","socio-cultural interactions","media trends",
+    "strategic foresight","climate change","majority world",
+    "latin america","africa","russia","asia trends","sharepoint",
+    "education & community development","message from his highness",
+    "message from the chairman","our team","our partners","our mission",
+    "expo 2020 dubai","youthinkgulf",
+    "strategic and international studies","sound of thought podcast",
+    # 阿拉伯语导航词
+    "للمزيد","المزيد","الرئيسية","اتصل بنا","من نحن","الأخبار",
+    "مجلة التنمية والسياسات الاقتصادية"}
+
+# URL中含这些路径片段 → 分类/索引页，不是文章
+_NAV_URL_PATTERNS=[
+    r'/category/', r'/categories/', r'/index/', r'/mainpage/category/',
+    r'/mainpage/index/', r'/list/', r'/tag/', r'/tags/', r'/topic/',
+    r'/topics/', r'/activity/category/', r'/multimedia/', r'/release/category/',
+    r'/release/index/', r'sharepoint\.com', r'\.sharepoint\.',
+    r'^tel:', r'^mailto:',
+    r'/author/', r'/authors/', r'/researcher/', r'/researchers/',
+    r'/profile/', r'/staff/', r'/team/', r'/experts/',
+    r'/podcast', r'/podcasts',
+]
+
+def _is_likely_article(title,url):
+    """判断是否可能是真正的文章（而非导航/菜单链接）"""
+    tl=title.lower().strip()
+    ul=url.lower()
+    # 0. 标题是电话号码或纯数字
+    if re.match(r'^[\d\s\-\+\(\)]+$',tl):return False
+    # 0b. 标题是物理地址（含 building/road/street/block/P.O. 等）
+    if re.search(r'\b(building|road|street|block|floor|p\.?o\.?\s*box|awali|manama|riyadh|doha)\b',tl) and re.search(r'\d',tl):return False
+    # 1. URL含分类/索引/作者路径 → 不是文章
+    for pat in _NAV_URL_PATTERNS:
+        if re.search(pat,ul):return False
+    # 2. 标题完全匹配导航黑名单
+    if tl in _NAV_EXACT:return False
+    # 3. 标题以 "view all" / "see all" / "browse" 开头
+    if re.match(r'^(view all|see all|browse|show all|all )\b',tl):return False
+    # 3b. 标题是"XXX Now Available"格式（期刊上新通知）
+    if re.search(r'\bnow available\b',tl):return False
+    # 3c. 标题看起来像人名（2-4个首字母大写单词，无常见文章词汇）
+    orig_words=title.strip().split()
+    if 2<=len(orig_words)<=4:
+        all_capitalized=all(w[0].isupper() and w.isalpha() for w in orig_words if len(w)>1)
+        has_article_words=any(w.lower() in {"the","a","an","of","in","on","for","and","to","by","with","from","how","why","what","new","key"} for w in orig_words)
+        if all_capitalized and not has_article_words:
+            # 大概率是人名，除非URL含 /article/ /report/ /paper/ 等
+            if not re.search(r'/(article|report|paper|study|brief|analysis|opinion|blog)/',ul):
+                return False
+    # 4. 标题太短（≤3个词且无数字/年份）→ 检查URL深度
+    words=tl.split()
+    if len(words)<=3 and not re.search(r'\d{4}',tl):
+        from urllib.parse import urlparse
+        path=urlparse(url).path.strip("/")
+        segments=[s for s in path.split("/") if s]
+        if len(segments)<3:return False
+        last_seg=segments[-1] if segments else ""
+        if len(last_seg)<15:return False
+    # 5. URL路径指向通用顶层页面
+    from urllib.parse import urlparse
+    path=urlparse(url).path.strip("/").lower()
+    nav_paths={"research","publications","about","contact","events","newsroom",
+        "media","careers","jobs","work-with-us","our-offerings","programs",
+        "our-experts","school-of-public-policy","about-kapsarc",
+        "en","en-us","ar","","en/publications","en/research"}
+    if path in nav_paths:return False
+    return True
 
 def fetch_rss_articles(feed_url,tank_name):
     if not HAS_FEEDPARSER:return []
@@ -306,17 +392,62 @@ def batch_translate_titles(articles,api_key=None):
     if not ready:return articles
     key=info;need=[a for a in articles if a.title_cn is None and a.title]
     if not need:return articles
-    BS=30;client=anthropic.Anthropic(api_key=key);print(f"\n🌐 批量翻译 {len(need)} 个标题...")
+    BS=15  # 小批次，避免响应截断
+    MAX_RETRIES=2
+    client=anthropic.Anthropic(api_key=key)
+    print(f"\n🌐 批量翻译 {len(need)} 个标题（每批{BS}条）...")
+
+    def _translate_batch(batch):
+        tt="\n".join(f"{j+1}. {a.title}" for j,a in enumerate(batch))
+        resp=client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=3000,
+            messages=[{"role":"user","content":
+                f"将以下{len(batch)}个英文标题翻译为简洁中文，保留专有名词。"
+                f"必须返回{len(batch)}条结果。严格按JSON数组返回，无其他文字：\n"
+                f'[{{"id":1,"cn":"中文标题"}}, ...]\n\n{tt}'}])
+        tx=resp.content[0].text.strip()
+        tx=re.sub(r'^```json\s*','',tx);tx=re.sub(r'\s*```$','',tx)
+        return json.loads(tx)
+
     for i in range(0,len(need),BS):
-        batch=need[i:i+BS];tt="\n".join(f"{j+1}. {a.title}" for j,a in enumerate(batch))
-        try:
-            resp=client.messages.create(model="claude-haiku-4-5-20251001",max_tokens=2000,messages=[{"role":"user","content":f"将以下英文标题翻译为简洁中文，保留专有名词。严格按JSON数组返回，无其他文字：\n[{{\"id\":1,\"cn\":\"中文标题\"}},...]\n\n{tt}"}])
-            tx=resp.content[0].text.strip();tx=re.sub(r'^```json\s*','',tx);tx=re.sub(r'\s*```$','',tx);rs=json.loads(tx)
-            for r in rs:
-                idx=r["id"]-1
-                if 0<=idx<len(batch):batch[idx].title_cn=r.get("cn","")
-        except Exception as e:log.warning(f"  翻译批次 {i//BS+1} 失败: {e}")
-    tr=sum(1 for a in articles if a.title_cn);print(f"  ✅ 已翻译 {tr}/{len(need)} 个标题");return articles
+        batch=need[i:i+BS]
+        batch_num=i//BS+1
+        for attempt in range(MAX_RETRIES+1):
+            try:
+                rs=_translate_batch(batch)
+                ok=0
+                for r in rs:
+                    idx=r.get("id",0)-1
+                    if 0<=idx<len(batch) and r.get("cn"):
+                        batch[idx].title_cn=r["cn"]
+                        ok+=1
+                log.info(f"  批次{batch_num}: {ok}/{len(batch)} 条翻译成功")
+                break
+            except Exception as e:
+                if attempt<MAX_RETRIES:
+                    log.warning(f"  批次{batch_num} 第{attempt+1}次失败，重试: {e}")
+                    time.sleep(2)
+                else:
+                    log.error(f"  批次{batch_num} 翻译失败（已重试{MAX_RETRIES}次）: {e}")
+        time.sleep(0.5)  # 批次间隔，避免限频
+
+    # 第二轮：对仍未翻译的逐条补译
+    still_need=[a for a in need if a.title_cn is None]
+    if still_need:
+        print(f"  🔄 补译剩余 {len(still_need)} 条...")
+        for a in still_need:
+            try:
+                resp=client.messages.create(
+                    model="claude-haiku-4-5-20251001",max_tokens=200,
+                    messages=[{"role":"user","content":f"将以下英文标题翻译为简洁中文，只返回翻译结果，不要其他文字：\n{a.title}"}])
+                a.title_cn=resp.content[0].text.strip()
+            except:pass
+            time.sleep(0.3)
+
+    translated=sum(1 for a in articles if a.title_cn)
+    print(f"  ✅ 已翻译 {translated}/{len(need)} 个标题")
+    return articles
 
 def generate_ai_summary(articles,api_key=None):
     ready,info=check_ai_ready(api_key)
