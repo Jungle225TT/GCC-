@@ -64,12 +64,12 @@ THINK_TANKS = [
     {"name":"King Abdullah Petroleum Studies and Research Centre (KAPSARC)","country":"Saudi Arabia","tier":"core_gcc","base_url":"https://www.kapsarc.org","pages":["/our-offerings/publications/","/newsroom/news/"],"rss_feeds":["https://www.kapsarc.org/feed/"],"selectors":{"article":"article, .publication-item, .research-item, .card, [class*='post'], [class*='article'], [class*='publication']","title":"h4 a, h3 a, h2 a, .title a, [class*='title'] a","link":"a[href]","snippet":"p, .excerpt, .summary, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date'], [datetime]"}},
     {"name":"International Institute for Iranian Studies (Rasanah)","country":"Saudi Arabia","tier":"core_gcc","base_url":"https://rasanah-iiis.org/english","pages":["/","/category/publications/","/category/publications/monthly-reports/","/category/the-journal/"],"rss_feeds":["https://rasanah-iiis.org/english/feed/"],"selectors":{"article":"article, .post, .entry, [class*='post'], [class*='article']","title":"h2 a, h3 a, .entry-title a, [class*='title'] a","link":"a[href]","snippet":".entry-content p, .excerpt, [class*='excerpt']","date":"time, .date, [class*='date']"}},
     {"name":"King Faisal Center for Research and Islamic Studies","country":"Saudi Arabia","tier":"core_gcc","base_url":"https://www.kfcris.com/en","pages":["/research","/publications","/research/dirasat"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Emirates Policy Center (EPC)","country":"UAE","tier":"core_gcc","base_url":"https://www.epc.ae","pages":["/en/publications","/en/research"],"selectors":{"article":"article, .card, [class*='publication'], [class*='item'], [class*='post']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Emirates Policy Center (EPC)","country":"UAE","tier":"core_gcc","base_url":"https://www.epc.ae","pages":["/en/publications","/en/details/featured/gcc"],"selectors":{"article":".MuiCard-root, article, .card, [class*='publication'], [class*='item'], [class*='post']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
     {"name":"Emirates Center for Strategic Studies and Research (ECSSR)","country":"UAE","tier":"core_gcc","base_url":"https://www.ecssr.ae","pages":["/en/research-programs","/en/publications"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Gulf Research Center (GRC)","country":"UAE","tier":"core_gcc","base_url":"https://www.grc.ae","pages":["/research","/publications"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Gulf Research Center (GRC)","country":"UAE","tier":"core_gcc","base_url":"https://www.grc.ae","pages":["/research","/publications"],"requests_timeout":5,"playwright_timeout":8000,"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
     {"name":"Dubai Public Policy Research Center (Bhuth)","country":"UAE","tier":"core_gcc","base_url":"https://bhuth.ae","pages":["/en/publications","/en/research"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item'], [class*='post']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
     {"name":"Sheikh Saud bin Saqr Al Qasimi Foundation","country":"UAE","tier":"core_gcc","base_url":"https://publications.alqasimifoundation.com","pages":["/en","/blog"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Future Center for Advanced Researches and Studies","country":"UAE","tier":"core_gcc","base_url":"https://futureuae.com","pages":["/en-US","/en-US/Release/Index/2/publications"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Future Center for Advanced Researches and Studies","country":"UAE","tier":"core_gcc","base_url":"https://futureuae.com","pages":["/en-US","/en-US/Release/Index/2/publications"],"requests_timeout":5,"playwright_timeout":8000,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
     {"name":"Al Jazeera Centre for Studies (AJCS)","country":"Qatar","tier":"core_gcc","base_url":"https://studies.aljazeera.net","pages":["/en/","/en/reports"],"rss_feeds":["https://studies.aljazeera.net/en/rss.xml"],"selectors":{"article":"article, .card, [class*='post'], [class*='item'], [class*='article']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
     {"name":"Brookings Doha Center","country":"Qatar","tier":"core_gcc","base_url":"https://www.brookings.edu","pages":["/center/brookings-doha-center/"],"rss_feeds":["https://www.brookings.edu/feed/?center=brookings-doha-center"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
     {"name":"Arab Center for Research and Policy Studies (Doha Institute)","country":"Qatar","tier":"core_gcc","base_url":"https://www.dohainstitute.org","pages":["/en/Pages/index.aspx"],"selectors":{"article":"article, .card, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
@@ -77,9 +77,9 @@ THINK_TANKS = [
     {"name":"Kuwait Institute for Scientific Research (KISR)","country":"Kuwait","tier":"core_gcc","base_url":"https://www.kisr.edu.kw","pages":["/en/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
     {"name":"Bahrain Center for Strategic, International and Energy Studies (Derasat)","country":"Bahrain","tier":"core_gcc","base_url":"https://www.derasat.org.bh","pages":["/en/home_en/","/knowledge-center/publications-page/","/en/research/"],"rss_feeds":["https://www.derasat.org.bh/en/feed/","https://www.derasat.org.bh/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
     {"name":"Tawasul","country":"Oman","tier":"core_gcc","base_url":"https://tawasul.co.om","pages":["/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
-    {"name":"Carnegie Middle East Center","country":"Lebanon","tier":"pan_mena","base_url":"https://carnegie-mec.org","pages":["/"],"rss_feeds":["https://carnegie-mec.org/feed","https://carnegieendowment.org/feeds/middle-east"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Carnegie Middle East Center","country":"Lebanon","tier":"pan_mena","base_url":"https://carnegie-mec.org","pages":["/","/middle-east/research","/middle-east/diwan"],"rss_feeds":["https://carnegie-mec.org/feed","https://carnegieendowment.org/feeds/middle-east"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
     {"name":"Al-Ahram Center for Political and Strategic Studies","country":"Egypt","tier":"pan_mena","base_url":"https://acpss.ahram.org.eg","pages":["/"],"selectors":{"article":"article, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
-    {"name":"Al Sharq Forum","country":"Turkey","tier":"pan_mena","base_url":"https://www.sharqforum.org","pages":["/"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Al Sharq Forum","country":"Turkey","tier":"pan_mena","base_url":"https://research.sharqforum.org","pages":["/"],"rss_feeds":["https://research.sharqforum.org/feed/"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
     {"name":"Arab Reform Initiative","country":"France","tier":"pan_mena","base_url":"https://www.arab-reform.net","pages":["/"],"rss_feeds":["https://www.arab-reform.net/feed/"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
 ]
 
@@ -121,11 +121,11 @@ def classify_content_type(title,url):
 
 HEADERS={"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36","Accept-Language":"en-US,en;q=0.9,ar;q=0.8"}
 
-def fetch_html_requests(url,timeout=20):
+def fetch_html_requests(url,timeout=10):
     try:r=requests.get(url,headers=HEADERS,timeout=timeout);r.raise_for_status();return r.text
     except Exception as e:log.warning(f"  requests 失败 {url}: {e}");return None
 
-def fetch_html_playwright(url,timeout=30000):
+def fetch_html_playwright(url,timeout=20000):
     if not HAS_PLAYWRIGHT:return None
     try:
         with sync_playwright() as p:
@@ -134,10 +134,10 @@ def fetch_html_playwright(url,timeout=30000):
             h=pg.content();b.close();return h
     except Exception as e:log.warning(f"  Playwright 失败 {url}: {e}");return None
 
-def fetch_html(url,use_playwright=False):
-    html=fetch_html_requests(url)
+def fetch_html(url,use_playwright=False,req_timeout=10,pw_timeout=20000):
+    html=fetch_html_requests(url,timeout=req_timeout)
     if use_playwright or(html and len(html)<2000):
-        pw=fetch_html_playwright(url)
+        pw=fetch_html_playwright(url,timeout=pw_timeout)
         if pw and len(pw)>len(html or""):html=pw
     return html
 
@@ -145,13 +145,25 @@ def extract_articles_from_page(html,base_url,page_url,selectors,tank_name):
     soup=BeautifulSoup(html,"html.parser");articles=[];seen=set()
     for c in soup.select(selectors.get("article","article")):
         te=c.select_one(selectors.get("title","h2 a, h3 a"))
-        if not te:te=c.select_one("a[href]")
-        if not te:continue
-        t=te.get_text(strip=True);h=te.get("href","")
+        t="";h=""
+        if te:
+            t=te.get_text(strip=True);h=te.get("href","")
+        # 标题在链接内但无文本（如图片链接）→ 尝试 heading+link 组合（适配 React 卡片式布局）
+        if not t or len(t)<5:
+            heading=c.select_one("h2,h3,h4,[class*='title'],[class*='heading']")
+            link_el=c.select_one("a[href]")
+            if heading and link_el:
+                t=heading.get_text(strip=True);h=link_el.get("href","")
+            elif not te:
+                te=c.select_one("a[href]")
+                if not te:continue
+                t=te.get_text(strip=True);h=te.get("href","")
         if not t or len(t)<5:continue
         if h.startswith("/"):h=base_url.rstrip("/")+h
         elif not h.startswith("http"):h=base_url.rstrip("/")+"/"+h
         if h in seen:continue
+        # 在第一轮就过滤导航项，避免污染 seen 集合，防止阻断后续兜底扫描
+        if not _is_likely_article(t,h):continue
         seen.add(h)
         se=c.select_one(selectors.get("snippet","p"));sn=se.get_text(strip=True) if se else ""
         de=c.select_one(selectors.get("date","time"));ds=None
@@ -170,7 +182,7 @@ def extract_articles_from_page(html,base_url,page_url,selectors,tank_name):
             pa=lk.parent;sn=""
             if pa:pt=pa.find_next_sibling("p") or pa.find("p");sn=pt.get_text(strip=True)[:500] if pt else ""
             articles.append({"title":t,"url":h,"snippet":sn,"date":None})
-    # 过滤导航项/非文章链接
+    # 最终过滤（主要针对兜底扫描的结果）
     articles=[a for a in articles if _is_likely_article(a["title"],a["url"])]
     return articles
 
@@ -211,6 +223,7 @@ _NAV_URL_PATTERNS=[
     r'/author/', r'/authors/', r'/researcher/', r'/researchers/',
     r'/profile/', r'/staff/', r'/team/', r'/experts/',
     r'/podcast', r'/podcasts',
+    r'/featured/', r'/units/', r'/about-us/',  # EPC 话题/单元/关于页面
 ]
 
 def _is_likely_article(title,url):
@@ -220,7 +233,7 @@ def _is_likely_article(title,url):
     # 0. 标题是电话号码或纯数字
     if re.match(r'^[\d\s\-\+\(\)]+$',tl):return False
     # 0b. 标题是物理地址（含 building/road/street/block/P.O. 等）
-    if re.search(r'\b(building|road|street|block|floor|p\.?o\.?\s*box|awali|manama|riyadh|doha)\b',tl) and re.search(r'\d',tl):return False
+    if re.search(r'\b(building|road|street|block|floor|p\.?\s*o\.?\s*box|awali|manama|riyadh|doha)\b',tl) and re.search(r'\d',tl):return False
     # 1. URL含分类/索引/作者路径 → 不是文章
     for pat in _NAV_URL_PATTERNS:
         if re.search(pat,ul):return False
@@ -288,6 +301,8 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50):
     nm, co, ti, bu = tank["name"], tank["country"], tank["tier"], tank["base_url"]
     log.info(f"📚 {nm} ({co}) [{ti}]")
     raw = []
+    req_to = tank.get("requests_timeout", 10)
+    pw_to  = tank.get("playwright_timeout", 20000)
 
     # ── 第一优先级：RSS ──
     rss_feeds = tank.get("rss_feeds", [])
@@ -305,7 +320,7 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50):
             for pp in tank["pages"]:
                 url = bu.rstrip("/") + pp
                 log.info(f"  🌐 抓取: {url}")
-                html = fetch_html(url, use_playwright=use_playwright)
+                html = fetch_html(url, use_playwright=use_playwright, req_timeout=req_to, pw_timeout=pw_to)
                 if not html: continue
                 items = extract_articles_from_page(html, bu, url, tank["selectors"], nm)
                 log.info(f"    发现 {len(items)} 个候选条目")
@@ -317,7 +332,7 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50):
         for pp in tank["pages"]:
             url = bu.rstrip("/") + pp
             log.info(f"  🌐 抓取: {url}")
-            html = fetch_html(url, use_playwright=use_playwright)
+            html = fetch_html(url, use_playwright=use_playwright, req_timeout=req_to, pw_timeout=pw_to)
             if not html: continue
             items = extract_articles_from_page(html, bu, url, tank["selectors"], nm)
             log.info(f"    发现 {len(items)} 个候选条目")
@@ -433,7 +448,11 @@ def ai_classify_batch(articles,api_key=None):
     prompt=f"你是GCC政治经济研究助手。判断以下文章是否与GCC六国相关。\n对每篇回答：1.是否相关(yes/no) 2.类型(research/opinion/news/event/other)\n严格按JSON数组返回：[{{\"id\":1,\"relevant\":true,\"type\":\"research\"}},...]\n\n{it}"
     try:
         resp=client.messages.create(model="claude-haiku-4-5-20251001",max_tokens=1000,messages=[{"role":"user","content":prompt}])
-        tx=resp.content[0].text.strip();tx=re.sub(r'^```json\s*','',tx);tx=re.sub(r'\s*```$','',tx);rs=json.loads(tx)
+        tx=resp.content[0].text.strip();tx=re.sub(r'^```json\s*','',tx);tx=re.sub(r'\s*```$','',tx)
+        # 提取第一个完整JSON数组，防止模型在数组后追加额外文字
+        m=re.search(r'\[.*?\]',tx,re.DOTALL)
+        if m:tx=m.group(0)
+        rs=json.loads(tx)
         for r in rs:
             idx=r["id"]-1
             if 0<=idx<len(bl):bl[idx].ai_verdict="relevant" if r.get("relevant") else "not_relevant";
@@ -464,6 +483,8 @@ def batch_translate_titles(articles,api_key=None):
                 f'[{{"id":1,"cn":"中文标题"}}, ...]\n\n{tt}'}])
         tx=resp.content[0].text.strip()
         tx=re.sub(r'^```json\s*','',tx);tx=re.sub(r'\s*```$','',tx)
+        m=re.search(r'\[.*?\]',tx,re.DOTALL)
+        if m:tx=m.group(0)
         return json.loads(tx)
 
     for i in range(0,len(need),BS):
