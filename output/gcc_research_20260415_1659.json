@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "scraped_at": "2026-04-15T11:11:18.411141",
-    "total_articles": 207,
+    "scraped_at": "2026-04-15T17:08:04.539495",
+    "total_articles": 215,
     "system": "GCC Think Tank Scraper v2.1"
   },
   "articles": [
@@ -31,6 +31,24 @@
       "source_tier": "core_gcc",
       "date": "EPC|25 Mar 2022",
       "snippet": "The Iran Strategic Report aims to provide a neutral and objective view of the Iranian situation. The importance of the report stems from the political, geographical and cultural weight possessed by the Iranian neighbor, and the effect of its policies and relations on the policies and the security of the region; confirming the need for tools and knowledge to understand Iran, and constantly improve these tools in order to guide and support policies of dealing with Iran using realistic approaches, ",
+      "title_cn": null,
+      "keyword_score": 99.0,
+      "content_type": "high",
+      "priority": "priority_read",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Adapting Counterterrorism Frameworks Comparative Analysis of the AMISOM and ATMIS missions in Somalia from 007 to 20242025Kalthoum Alblooshi",
+      "url": "https://www.ecssr.ae/en/publications/adapting-counterterrorism-frameworks-comparative-analysis-of-the-amiso",
+      "source": "Emirates Center for Strategic Studies and Research (ECSSR)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "2025",
       "title_cn": null,
       "keyword_score": 99.0,
       "content_type": "high",
@@ -1032,6 +1050,78 @@
       "fetch_method": "html"
     },
     {
+      "title": "Eroding Trust and the Future of Iran–Gulf Engagement",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/articles/eroding-trust-and-the-future-of-iran-gulf-engagement/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-15",
+      "snippet": "The Iran war has invariably changed the nature of regional dynamics in the Middle East. As Iran’s strategy to diversify the escalation to increase the cost of the war advanced, it severely damaged the progress made in recent years in establishing mechanisms and channels between Iran and the Gulf states to reduce mistrust and skepticism. [&#8230;]",
+      "title_cn": null,
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Shock, Adaptation and Resilience: The Global Economic Fallout of the 2026 Hormuz Crisis",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/shock-adaptation-and-resilience-the-global-economic-fallout-of-the-2026-hormuz-crisis/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-15",
+      "snippet": "The economic repercussions of the Iran–US Israel conflict, which erupted on February 28, 2026 and culminated in a fragile ceasefire on&#160; April 8, constitute one of the most severe energy supply shocks in recent history. What began with coordinated US and Israeli strikes on Iranian nuclear facilities, military infrastructure and leadership targets — including the [&#8230;]",
+      "title_cn": null,
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Leverage at the Chokepoint: Wartime Power, Peacetime Limits",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/leverage-at-the-chokepoint-wartime-power-peacetime-limits/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-15",
+      "snippet": "The Strait of Hormuz, a narrow corridor only 21 miles wide at its narrowest point, emerged as the epicenter of maritime disruption during the 40-day Iranian conflict in 2026. Following the launch of Operation Epic Fury on February 28, in which US and Israeli forces struck Iranian nuclear and military infrastructure and killed Supreme Leader [&#8230;]",
+      "title_cn": null,
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Rasanah’s Monthly Iran Case File: February-March 2026",
+      "url": "https://rasanah-iiis.org/english/news/rasanahs-monthly-iran-case-file-february-march-2026/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-15",
+      "snippet": "The International Institute for Iranian Studies (Rasanah) has released its Iran Case File (ICF) for February and March 2026, offering both general readers and specialists a detailed account of developments during the period under review. The ICF seeks to assess Iran’s internal and external conditions while evaluating the interplay between its various political, economic and [&#8230;]",
+      "title_cn": null,
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
       "title": "IRAN IN A WEEK March April 2-8, 2026",
       "url": "https://rasanah-iiis.org/english/monitoring-and-translation/iran-in-a-week/iran-in-a-week-march-april-2-8-2026/",
       "source": "International Institute for Iranian Studies (Rasanah)",
@@ -1129,78 +1219,6 @@
       "source_tier": "core_gcc",
       "date": "2026-03-30",
       "snippet": "Introduction The ongoing military confrontation between Iran and the United States and Israel provided the Islamic Revolutionary Guard Corps (IRGC) with an opening to reshape the political landscape in line with its own outlook. This influence was not confined to its central role in the selection of the new supreme leader Mojtaba Khamenei as successor [&#8230;]",
-      "title_cn": null,
-      "keyword_score": 99.0,
-      "content_type": "unknown",
-      "priority": "normal",
-      "ai_verdict": null,
-      "matched_keywords": [
-        "core_gcc_auto_pass"
-      ],
-      "fetch_method": "rss"
-    },
-    {
-      "title": "Syria at a Crossroads: Opportunities and Risks Amid Regional Escalation",
-      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/syria-at-a-crossroads-opportunities-and-risks-amid-regional-escalation/",
-      "source": "International Institute for Iranian Studies (Rasanah)",
-      "source_country": "Saudi Arabia",
-      "source_tier": "core_gcc",
-      "date": "2026-03-26",
-      "snippet": "Syria’s emerging state structure is navigating an increasingly complex regional landscape in the aftermath of the February 2016 assassination of Iran’s Supreme Leader Ali Khamenei and the subsequent intensification of military confrontation pitting Israel and the United States against Iran and Hezbollah. This evolving dynamic poses critical strategic questions: How can Syria best capitalize on [&#8230;]",
-      "title_cn": null,
-      "keyword_score": 99.0,
-      "content_type": "unknown",
-      "priority": "normal",
-      "ai_verdict": null,
-      "matched_keywords": [
-        "core_gcc_auto_pass"
-      ],
-      "fetch_method": "rss"
-    },
-    {
-      "title": "IRAN IN A WEEK March 18-25, 2026",
-      "url": "https://rasanah-iiis.org/english/multimedia/infographics/iran-in-a-week-march-18-25-2026/",
-      "source": "International Institute for Iranian Studies (Rasanah)",
-      "source_country": "Saudi Arabia",
-      "source_tier": "core_gcc",
-      "date": "2026-03-26",
-      "snippet": "",
-      "title_cn": null,
-      "keyword_score": 99.0,
-      "content_type": "unknown",
-      "priority": "normal",
-      "ai_verdict": null,
-      "matched_keywords": [
-        "core_gcc_auto_pass"
-      ],
-      "fetch_method": "rss"
-    },
-    {
-      "title": "The Gulf States’ Response to Iran’s Attacks: Strategic Restraint Amid Escalation",
-      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/the-gulf-states-response-to-irans-attacks-strategic-restraint-amid-escalation/",
-      "source": "International Institute for Iranian Studies (Rasanah)",
-      "source_country": "Saudi Arabia",
-      "source_tier": "core_gcc",
-      "date": "2026-03-19",
-      "snippet": "As tensions in the Middle East continue to escalate, Tehran’s retaliatory attacks have expanded beyond Israel and direct US military targets. Iranian strikes have increasingly targeted the Gulf states, causing civilian casualties, damage to energy infrastructure and air traffic disruptions. The response from Gulf states so far has been strong condemnation, active and rapid measures [&#8230;]",
-      "title_cn": null,
-      "keyword_score": 99.0,
-      "content_type": "unknown",
-      "priority": "normal",
-      "ai_verdict": null,
-      "matched_keywords": [
-        "core_gcc_auto_pass"
-      ],
-      "fetch_method": "rss"
-    },
-    {
-      "title": "The EU and China Confront the 2026 US-Israel-Iran War: Diverging Responses Under the Shadow of the Russia-Ukraine Conflict",
-      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/the-eu-and-china-confront-the-2026-us-israel-iran-war-diverging-responses-under-the-shadow-of-the-russia-ukraine-conflict/",
-      "source": "International Institute for Iranian Studies (Rasanah)",
-      "source_country": "Saudi Arabia",
-      "source_tier": "core_gcc",
-      "date": "2026-03-19",
-      "snippet": "The outbreak of large-scale hostilities between the United States, Israel and Iran on February 28, 2026 rapidly escalated into a regional crisis affecting the Middle East and the South Caucasus. Coordinated US-Israeli strikes targeting Iranian military infrastructure and nuclear-related facilities triggered Iranian retaliatory actions against Israel and civilian and military targets in Türkiye, Azerbaijan, the [&#8230;]",
       "title_cn": null,
       "keyword_score": 99.0,
       "content_type": "unknown",
@@ -1507,6 +1525,132 @@
       "source_tier": "core_gcc",
       "date": null,
       "snippet": "",
+      "title_cn": null,
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Paths To National Reconciliation In Post- Tigray War Ethiopia2026Zayed Alkayyoomi",
+      "url": "https://www.ecssr.ae/en/publications/paths-to-national-reconciliation-in-post-tigray-war-ethiopia",
+      "source": "Emirates Center for Strategic Studies and Research (ECSSR)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "2026",
+      "title_cn": null,
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Turkey and Red Sea Security: Strategic Drivers, Engagement and Implications2026Abdulrahman Alhammadi",
+      "url": "https://www.ecssr.ae/en/publications/turkey-and-red-sea-security-strategic-drivers-engagement-and-implica",
+      "source": "Emirates Center for Strategic Studies and Research (ECSSR)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "2026",
+      "title_cn": null,
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Pathways to Effective Regionalism assessing the effectiveness of the Southern Afican Development Community (SADC) through Historical and Role Theory Perspectives2025Yusra Alharbi",
+      "url": "https://www.ecssr.ae/en/publications/pathways-to-effective-regionalism-assessing-the-effectiveness-of-the-s",
+      "source": "Emirates Center for Strategic Studies and Research (ECSSR)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "2025",
+      "title_cn": null,
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Integrating Non-State Actors the Case of Iraq's Popular Mobilization Forces2025Maryam AlDhuhoori",
+      "url": "https://www.ecssr.ae/en/publications/integrating-non-state-actors-the-case-of-iraq-s-popular-mobilization-f",
+      "source": "Emirates Center for Strategic Studies and Research (ECSSR)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "2025",
+      "title_cn": null,
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Understanding Contemporary Israeli National-Security policymaking: The Role of the Military Establishment2025Khamis Al Ali",
+      "url": "https://www.ecssr.ae/en/publications/understanding-contemporary-israeli-national-security-policymaking-the",
+      "source": "Emirates Center for Strategic Studies and Research (ECSSR)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "2025",
+      "title_cn": null,
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Strategic Calculations: Iran’s Negotiating Strategy in the JCPOA2025Fatima Al Zeyoudi",
+      "url": "https://www.ecssr.ae/en/publications/strategic-calculations-iran-s-negotiating-strategy-in-the-jcpoa",
+      "source": "Emirates Center for Strategic Studies and Research (ECSSR)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "2025",
+      "title_cn": null,
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Turkey’s Horn of Africa Policy: Determinants and Strategic Shifts Under the AKP2025Obaid Salem Alzaabi",
+      "url": "https://www.ecssr.ae/en/publications/turkey-s-horn-of-africa-policy-determinants-and-strategic-shifts-unde",
+      "source": "Emirates Center for Strategic Studies and Research (ECSSR)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "2025",
       "title_cn": null,
       "keyword_score": 99.0,
       "content_type": "unknown",
@@ -3516,6 +3660,24 @@
       "fetch_method": "html"
     },
     {
+      "title": "Combating Iran’s “Mutually Assured Destruction” Doctrine: Lessons from History",
+      "url": "https://www.derasat.org.bh/en/combating-irans-mutually-assured-destruction-doctrine-lessons-from-history/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "date": "2026-04-15",
+      "snippet": "The principle of mutually assured destruction (MAD) that emerged during the Cold War disincentivized aggression by making adversaries scared that an attack would result in total global annihilation. During the 21st century, Iran has developed an economic version, whereby its response to an existential threat is for it to induce a catastrophic contraction in the [&#8230;]\n&lt;p&gt;The post Combating Iran’s “Mutually Assured Destruction” Doctrine: Lessons from History first appeared on Derasat.&lt",
+      "title_cn": null,
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
       "title": "Bahrain’s cabinet announces a timely economic support package",
       "url": "https://www.derasat.org.bh/en/bahrains-cabinet-announces-a-timely-economic-support-package/",
       "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
@@ -3667,24 +3829,6 @@
       "source_tier": "core_gcc",
       "date": "2026-04-09",
       "snippet": "Dr. Abdulla Isa Al Abbasi, Director of the Energy and Environment Program at the Bahrain Center for Strategic, International and Energy Studies (Derasat), participated as a keynote speaker in the “University of Bahrain Undergraduate Research and Innovation Conference 2026, with the participation of academics, researchers, and students from various scientific disciplines. In his speech, Dr. [&#8230;]\n&lt;p&gt;The post Derasat Center participates in the University of Bahrain Undergraduate Research",
-      "title_cn": null,
-      "keyword_score": 99.0,
-      "content_type": "unknown",
-      "priority": "normal",
-      "ai_verdict": null,
-      "matched_keywords": [
-        "core_gcc_auto_pass"
-      ],
-      "fetch_method": "rss"
-    },
-    {
-      "title": "National Security Between Regional Threats and Criminal Protection",
-      "url": "https://www.derasat.org.bh/en/national-security-between-regional-threats-and-criminal-protection/",
-      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
-      "source_country": "Bahrain",
-      "source_tier": "core_gcc",
-      "date": "2026-04-08",
-      "snippet": "From time to time, the international environment witnesses rapid political and security developments whose effects may be felt in national legal systems, particularly in states that interact with their regional and international surroundings within the framework of collective security and defense cooperation. In this context, an important legal question arises regarding how national legislation addresses [&#8230;]\n&lt;p&gt;The post National Security Between Regional Threats and Criminal Protecti",
       "title_cn": null,
       "keyword_score": 99.0,
       "content_type": "unknown",
