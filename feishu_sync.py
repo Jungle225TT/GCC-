@@ -34,6 +34,13 @@ import requests
 from pathlib import Path
 from datetime import datetime
 
+# 优先从 .env 文件读取配置（需 pip install python-dotenv）
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # 没有 python-dotenv 也能正常用环境变量
+
 # ============================================================
 # 配置（优先读环境变量，也可直接填写）
 # ============================================================
@@ -147,40 +154,49 @@ def ensure_fields(token):
 
 
 def list_existing_urls(token):
-    """获取表格中已有的所有文章URL，用于去重"""
+    """
+    获取表格中已有的所有文章URL，用于去重。
+    返回 URL 集合；如果读取失败（超时/限频），返回 None。
+    调用方应在收到 None 时中止写入，防止全量重复写入。
+    """
     urls = set()
     page_token = ""
     page_size = 500
 
-    while True:
-        url = f"{BASE_URL}/bitable/v1/apps/{FEISHU_APP_TOKEN}/tables/{FEISHU_TABLE_ID}/records"
-        params = {
-            "page_size": page_size,
-            "field_names": '["链接"]',  # 只取链接字段，减少数据量
-        }
-        if page_token:
-            params["page_token"] = page_token
+    try:
+        while True:
+            url = f"{BASE_URL}/bitable/v1/apps/{FEISHU_APP_TOKEN}/tables/{FEISHU_TABLE_ID}/records"
+            params = {
+                "page_size": page_size,
+                "field_names": '["链接"]',  # 只取链接字段，减少数据量
+            }
+            if page_token:
+                params["page_token"] = page_token
 
-        resp = requests.get(url, headers=_headers(token), params=params)
-        data = resp.json()
+            resp = requests.get(url, headers=_headers(token), params=params, timeout=30)
+            data = resp.json()
 
-        if data.get("code") != 0:
-            print(f"  ⚠️  读取已有记录失败: {data.get('msg')}")
-            break
+            if data.get("code") != 0:
+                print(f"  ⚠️  读取已有记录失败: {data.get('msg')}，本次跳过去重以防重复写入")
+                return None
 
-        items = data.get("data", {}).get("items", [])
-        for item in items:
-            fields = item.get("fields", {})
-            link_field = fields.get("链接")
-            if isinstance(link_field, dict):
-                urls.add(link_field.get("link", ""))
-            elif isinstance(link_field, str):
-                urls.add(link_field)
+            items = data.get("data", {}).get("items", [])
+            for item in items:
+                fields = item.get("fields", {})
+                link_field = fields.get("链接")
+                if isinstance(link_field, dict):
+                    urls.add(link_field.get("link", ""))
+                elif isinstance(link_field, str):
+                    urls.add(link_field)
 
-        has_more = data.get("data", {}).get("has_more", False)
-        if not has_more:
-            break
-        page_token = data.get("data", {}).get("page_token", "")
+            has_more = data.get("data", {}).get("has_more", False)
+            if not has_more:
+                break
+            page_token = data.get("data", {}).get("page_token", "")
+
+    except Exception as e:
+        print(f"  ⚠️  读取历史记录失败，本次跳过去重以防重复写入: {e}")
+        return None
 
     return urls
 
@@ -289,6 +305,13 @@ def sync_to_feishu(json_path, auto_mode=False):
     # 增量去重
     print(f"\n🔍 检查已有记录（增量去重）...")
     existing_urls = list_existing_urls(token)
+
+    if existing_urls is None:
+        # 读取失败时中止，防止全量重复写入
+        print("  ❌ 无法读取历史记录，本次同步已中止（避免重复写入）")
+        print("     请检查网络或飞书 API 限频，稍后重试")
+        return False
+
     print(f"  表格中已有 {len(existing_urls)} 条记录")
 
     new_articles = [a for a in articles if a.get("url", "") not in existing_urls]

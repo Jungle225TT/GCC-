@@ -1,0 +1,22 @@
+# 输出目录
+output/
+output_fulltext/
+
+# 去重数据库
+*.db
+
+# 环境变量
+.env
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
