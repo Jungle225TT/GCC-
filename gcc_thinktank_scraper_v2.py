@@ -1104,11 +1104,39 @@ def export_summary_pdf(summary_text: str, filepath: str) -> str:
         title="GCC研究动态内部简报",
         author="成都创新金融研究院",
     )
+    def _strip_pdf_links(s: list) -> list:
+        """降级：将 story 中所有 Paragraph 的 <a href=...> 标签去掉，保留文字"""
+        import copy
+        clean = []
+        for item in s:
+            if isinstance(item, Paragraph):
+                text = re.sub(r'<a [^>]+>(.+?)</a>', r'\1', item.text, flags=re.DOTALL)
+                clean.append(Paragraph(text, item.style))
+            else:
+                clean.append(item)
+        return clean
+
     try:
         doc.build(story)
         log.info(f"📄 PDF 简报已保存: {filepath}")
         return filepath
     except Exception as e:
+        if "destination" in str(e).lower() or "format not resolved" in str(e).lower():
+            log.warning(f"⚠️  PDF 内部链接解析失败，降级为纯文本模式重试: {e}")
+            try:
+                doc2 = SimpleDocTemplate(
+                    filepath, pagesize=A4,
+                    leftMargin=2.5 * cm, rightMargin=2.5 * cm,
+                    topMargin=2.5 * cm, bottomMargin=2.5 * cm,
+                    title="GCC研究动态内部简报",
+                    author="成都创新金融研究院",
+                )
+                doc2.build(_strip_pdf_links(story))
+                log.info(f"📄 PDF 简报已保存（纯文本模式）: {filepath}")
+                return filepath
+            except Exception as e2:
+                log.error(f"❌ PDF 生成失败: {e2}")
+                return ""
         log.error(f"❌ PDF 生成失败: {e}")
         return ""
 
