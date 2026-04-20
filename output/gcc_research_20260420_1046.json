@@ -1,0 +1,1017 @@
+{
+  "metadata": {
+    "scraped_at": "2026-04-20T10:47:51.150889",
+    "total_articles": 56,
+    "system": "GCC Think Tank Scraper v2.1"
+  },
+  "articles": [
+    {
+      "title": "China’s 15th Five-Year Plan: A Deeper Phase of the Energy Transition",
+      "url": "https://www.kapsarc.org/our-offerings/publications/china-s-15th-five-year-plan-a-deeper-phase-of-the-energy-transition/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "19 April 2026",
+      "snippet": "19 April 2026",
+      "title_cn": "中国'十五五'规划：能源转型深化阶段",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "What Net-Zero Indices Tell Us About the State of Energy Transitions",
+      "url": "https://www.kapsarc.org/our-offerings/publications/what-net-zero-indices-tell-us-about-the-state-of-energy-transitions/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "12 April 2026",
+      "snippet": "12 April 2026",
+      "title_cn": "净零指数揭示能源转型现状",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Pathways to Decarbonizing Land Transport in Saudi Arabia: An Integrated Assessment of Technologies and Policy Interventions",
+      "url": "https://doi.org/10.1016/j.egycc.2026.100245",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "12 April 2026",
+      "snippet": "12 April 2026",
+      "title_cn": "沙特陆路交通脱碳路径：技术与政策综合评估",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "The Fuel Distribution Network Optimizer (FDNO) 2.0: A Description of the Model",
+      "url": "https://www.kapsarc.org/our-offerings/publications/the-fuel-distribution-network-optimizer-fdno-20-a-description-of-the-model/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "09 April 2026",
+      "snippet": "09 April 2026",
+      "title_cn": "燃料配送网络优化模型(FDNO) 2.0：模型说明",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Impact of Capping Emissions on Macroeconomic Volatility: The Case of Saudi Arabia",
+      "url": "https://www.kapsarc.org/our-offerings/publications/impact-of-capping-emissions-on-macroeconomic-volatility-the-case-of-saudi-arabia/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "09 April 2026",
+      "snippet": "09 April 2026",
+      "title_cn": "排放上限对宏观经济波动的影响：以沙特为例",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "IRAN IN A WEEK April 9-15, 2026",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/iran-in-a-week/iran-in-a-week-april-9-15-2026/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-16",
+      "snippet": "",
+      "title_cn": "伊朗一周简报 2026年4月9-15日",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Eroding Trust and the Future of Iran–Gulf Engagement",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/articles/eroding-trust-and-the-future-of-iran-gulf-engagement/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-15",
+      "snippet": "The Iran war has invariably changed the nature of regional dynamics in the Middle East. As Iran’s strategy to diversify the escalation to increase the cost of the war advanced, it severely damaged the progress made in recent years in establishing mechanisms and channels between Iran and the Gulf states to reduce mistrust and skepticism. [&#8230;]",
+      "title_cn": "信任侵蚀与伊朗-海湾接触的未来",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Shock, Adaptation and Resilience: The Global Economic Fallout of the 2026 Hormuz Crisis",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/shock-adaptation-and-resilience-the-global-economic-fallout-of-the-2026-hormuz-crisis/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-15",
+      "snippet": "The economic repercussions of the Iran–US Israel conflict, which erupted on February 28, 2026 and culminated in a fragile ceasefire on&#160; April 8, constitute one of the most severe energy supply shocks in recent history. What began with coordinated US and Israeli strikes on Iranian nuclear facilities, military infrastructure and leadership targets — including the [&#8230;]",
+      "title_cn": "冲击、适应与韧性：2026年霍尔木兹危机的全球经济影响",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Leverage at the Chokepoint: Wartime Power, Peacetime Limits",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/leverage-at-the-chokepoint-wartime-power-peacetime-limits/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-15",
+      "snippet": "The Strait of Hormuz, a narrow corridor only 21 miles wide at its narrowest point, emerged as the epicenter of maritime disruption during the 40-day Iranian conflict in 2026. Following the launch of Operation Epic Fury on February 28, in which US and Israeli forces struck Iranian nuclear and military infrastructure and killed Supreme Leader [&#8230;]",
+      "title_cn": "咽喉要道的杠杆：战时权力与和平时期限制",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Rasanah’s Monthly Iran Case File: February-March 2026",
+      "url": "https://rasanah-iiis.org/english/news/rasanahs-monthly-iran-case-file-february-march-2026/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-15",
+      "snippet": "The International Institute for Iranian Studies (Rasanah) has released its Iran Case File (ICF) for February and March 2026, offering both general readers and specialists a detailed account of developments during the period under review. The ICF seeks to assess Iran’s internal and external conditions while evaluating the interplay between its various political, economic and [&#8230;]",
+      "title_cn": "Rasanah月度伊朗案例档案：2026年2-3月",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "The United Arab Emirates as a Middle Power: Strategies to Adapt to a Divided World Order",
+      "url": "https://www.epc.ae/en/details/publications/dawlat-al-imarat-qwwa-mutawasita-astiratijiat-altkyuf-mae-nzam-alamy-munqsim",
+      "source": "Emirates Policy Center (EPC)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": "Dr. Ebtesam AlKetbi|2 Jul 2025",
+      "snippet": "",
+      "title_cn": "作为中等强国的阿联酋：适应分裂世界秩序的策略",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Pack Territory: Inside the Militias’ Reign",
+      "url": "https://www.epc.ae/en/details/publications/pack-territory-inside-the-militias-reign",
+      "source": "Emirates Policy Center (EPC)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": "Iran Studies Unit|24 Mar 2025",
+      "snippet": "Cognizant of the profound structural impact – rather than just the immediate manifestations – analysts at the Emirates Policy Center have approached the militia phenomenon as an interconnected network embedded within a broader hegemonic project. These formations represent a unique category of sub-state actors whose operations systematically undermine state institutions. It is a network on interdependent interests that leaves substantial geopolitical, economic and social impacts in the Middle Eas",
+      "title_cn": "势力范围：民兵统治内幕",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Syria: Between the Echoes of War and the Dawning of Peace",
+      "url": "https://www.epc.ae/en/details/publications/syria-between-the-echoes-of-war-and-the-dawning-of-peace",
+      "source": "Emirates Policy Center (EPC)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": "EPC|29 May 2024",
+      "snippet": "More than a decade has passed since the eruption of the Syrian protests and the ensuing war, leaving behind a trail of unfathomable destruction. Despite a decrease in the intensity of hostilities, the conflict persists unabated, showing no tangible signs of a comprehensive resolution on the horizon.",
+      "title_cn": "叙利亚：战争回响与和平曙光之间",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "A Dragon’s Odyssey: China’s Rise in the Gulf",
+      "url": "https://www.epc.ae/en/details/publications/a-dragon-s-odyssey-china-s-rise-in-the-gulf",
+      "source": "Emirates Policy Center (EPC)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": "Carlotta Rinaudo, Zeno Leoni, Ahmed Aboudouh|10 May 2024",
+      "snippet": "Since President Xi Jinping took office in 2012/2013, China’s sway in the Gulf region has undergone a pronounced ascension, riding the waves of regional geopolitical transformations and offering an opening to amplify Chinese economic and political clout across the region. One of the most profound shifts lies in the recalibration of strategic perceptions among Gulf states regarding the US and its pivotal role as the guarantor of security in the region, both in the present landscape and in the proj",
+      "title_cn": "龙之奥德赛：中国在海湾的崛起",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "The UAE’s Role in Empowering Religious Diplomacy",
+      "url": "https://www.epc.ae/en/details/publications/the-uae-s-role-in-empowering-religious-diplomacy",
+      "source": "Emirates Policy Center (EPC)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": "Dr. Ebtesam AlKetbi|26 May 2023",
+      "snippet": "Religious diplomacy has become an essential tool in UAE foreign policy. The UAE has sponsored various platforms, fora, awards and initiatives to consolidate tolerance, co-existence and interfaith dialogue, and to foster diversity and human fraternity.",
+      "title_cn": "阿联酋在赋能宗教外交中的作用",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Paths To National Reconciliation In Post- Tigray War Ethiopia2026Zayed Alkayyoomi",
+      "url": "https://www.ecssr.ae/en/publications/paths-to-national-reconciliation-in-post-tigray-war-ethiopia",
+      "source": "Emirates Center for Strategic Studies and Research (ECSSR)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "2026",
+      "title_cn": "后提格雷战争埃塞俄比亚的民族和解之路2026Zayed Alkayyoomi",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Turkey and Red Sea Security: Strategic Drivers, Engagement and Implications2026Abdulrahman Alhammadi",
+      "url": "https://www.ecssr.ae/en/publications/turkey-and-red-sea-security-strategic-drivers-engagement-and-implica",
+      "source": "Emirates Center for Strategic Studies and Research (ECSSR)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "2026",
+      "title_cn": "土耳其与红海安全：战略动因、参与及影响2026Abdulrahman Alhammadi",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Pathways to Effective Regionalism assessing the effectiveness of the Southern Afican Development Community (SADC) through Historical and Role Theory Perspectives2025Yusra Alharbi",
+      "url": "https://www.ecssr.ae/en/publications/pathways-to-effective-regionalism-assessing-the-effectiveness-of-the-s",
+      "source": "Emirates Center for Strategic Studies and Research (ECSSR)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "2025",
+      "title_cn": "有效区域主义之路：通过历史与角色理论视角评估南部非洲发展共同体（SADC）2025Yusra Alharbi",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Integrating Non-State Actors the Case of Iraq's Popular Mobilization Forces2025Maryam AlDhuhoori",
+      "url": "https://www.ecssr.ae/en/publications/integrating-non-state-actors-the-case-of-iraq-s-popular-mobilization-f",
+      "source": "Emirates Center for Strategic Studies and Research (ECSSR)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "2025",
+      "title_cn": "非国家行为体的整合：以伊拉克人民动员部队为例2025Maryam AlDhuhoori",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Understanding Contemporary Israeli National-Security policymaking: The Role of the Military Establishment2025Khamis Al Ali",
+      "url": "https://www.ecssr.ae/en/publications/understanding-contemporary-israeli-national-security-policymaking-the",
+      "source": "Emirates Center for Strategic Studies and Research (ECSSR)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "2025",
+      "title_cn": "理解当代以色列国家安全决策：军事机构的作用2025Khamis Al Ali",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "GCC IN A MULTIPOLAR WORLD",
+      "url": "https://bhuth.ae/en/publications/gcc-in-a-multipolar-world",
+      "source": "Dubai Public Policy Research Center (Bhuth)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "",
+      "title_cn": "多极世界中的海湾合作委员会",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "RE-IMAGINING YEMEN",
+      "url": "https://bhuth.ae/en/publications/re-imagining-yemen",
+      "source": "Dubai Public Policy Research Center (Bhuth)",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "",
+      "title_cn": "重塑也门",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Pathways for AI Integration in Teacher Education: Insights from UAE Educators",
+      "url": "https://publications.alqasimifoundation.com/en/pathways-for-ai-integration-in-teacher-education-insights-from-uae-educators",
+      "source": "Sheikh Saud bin Saqr Al Qasimi Foundation",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "April 1, 2026",
+      "title_cn": "人工智能融入教师教育的路径：来自阿联酋教育者的见解",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "AI and the Future of Work: Insights from Ras Al Khaimah’s Workforce",
+      "url": "https://publications.alqasimifoundation.com/en/ai-and-the-future-of-work-insights-from-ras-al-khaimahs-workforce",
+      "source": "Sheikh Saud bin Saqr Al Qasimi Foundation",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "March 12, 2026",
+      "title_cn": "人工智能与未来工作：来自哈伊马角劳动力的见解",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "The Role of UAE Institutional Philanthropy in Driving Development at Home",
+      "url": "https://publications.alqasimifoundation.com/en/the-role-of-uae-institutional-philanthropy-in-driving-development-at-home",
+      "source": "Sheikh Saud bin Saqr Al Qasimi Foundation",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "January 8, 2026",
+      "title_cn": "阿联酋机构慈善在推动国内发展中的作用",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Bioarchaeology in Ras Al Khaimah",
+      "url": "https://publications.alqasimifoundation.com/en/bioarchaeology-in-ras-al-khaimah",
+      "source": "Sheikh Saud bin Saqr Al Qasimi Foundation",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "January 8, 2026",
+      "title_cn": "哈伊马角的生物考古学",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Clothing, Culture, and Identity: Baloch Women’s Sartorial Practices in the UAE and the Nuance of National Heritage",
+      "url": "https://publications.alqasimifoundation.com/en/clothing-culture-and-identity-baloch-womens-sartorial-practices-in-the-uae-and-the-nuance-of-national-heritage",
+      "source": "Sheikh Saud bin Saqr Al Qasimi Foundation",
+      "source_country": "UAE",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "December 22, 2025",
+      "title_cn": "服饰、文化与身份：阿联酋俾路支女性的着装实践与民族遗产的细微差别",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Gains and Losses: Assessing the Trajectories of the War on Iran",
+      "url": "http://studies.aljazeera.net/en/policy-briefs/gains-and-losses-assessing-trajectories-war-iran",
+      "source": "Al Jazeera Centre for Studies (AJCS)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "2026-04-08",
+      "snippet": "The three main parties to the conflict—the United States and Israel on one side, and Iran on the other—have achieved certain gains and suffered setbacks, yet none has reached the conclusion that the expected benefits no longer justify the costs involved.",
+      "title_cn": "得失之间：评估对伊朗战争的轨迹",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Escalation Without Exit: Strategic Disorientation and Potential Scenarios in the US–Israeli War on Iran",
+      "url": "http://studies.aljazeera.net/en/analyses/escalation-without-exit-strategic-disorientation-and-potential-scenarios-us%E2%80%93israeli-war",
+      "source": "Al Jazeera Centre for Studies (AJCS)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "2026-04-06",
+      "snippet": "More than a month into the US-Israeli war on Iran, early assumptions of rapid victory have unravelled. Strategic ambiguity, escalation dynamics and resilient Iranian responses point to a protracted conflict with regional spillovers, infrastructure targeting and rising global economic risks, with no clear end-state.",
+      "title_cn": "无出口的升级：美以对伊朗战争的战略迷失与潜在情景",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Iran’s Strategic Options: Rethinking Negotiation with America",
+      "url": "http://studies.aljazeera.net/en/analyses/iran%E2%80%99s-strategic-options-rethinking-negotiation-america",
+      "source": "Al Jazeera Centre for Studies (AJCS)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "2026-04-01",
+      "snippet": "Iranian realism rejects reliance on US promises, emphasising deterrence, domestic strength and tangible power. Historical US treaty breaches, unilateral withdrawals, and interventionism justify Iran’s pragmatic strategy: conditional diplomacy, active deterrence and prioritised national security over formal agreements.",
+      "title_cn": "伊朗的战略选择：重新思考与美国的谈判",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Secularism and Sacred Narratives: The Contradictions of US Political Rhetoric in the 2026 Iran War",
+      "url": "http://studies.aljazeera.net/en/analyses/secularism-and-sacred-narratives-contradictions-us-political-rhetoric-2026-iran-war",
+      "source": "Al Jazeera Centre for Studies (AJCS)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "2026-03-26",
+      "snippet": "The US presents itself as a secular democracy, yet its wartime rhetoric frequently incorporates moral and religious language. The 2026 US-Israeli war on Iran highlights a structural tension between formal secularism and the practical reliance on religious narratives to justify and sustain military action.",
+      "title_cn": "世俗主义与神圣叙事：2026年伊朗战争中美国政治修辞的矛盾",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "The War No One Can Win: Why Shattering the Iranian Regime Is a Strategic Miscalculation",
+      "url": "http://studies.aljazeera.net/en/analyses/war-no-one-can-win-why-shattering-iranian-regime-strategic-miscalculation",
+      "source": "Al Jazeera Centre for Studies (AJCS)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "2026-03-26",
+      "snippet": "The collapse of the Iranian regime risks catastrophic horizontal war and political collapse, with Israel as the region’s main existential threat. US policies dismantling its own system push the Middle East back into 19th-century power politics, ending the brief ‘Dengist era’ and its connectivity projects.",
+      "title_cn": "无人能赢的战争：为何击溃伊朗政权是战略误判",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "2026 Midterm Elections",
+      "url": "https://www.brookings.edu/collection/the-2026-midterm-elections/",
+      "source": "Brookings Doha Center",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "",
+      "title_cn": "2026年中期选举",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Social protection, not just legal protection: Migrant laborers in the Gulf",
+      "url": "https://www.brookings.edu/articles/social-protection-not-just-legal-protection-migrant-laborers-in-the-gulf/",
+      "source": "Brookings Doha Center",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "August 23, 2021",
+      "snippet": "Noha Aboueldahab",
+      "title_cn": "不止法律保护，更需社会保障：海湾地区的移工",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Middle East and North Africa COVID-19 Policy Response Project",
+      "url": "https://www.brookings.edu/collection/middle-east-and-north-africa-covid-19-policy-response-project/",
+      "source": "Brookings Doha Center",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "August 23, 2021",
+      "snippet": "August 23, 2021",
+      "title_cn": "中东与北非COVID-19政策应对项目",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Libya’s peace process: What’s at stake for the Maghreb, 10 years after Gadhafi’s overthrow",
+      "url": "https://www.brookings.edu/articles/libyas-peace-process-whats-at-stake-for-the-maghreb-10-years-after-gadhafis-overthrow/",
+      "source": "Brookings Doha Center",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "August 19, 2021",
+      "snippet": "Yasmina Abouzzohour",
+      "title_cn": "利比亚和平进程：卡扎菲倒台十年后，马格里布地区的得失攸关",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Infographic: COVID-19 vaccination efforts in the Middle East and North Africa",
+      "url": "https://www.brookings.edu/articles/covid-19-vaccination-efforts-in-the-middle-east-and-north-africa/",
+      "source": "Brookings Doha Center",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "August 3, 2021",
+      "snippet": "Paul Dyer, \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tIsaac Schaider, \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAndrew Letzkus",
+      "title_cn": "信息图：中东与北非的COVID-19疫苗接种工作",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Digital Activism within the Coptic Community in North America: New Transnational Opportunities or Emerging Threats?",
+      "url": "https://www.dohainstitute.org/en/ResearchAndStudies/Pages/digital-activism-within-the-coptic-community-in-north-america.aspx",
+      "source": "Arab Center for Research and Policy Studies (Doha Institute)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "Studies20 April 2026",
+      "snippet": "",
+      "title_cn": "北美科普特社群内的数字行动主义：新跨国机遇还是新兴威胁？",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "13th Gulf Studies Forum: Gulf Security and the US-Israel War on Iran and Language Policies in the Arab Gulf Countries",
+      "url": "https://www.dohainstitute.org/en/Events/gulf-forum-13th-round/Pages/index.aspx",
+      "source": "Arab Center for Research and Policy Studies (Doha Institute)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "Upcoming Event16 April 2026",
+      "snippet": "Call for Papers",
+      "title_cn": "第十三届海湾研究论坛：海湾安全、美以对伊朗战争及阿拉伯海湾国家语言政策",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "The Ceasefire in the War on Iran: Determinants and Prospects",
+      "url": "https://www.dohainstitute.org/en/PoliticalStudies/Pages/the-ceasefire-in-the-war-on-iran-determinants-and-prospects.aspx",
+      "source": "Arab Center for Research and Policy Studies (Doha Institute)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "Situation Assessment12 April 2026",
+      "snippet": "",
+      "title_cn": "对伊朗战争的停火：决定因素与前景",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Abstract Deadline Extended: Iranian Studies Unit Conference on “Security Dynamics in Iran”",
+      "url": "https://www.dohainstitute.org/en/Events/iranian-studies-unit-2026-conference/Pages/index.aspx",
+      "source": "Arab Center for Research and Policy Studies (Doha Institute)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "Upcoming Event12 February 2026",
+      "snippet": "",
+      "title_cn": "摘要截止日期延长：伊朗研究单位会议“伊朗安全动态”",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Risk Politics and the US-Israeli War on Iran: Emotion Governance, Security Mosaic and Risk Management",
+      "url": "https://www.dohainstitute.org/en/ResearchAndStudies/Pages/risk-politics-and-the-us-israeli-war-on-iran.aspx",
+      "source": "Arab Center for Research and Policy Studies (Doha Institute)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "Studies9 April 2026",
+      "snippet": "",
+      "title_cn": "风险政治与美以对伊朗战争：情绪治理、安全拼图与风险管理",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "مركز المشروعات الصغيرة والمتوسطة",
+      "url": "https://www.arab-api.org/SMEsCenter.aspx",
+      "source": "Arab Planning Institute (API)",
+      "source_country": "Kuwait",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "مركز إقليمي متخصص بتنمية وتطوير المشروعات الصغيرة والمتوسطة",
+      "title_cn": "中小企业中心",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "المعهد العربي للتخطيط بالكويت",
+      "url": "https://www.arab-api.org/WoWeAre.aspx?PageID=1",
+      "source": "Arab Planning Institute (API)",
+      "source_country": "Kuwait",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "يدعم جهود التنمية الاقتصادية والاجتماعية في الدول العربية من خلال بناء القدرات الوطنية وإعداد البحوث والدراسات وتقديم الخدمات الاستشارية والدعم المؤسسي وتشجيع ريادة الأعمال وعقد اللقاءات التنموية",
+      "title_cn": "科威特阿拉伯规划研究所",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "النمذجة ورسم السياسات الاقتصادية",
+      "url": "https://www.arab-api.org/APIExpertiseDetails.aspx?ExpertiseID=9",
+      "source": "Arab Planning Institute (API)",
+      "source_country": "Kuwait",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "",
+      "title_cn": "经济政策建模与制定",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "التعاون المحلي والإقليمي والدولي",
+      "url": "https://www.arab-api.org/APIExpertiseDetails.aspx?ExpertiseID=11",
+      "source": "Arab Planning Institute (API)",
+      "source_country": "Kuwait",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "",
+      "title_cn": "地方、区域与国际合作",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "ريادة الأعمال  وتنمية المشروعات الصغيرة والمتوسطة‎",
+      "url": "https://www.arab-api.org/APIExpertiseDetails.aspx?ExpertiseID=12",
+      "source": "Arab Planning Institute (API)",
+      "source_country": "Kuwait",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "",
+      "title_cn": "创业与中小企业发展",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Techno-Economic Division",
+      "url": "https://www.kisr.edu.kw/en/services/support-services/",
+      "source": "Kuwait Institute for Scientific Research (KISR)",
+      "source_country": "Kuwait",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "",
+      "title_cn": "技术经济司",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Geo-Informatics",
+      "url": "https://www.kisr.edu.kw/en/services/geo-informatics/",
+      "source": "Kuwait Institute for Scientific Research (KISR)",
+      "source_country": "Kuwait",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "",
+      "title_cn": "地理信息学",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Commercialization",
+      "url": "https://www.kisr.edu.kw/en/services/analytical-copy/",
+      "source": "Kuwait Institute for Scientific Research (KISR)",
+      "source_country": "Kuwait",
+      "source_tier": "core_gcc",
+      "date": null,
+      "snippet": "",
+      "title_cn": "商业化",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Combating Iran’s “Mutually Assured Destruction” Doctrine: Lessons from History",
+      "url": "https://www.derasat.org.bh/en/combating-irans-mutually-assured-destruction-doctrine-lessons-from-history/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "date": "2026-04-16",
+      "snippet": "The principle of mutually assured destruction (MAD) that emerged during the Cold War disincentivized aggression by making adversaries scared that an attack would result in total global annihilation. During the 21st century, Iran has developed an economic version, whereby its response to an existential threat is for it to induce a catastrophic contraction in the [&#8230;]\n&lt;p&gt;The post Combating Iran’s “Mutually Assured Destruction” Doctrine: Lessons from History first appeared on Derasat.&lt",
+      "title_cn": "对抗伊朗的“相互确保摧毁”原则：历史教训",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Bahrain’s cabinet announces a timely economic support package",
+      "url": "https://www.derasat.org.bh/en/bahrains-cabinet-announces-a-timely-economic-support-package/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "date": "2026-04-14",
+      "snippet": "Iran’s attacks during the current conflict have created significant economic implications for the Kingdom of Bahrain and the rest of the Gulf Cooperation Council (GCC) countries. Drawing upon the practical lessons learned during Covid-19, on 13th April, Bahrain’s cabinet, led by HRH Crown Prince Salman bin Hamad Al Khalifa, Prime Minister of the Kingdom of [&#8230;]\n&lt;p&gt;The post Bahrain’s cabinet announces a timely economic support package first appeared on Derasat.&lt;/p&gt;",
+      "title_cn": "巴林内阁宣布及时的经济支持计划",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Bahrain’s Diplomacy in a Time of Tensions: Strategic Coordination Across Global and Regional Platforms",
+      "url": "https://www.derasat.org.bh/en/bahrains-diplomacy-in-a-time-of-tensions-strategic-coordination-across-global-and-regional-platforms/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "date": "2026-04-14",
+      "snippet": "The current regional tensions and two-week ceasefire deal has underscored a defining transformation in contemporary diplomacy: influence is no longer derived solely from participation in international institutions, but from the ability to shape agendas across interconnected global and regional platforms. In this context, the Kingdom of Bahrain’s leadership across the United Nations Security Council, the [&#8230;]\n&lt;p&gt;The post Bahrain’s Diplomacy in a Time of Tensions: Strategic Coordination",
+      "title_cn": "紧张局势下的巴林外交：全球与区域平台的战略协调",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "The End of the Era of Containment and the Reconstruction of the Concept of Collective Security",
+      "url": "https://www.derasat.org.bh/en/the-end-of-the-era-of-containment-and-the-reconstruction-of-the-concept-of-collective-security/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "date": "2026-04-13",
+      "snippet": "The regional order in the Middle East has long relied, to a large extent, on the principle of containment as one of the main tools for preventing crises from escalating. This approach has been evident over the past decades in how various regional tensions have been managed. Although it has achieved relative success in mitigating [&#8230;]\n&lt;p&gt;The post The End of the Era of Containment and the Reconstruction of the Concept of Collective Security first appeared on Derasat.&lt;/p&gt;",
+      "title_cn": "遏制时代的终结与集体安全概念的重建",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "How the World Trade Organization can help defuse the current US-Israel-Iran conflict",
+      "url": "https://www.derasat.org.bh/en/how-the-world-trade-organization-can-help-defuse-the-current-us-israel-iran-conflict/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "date": "2026-04-13",
+      "snippet": "The fallout from the current US-Israel-Iran war is both global and acute, with immediate consequences for energy markets, trade flows, and economic stability. This creates a clear role for international organizations, such as the World Trade Organization (WTO), to help contain and discipline the economic disruption, even though the ultimate resolution of the conflict rests [&#8230;]\n&lt;p&gt;The post How the World Trade Organization can help defuse the current US-Israel-Iran conflict first appea",
+      "title_cn": "世界贸易组织如何帮助缓和当前美以伊冲突",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "الترقب الحذِر: لماذا تتجنب الكويت معاداة إيران في حربها ضد واشنطن وتل أبيب؟",
+      "url": "https://acpss.ahram.org.eg/News/21678.aspx",
+      "source": "Al-Ahram Center for Political and Strategic Studies",
+      "source_country": "Egypt",
+      "source_tier": "pan_mena",
+      "date": null,
+      "snippet": "",
+      "title_cn": "谨慎观望：为何科威特在其对华盛顿和特拉维夫的战争中避免对抗伊朗？",
+      "keyword_score": 4.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": "relevant",
+      "matched_keywords": [
+        "الكويت(标题,+4)"
+      ],
+      "fetch_method": "html"
+    }
+  ]
+}
