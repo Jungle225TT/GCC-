@@ -74,6 +74,10 @@ playwright install chromium
 **AI 功能**（翻译、筛选、研究简报）：
 
 ```bash
+# 默认使用 DeepSeek（推荐，性价比更高）
+pip install openai
+
+# 或使用 Anthropic Claude
 pip install anthropic
 ```
 
@@ -98,21 +102,36 @@ pip install python-dotenv
 **一键安装全部依赖**：
 
 ```bash
-pip install requests beautifulsoup4 feedparser playwright anthropic reportlab trafilatura python-dotenv
+pip install requests beautifulsoup4 feedparser playwright openai reportlab trafilatura python-dotenv
 playwright install chromium
 ```
 
 ### 3. 配置 API Key
 
-AI 功能需要 Anthropic API Key。**推荐用环境变量**，避免出现在 bash 历史记录中：
+AI 功能通过 `ai_client.py` 管理，默认使用 **DeepSeek**，可通过环境变量切换为 Anthropic Claude。
+
+**默认：DeepSeek（推荐）**
 
 ```bash
 # macOS / Linux：加入 ~/.zshrc 或 ~/.bashrc
-export ANTHROPIC_API_KEY="sk-ant-xxxxx..."
+export DEEPSEEK_API_KEY="sk-xxxxx"
 
 # 或者创建 .env 文件（已加入 .gitignore，不会被提交）
-echo 'ANTHROPIC_API_KEY=sk-ant-xxxxx...' > .env
+echo 'DEEPSEEK_API_KEY=sk-xxxxx' > .env
 ```
+
+**可选：切换为 Anthropic Claude**
+
+```bash
+export AI_PROVIDER=anthropic
+export ANTHROPIC_API_KEY="sk-ant-xxxxx"
+```
+
+| 环境变量 | 说明 |
+|---------|------|
+| `DEEPSEEK_API_KEY` | DeepSeek API Key（默认 provider） |
+| `AI_PROVIDER` | 设为 `anthropic` 可切换至 Claude；省略则用 DeepSeek |
+| `ANTHROPIC_API_KEY` | 仅 `AI_PROVIDER=anthropic` 时需要 |
 
 ---
 
@@ -128,7 +147,7 @@ echo 'ANTHROPIC_API_KEY=sk-ant-xxxxx...' > .env
 - 日期标准化：统一输出 `YYYY-MM-DD` 格式，自动过滤无日期文章（机构介绍页兜底）
 - 时效过滤：只收录近 N 天的文章，默认 30 天
 - SQLite 增量去重（自动跳过上次已处理的文章）
-- 可选：Claude Haiku 边界文章分类、标题批量翻译、Claude Sonnet 研究简报（输出 MD + PDF）
+- 可选：AI 边界文章分类、标题批量翻译、AI 研究简报（输出 MD + PDF）；默认用 DeepSeek，可切换至 Anthropic Claude
 
 ### 运行方式
 
@@ -145,12 +164,12 @@ python gcc_thinktank_scraper_v2.py
 **② 推荐：启用 Playwright + AI**
 
 ```bash
-export ANTHROPIC_API_KEY="sk-ant-xxxxx..."
+export DEEPSEEK_API_KEY="sk-xxxxx"
 python gcc_thinktank_scraper_v2.py --playwright --ai
 ```
 
 - `--playwright`：启用 Chromium 渲染 JS 页面（Carnegie MEC 等 SPA 站点必须）
-- `--ai`：启用 Claude Haiku 边界文章分类 + 标题翻译 + Claude Sonnet 研究简报（输出 MD + PDF）
+- `--ai`：启用 AI 边界文章分类 + 标题翻译 + 研究简报（输出 MD + PDF）
 
 ---
 
@@ -240,7 +259,7 @@ python gcc_thinktank_scraper_v2.py --keep-undated --debug
 | `--countries` | 全部 | 只抓指定国家，可多个（空格分隔） |
 | `--playwright` | 关闭 | 启用 Chromium JS 渲染（Carnegie MEC 等 SPA 站点必须） |
 | `--ai` | 关闭 | 启用 AI 筛选 + 翻译 + 研究简报（输出 MD + PDF） |
-| `--api-key` | 读环境变量 | Anthropic API Key（建议用环境变量代替） |
+| `--api-key` | 读环境变量 | AI API Key（DeepSeek 或 Anthropic，建议用环境变量代替） |
 | `--output-dir` | `./output` | 输出目录 |
 | `--max-per-tank` | `50` | 每个智库最多保留篇数 |
 | `--no-dedup` | 关闭 | 禁用 SQLite 增量去重 |
@@ -646,11 +665,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install requests beautifulsoup4 feedparser playwright anthropic reportlab python-dotenv
+      - run: pip install requests beautifulsoup4 feedparser playwright openai reportlab python-dotenv
       - run: playwright install chromium
       - run: python gcc_thinktank_scraper_v2.py --playwright --ai --days 30
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
       - run: python feishu_sync.py
         env:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
@@ -742,13 +761,17 @@ RELEVANCE_THRESHOLD = 3   # 改为你想要的值
 
 ### Q：AI 功能费用？
 
-| 功能 | 使用模型 | 估算成本 |
-|------|---------|---------|
-| 边界文章分类（20篇） | Claude Haiku | ~$0.001 |
-| 标题批量翻译（100篇） | Claude Haiku | ~$0.005 |
-| 研究简报生成（1次） | Claude Sonnet | ~$0.01 |
+默认使用 DeepSeek，费用极低：
 
-每日运行一次全量抓取 + AI 的总成本通常在 **$0.02 以内**。
+| 功能 | 使用模型（DeepSeek） | 估算成本 |
+|------|---------|---------|
+| 边界文章分类（20篇） | deepseek-chat | ~$0.0002 |
+| 标题批量翻译（100篇） | deepseek-chat | ~$0.001 |
+| 研究简报生成（1次） | deepseek-chat | ~$0.003 |
+
+每日运行一次全量抓取 + AI 的总成本通常在 **$0.005 以内**。
+
+如切换为 Anthropic Claude（`AI_PROVIDER=anthropic`），成本约为 DeepSeek 的 5–10 倍。
 
 ### Q：当天运行后再次运行，显示"去重过滤了 N 篇，剩余 0 篇"？
 

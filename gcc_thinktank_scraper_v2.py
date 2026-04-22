@@ -274,6 +274,14 @@ def extract_articles_from_page(html,base_url,page_url,selectors,tank_name):
         se=c.select_one(selectors.get("snippet","p"));sn=se.get_text(strip=True) if se else ""
         de=c.select_one(selectors.get("date","time"));ds=None
         if de:ds=normalize_date(de.get("datetime") or de.get_text(strip=True))
+        # 日期选择器未命中时，扫描卡片内所有小元素寻找日期文本
+        if not ds or len(ds) < 7:
+            for el in c.find_all(["span","time","em","small","p","div"],limit=20):
+                txt=el.get_text(strip=True)
+                if 5 < len(txt) < 60:
+                    cand=normalize_date(txt)
+                    if cand and len(cand) >= 7:
+                        ds=cand;break
         articles.append({"title":t,"url":h,"snippet":sn[:500],"date":ds})
     if not articles:
         for lk in soup.find_all("a",href=True):
@@ -490,6 +498,17 @@ def normalize_date(date_str):
     m = re.match(r'^(\d{1,2})[/.](\d{1,2})[/.](\d{4})$', d)
     if m and int(m.group(2)) <= 12:
         return f"{m.group(3)}-{int(m.group(2)):02d}-{int(m.group(1)):02d}"
+    # 混合文本中搜索完整日期（如 "Studies 20 April, 2026" 或 "Published: March 15, 2024"）
+    m = re.search(r'\b(\d{1,2})\s+([a-z]+)\s+(\d{4})\b', dl)
+    if m:
+        mn = _MONTH_MAP.get(m.group(2)) or _MONTH_MAP.get(m.group(2)[:3])
+        if mn:
+            return f"{m.group(3)}-{mn}-{int(m.group(1)):02d}"
+    m = re.search(r'\b([a-z]+)\s+(\d{1,2})[,\s]+(\d{4})\b', dl)
+    if m:
+        mn = _MONTH_MAP.get(m.group(1)) or _MONTH_MAP.get(m.group(1)[:3])
+        if mn:
+            return f"{m.group(3)}-{mn}-{int(m.group(2)):02d}"
     # 含年份的混合字符串，提取最靠前的 4 位年份作兜底
     m = re.search(r'\b(20\d{2}|19\d{2})\b', d)
     if m:
