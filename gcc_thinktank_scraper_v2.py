@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-GCC智库研究抓取系统 v2.1
+GCC智库研究抓取系统 v2.3
 成都创新金融研究院 — 姜亭汀
 四层漏斗筛选：来源可信度 → 关键词评分 → 内容类型 → AI辅助
 数据源：HTML抓取 + RSS订阅
@@ -130,10 +130,11 @@ THINK_TANKS = [
     {"name":"Kuwait Institute for Scientific Research (KISR)","country":"Kuwait","tier":"core_gcc","base_url":"https://www.kisr.edu.kw","pages":["/en/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
     {"name":"Bahrain Center for Strategic, International and Energy Studies (Derasat)","country":"Bahrain","tier":"core_gcc","base_url":"https://www.derasat.org.bh","pages":["/en/home_en/","/knowledge-center/publications-page/","/en/research/"],"rss_feeds":["https://www.derasat.org.bh/en/feed/","https://www.derasat.org.bh/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
     {"name":"Tawasul","country":"Oman","tier":"core_gcc","base_url":"https://tawasul.co.om","pages":["/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
-    {"name":"Carnegie Middle East Center","country":"Lebanon","tier":"pan_mena","base_url":"https://carnegie-mec.org","pages":["/","/middle-east/research","/middle-east/diwan"],"rss_feeds":["https://carnegie-mec.org/feed","https://carnegieendowment.org/feeds/middle-east"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Carnegie Middle East Center","country":"Lebanon","tier":"pan_mena","base_url":"https://carnegieendowment.org","pages":["/regions/gulf","/regions/saudi-arabia","/regions/united-arab-emirates","/regions/qatar","/regions/kuwait","/regions/bahrain","/regions/oman","/middle-east/regions/saudi-arabia","/middle-east/regions/united-arab-emirates","/middle-east/regions/qatar","/middle-east/regions/kuwait","/middle-east/regions/bahrain","/middle-east/regions/oman","/sada/region/692?lang=en"],"rss_feeds":["https://carnegie-mec.org/feed","https://carnegieendowment.org/feeds/middle-east"],"use_playwright":True,"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post'], a[href*='/research/'], a[href*='/diwan/'], a[href*='/emissary/'], a[href*='/sada/']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},  # v2.3: 泛MENA深层抓取
     {"name":"Al-Ahram Center for Political and Strategic Studies","country":"Egypt","tier":"pan_mena","base_url":"https://acpss.ahram.org.eg","pages":["/"],"selectors":{"article":"article, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
-    {"name":"Al Sharq Forum","country":"Turkey","tier":"pan_mena","base_url":"https://research.sharqforum.org","pages":["/"],"rss_feeds":["https://research.sharqforum.org/feed/"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Arab Reform Initiative","country":"France","tier":"pan_mena","base_url":"https://www.arab-reform.net","pages":["/"],"rss_feeds":["https://www.arab-reform.net/feed/"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Al Sharq Forum","country":"Turkey","tier":"pan_mena","base_url":"https://research.sharqforum.org","pages":["/region/middle-east/ksa/","/region/middle-east/uae/","/region/middle-east/qatar/","/region/middle-east/kuwait/","/region/middle-east/bahrain/","/region/middle-east/oman/","/tag/gcc/"],"rss_feeds":["https://research.sharqforum.org/feed/"],"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},  # v2.3: 泛MENA深层抓取
+    {"name":"Arab Reform Initiative","country":"France","tier":"pan_mena","base_url":"https://www.arab-reform.net","pages":["/tag/saudi-arabia/","/tag/united-arab-emirates/","/tag/qatar/","/tag/kuwait/","/tag/bahrain/","/tag/oman/","/tag/gulf/","/tag/gcc/"],"rss_feeds":["https://www.arab-reform.net/feed/"],"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},  # v2.3: 泛MENA深层抓取
+    {"name":"Arab Gulf States Institute in Washington (AGSIW)","country":"USA","tier":"core_gcc","base_url":"https://agsiw.org","pages":["/topic/politics-and-governance/","/topic/economics-and-energy/","/topic/security-and-defense/","/topic/society/"],"rss_feeds":["https://agsiw.org/feed/"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},  # v2.3: 新增AGSIW
 ]
 
 STRONG_KEYWORDS=["gcc","gulf cooperation council","海合会","مجلس التعاون الخليجي"]
@@ -272,7 +273,7 @@ def extract_articles_from_page(html,base_url,page_url,selectors,tank_name):
         seen.add(h)
         se=c.select_one(selectors.get("snippet","p"));sn=se.get_text(strip=True) if se else ""
         de=c.select_one(selectors.get("date","time"));ds=None
-        if de:ds=de.get("datetime") or de.get_text(strip=True)
+        if de:ds=normalize_date(de.get("datetime") or de.get_text(strip=True))
         articles.append({"title":t,"url":h,"snippet":sn[:500],"date":ds})
     if not articles:
         for lk in soup.find_all("a",href=True):
@@ -316,7 +317,51 @@ _NAV_EXACT={"publications","research","our experts","experts","advisory services
     "strategic and international studies","sound of thought podcast",
     # 阿拉伯语导航词
     "للمزيد","المزيد","الرئيسية","اتصل بنا","من نحن","الأخبار",
-    "مجلة التنمية والسياسات الاقتصادية"}
+    "مجلة التنمية والسياسات الاقتصادية",
+    # 机构介绍/成员类（新增站点常见）
+    "in the news", "agsiw in the news", "media mentions", "press coverage",
+    "our fellows", "agsiw fellows", "senior fellows", "visiting fellows",
+    "board of directors", "board of advisors", "advisory board",
+    "support our work", "donate", "get involved",
+    "who we are", "mission and history", "our history", "our mission",
+    "in memoriam", "memoriam",
+    # 部门/学科/服务名称（API、KISR 等常见导航词）
+    "commercialization", "geoinformatics", "technology economics",
+    "sme center", "sme centre", "small and medium enterprises",
+    "entrepreneurship and sme development", "entrepreneurship",
+    "local, regional and international cooperation",
+    "economic policy modeling", "economic policy modelling",
+    "training and capacity building", "capacity building",
+    "information and communication technology",
+    "environment and natural resources", "food and water security",
+    "energy and environment", "marine and fisheries",
+    "biotechnology", "petroleum research", "refining and petrochemicals",
+    "water resources", "agriculture", "aridland agriculture",
+    # 报告分类/栏目名（KISR、API 常见）
+    "periodic reports", "regular reports", "technical reports", "annual reports",
+    "working papers", "working paper series", "occasional papers",
+    "economic policy modeling and formulation", "economic policy modelling and formulation",
+    "local, regional and international cooperation",
+    "entrepreneurship and sme development", "smes development",
+    "center for smes", "centre for smes", "sme development center",
+    # 机构全称（当标题就是机构名时，一定是导航/介绍页）
+    "arab planning institute", "arab planning institute (api)",
+    "kuwait arab planning institute",
+    "malcolm h. kerr carnegie middle east center",
+    "the malcolm kerr carnegie middle east center",
+    "carnegie middle east center",          # 仅作为独立标题时过滤
+    "king abdullah petroleum studies and research centre",
+    "king faisal center for research and islamic studies",
+    "emirates center for strategic studies and research",
+    "gulf research center", "dubai public policy research center",
+    "al jazeera centre for studies",
+    "arab center for research and policy studies",
+    # 通用栏目词
+    "publications and reports", "reports and publications",
+    "research and analysis", "papers and reports",
+    "latest publications", "recent publications", "all publications",
+    "featured research", "highlights",
+}
 
 # URL中含这些路径片段 → 分类/索引页，不是文章
 _NAV_URL_PATTERNS=[
@@ -329,6 +374,20 @@ _NAV_URL_PATTERNS=[
     r'/profile/', r'/staff/', r'/team/', r'/experts/',
     r'/podcast', r'/podcasts',
     r'/featured/', r'/units/', r'/about-us/',  # EPC 话题/单元/关于页面
+    r'/biography/', r'/bio/', r'/in-the-news/', r'/media-mention',  # 人物传记/媒体报道
+    r'/leadership/', r'/board/', r'/fellows/',                       # 机构成员页
+    r'/event/', r'/events/', r'/webinar/', r'/conference/',          # 活动页
+    r'/newsletter/', r'/newsletters/', r'/subscribe',                # 订阅/通讯
+    # 部门/中心/学科导航页（API、KISR 等网站的 CMS 结构）
+    r'[?&]tabid=',          # ASPX CMS tab导航（arab-api.org 等老站）
+    r'/sector[s]?/',        # 研究部门
+    r'/division[s]?/',      # 部门
+    r'/department[s]?/',    # 系/处
+    r'/research-center[s]?/', r'/research-centre[s]?/',  # 研究中心目录页
+    r'/center[s]?/(?!brookings|carnegie|doha|gulf)',     # 通用中心页（白名单已知智库名）
+    r'/service[s]?/',       # 服务页
+    r'/program[s]?/',       # 项目目录
+    r'/about/?$',           # /about 或 /about/ 精确匹配
 ]
 
 def _is_likely_article(title,url):
@@ -354,8 +413,8 @@ def _is_likely_article(title,url):
         all_capitalized=all(w[0].isupper() and w.isalpha() for w in orig_words if len(w)>1)
         has_article_words=any(w.lower() in {"the","a","an","of","in","on","for","and","to","by","with","from","how","why","what","new","key"} for w in orig_words)
         if all_capitalized and not has_article_words:
-            # 大概率是人名，除非URL含 /article/ /report/ /paper/ 等
-            if not re.search(r'/(article|report|paper|study|brief|analysis|opinion|blog)/',ul):
+            # 大概率是人名，除非URL含 article/report/paper 等关键词（路径段或slug片段均可）
+            if not re.search(r'[/\-](article|report|paper|study|brief|analysis|opinion|blog)[s/\-]', ul):
                 return False
     # 4. 标题太短（≤3个词且无数字/年份）→ 检查URL深度
     words=tl.split()
@@ -376,6 +435,67 @@ def _is_likely_article(title,url):
     if path in nav_paths:return False
     return True
 
+_MONTH_MAP = {
+    "jan":"01","feb":"02","mar":"03","apr":"04","may":"05","jun":"06",
+    "jul":"07","aug":"08","sep":"09","oct":"10","nov":"11","dec":"12",
+    "january":"01","february":"02","march":"03","april":"04","june":"06",
+    "july":"07","august":"08","september":"09","october":"10",
+    "november":"11","december":"12",
+}
+
+def normalize_date(date_str):
+    """
+    将任意格式日期字符串统一为 YYYY-MM-DD（或 YYYY-MM / YYYY）。
+    无法解析则返回 None。
+    支持：ISO 8601、英文月名、数字斜线/点号分隔、纯年份等。
+    """
+    if not date_str:
+        return None
+    d = date_str.strip()
+    # 已是标准格式
+    if re.match(r'^\d{4}-\d{2}-\d{2}$', d):
+        return d
+    if re.match(r'^\d{4}-\d{2}$', d):
+        return d
+    if re.match(r'^\d{4}$', d) and 1990 <= int(d) <= 2035:
+        return d
+    # ISO 8601 含时间：2024-03-15T10:30:00Z
+    m = re.match(r'^(\d{4}-\d{2}-\d{2})[T ]', d)
+    if m:
+        return m.group(1)
+    dl = d.lower()
+    # "March 15, 2024" 或 "Mar 15 2024"
+    m = re.match(r'^([a-z]+)\s+(\d{1,2})[,\s]+(\d{4})', dl)
+    if m:
+        mn = _MONTH_MAP.get(m.group(1)) or _MONTH_MAP.get(m.group(1)[:3])
+        if mn:
+            return f"{m.group(3)}-{mn}-{int(m.group(2)):02d}"
+    # "15 March 2024" 或 "15 Mar 2024"
+    m = re.match(r'^(\d{1,2})\s+([a-z]+)\s+(\d{4})', dl)
+    if m:
+        mn = _MONTH_MAP.get(m.group(2)) or _MONTH_MAP.get(m.group(2)[:3])
+        if mn:
+            return f"{m.group(3)}-{mn}-{int(m.group(1)):02d}"
+    # "March 2024"（无日）
+    m = re.match(r'^([a-z]+)\s+(\d{4})$', dl)
+    if m:
+        mn = _MONTH_MAP.get(m.group(1)) or _MONTH_MAP.get(m.group(1)[:3])
+        if mn:
+            return f"{m.group(2)}-{mn}"
+    # "2024/03/15" 或 "2024.03.15"
+    m = re.match(r'^(\d{4})[/.](\d{1,2})[/.](\d{1,2})$', d)
+    if m:
+        return f"{m.group(1)}-{int(m.group(2)):02d}-{int(m.group(3)):02d}"
+    # "15/03/2024" 或 "15.03.2024"（DD/MM/YYYY）
+    m = re.match(r'^(\d{1,2})[/.](\d{1,2})[/.](\d{4})$', d)
+    if m and int(m.group(2)) <= 12:
+        return f"{m.group(3)}-{int(m.group(2)):02d}-{int(m.group(1)):02d}"
+    # 含年份的混合字符串，提取最靠前的 4 位年份作兜底
+    m = re.search(r'\b(20\d{2}|19\d{2})\b', d)
+    if m:
+        return m.group(1)
+    return None
+
 def fetch_rss_articles(feed_url,tank_name):
     if not HAS_FEEDPARSER:return []
     try:
@@ -392,7 +512,7 @@ def fetch_rss_articles(feed_url,tank_name):
                     try:ds=datetime(*getattr(e,pa)[:6]).strftime("%Y-%m-%d")
                     except:pass
                     break
-            if not ds:ds=e.get("published",e.get("updated",""))
+            if not ds:ds=normalize_date(e.get("published",e.get("updated","")))
             sn=""
             if hasattr(e,"summary"):sn=re.sub(r'<[^>]+>','',e.summary).strip()[:500]
             elif hasattr(e,"description"):sn=re.sub(r'<[^>]+>','',e.description).strip()[:500]
@@ -402,8 +522,30 @@ def fetch_rss_articles(feed_url,tank_name):
 
 RSS_MIN_THRESHOLD = 3  # RSS获取≥3篇则跳过HTML
 
+# GCC 六国规范名称集合（用于匹配 Carnegie metadata）
+CARNEGIE_GCC_REGIONS = {
+    "saudi arabia", "united arab emirates", "qatar",
+    "kuwait", "bahrain", "oman", "gulf",
+}
+
+def verify_carnegie_metadata(article_url, req_timeout=10):
+    """
+    拉取 Carnegie 文章详情页，提取嵌入的 JSON metadata 中的 regions 字段，
+    判断是否与 GCC 六国相关。返回 True/False/None（None = 拉取失败，保守保留）。
+    """
+    html = fetch_html_requests(article_url, timeout=req_timeout)
+    if not html:
+        return None
+    m = re.search(r'"regions"\s*:\s*\[([^\]]*)\]', html)
+    if not m:
+        return None
+    regions_raw = m.group(1).lower()
+    return any(r in regions_raw for r in CARNEGIE_GCC_REGIONS)
+
 def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None):
     nm, co, ti, bu = tank["name"], tank["country"], tank["tier"], tank["base_url"]
+    # 站点级 Playwright 开关：Carnegie 这类 SPA 站点强制启用
+    use_playwright = use_playwright or tank.get("use_playwright", False)
     log.info(f"📚 {nm} ({co}) [{ti}]")
     raw = []
     req_to = tank.get("requests_timeout", 10)
@@ -425,24 +567,38 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None)
             for pp in tank["pages"]:
                 url = bu.rstrip("/") + pp
                 log.info(f"  🌐 抓取: {url}")
-                html = fetch_html(url, use_playwright=use_playwright, req_timeout=req_to, pw_timeout=pw_to, browser=browser)
-                if not html: continue
-                items = extract_articles_from_page(html, bu, url, tank["selectors"], nm)
-                log.info(f"    发现 {len(items)} 个候选条目")
-                for it in items[:3]: log.debug(f"    [候选] {it['title'][:80]}")
-                raw.extend(items)
+                try:
+                    html = fetch_html(url, use_playwright=use_playwright, req_timeout=req_to, pw_timeout=pw_to, browser=browser)
+                    if not html: continue
+                    items = extract_articles_from_page(html, bu, url, tank["selectors"], nm)
+                    max_per_page = tank.get("max_per_page", 20 if tank.get("deep_topic") else 50)
+                    if len(items) > max_per_page:
+                        items = items[:max_per_page]
+                    log.info(f"    发现 {len(items)} 个候选条目（已限 {max_per_page}/页）")
+                    for it in items[:3]: log.debug(f"    [候选] {it['title'][:80]}")
+                    raw.extend(items)
+                except Exception as e:
+                    log.warning(f"  ⚠️ 单页抓取失败 {url}: {e}")
+                    continue
                 time.sleep(1)
     else:
         # ── 无RSS，直接HTML ──
         for pp in tank["pages"]:
             url = bu.rstrip("/") + pp
             log.info(f"  🌐 抓取: {url}")
-            html = fetch_html(url, use_playwright=use_playwright, req_timeout=req_to, pw_timeout=pw_to, browser=browser)
-            if not html: continue
-            items = extract_articles_from_page(html, bu, url, tank["selectors"], nm)
-            log.info(f"    发现 {len(items)} 个候选条目")
-            for it in items[:3]: log.debug(f"    [候选] {it['title'][:80]}")
-            raw.extend(items)
+            try:
+                html = fetch_html(url, use_playwright=use_playwright, req_timeout=req_to, pw_timeout=pw_to, browser=browser)
+                if not html: continue
+                items = extract_articles_from_page(html, bu, url, tank["selectors"], nm)
+                max_per_page = tank.get("max_per_page", 20 if tank.get("deep_topic") else 50)
+                if len(items) > max_per_page:
+                    items = items[:max_per_page]
+                log.info(f"    发现 {len(items)} 个候选条目（已限 {max_per_page}/页）")
+                for it in items[:3]: log.debug(f"    [候选] {it['title'][:80]}")
+                raw.extend(items)
+            except Exception as e:
+                log.warning(f"  ⚠️ 单页抓取失败 {url}: {e}")
+                continue
             time.sleep(1)
 
     # ── 去重 ──
@@ -458,12 +614,28 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None)
         if ct == "excluded": log.debug(f"    ❌ 排除: {t[:60]}"); continue
         if ti == "core_gcc":
             ks, mk = 99.0, ["core_gcc_auto_pass"]
+        elif tank.get("deep_topic"):
+            # 深层专题页抓来的内容，来源本身就是 GCC 主题，直接保底通过
+            ks, mk = 5.0, ["deep_topic_auto_pass"]
         else:
             ks, mk = compute_keyword_score(t, sn)
             if ks < RELEVANCE_THRESHOLD: log.debug(f"    ⏭️ 评分不足({ks}): {t[:60]}"); continue
         results.append(Article(title=t, url=u, source=nm, source_country=co, source_tier=ti,
-            date=it.get("date"), snippet=sn, keyword_score=ks, content_type=ct,
+            date=normalize_date(it.get("date")), snippet=sn, keyword_score=ks, content_type=ct,
             priority=pr, matched_keywords=mk, fetch_method=it.get("fetch_method", "html")))
+
+    # ── Carnegie 二次验证：用官方 regions metadata 替代关键词匹配 ──
+    if "Carnegie" in nm and tank.get("deep_topic"):
+        verified = []
+        for a in results:
+            v = verify_carnegie_metadata(a.url)
+            if v is False:
+                log.debug(f"    🚫 Carnegie metadata 排除: {a.title[:60]}")
+                continue
+            verified.append(a)
+            time.sleep(0.3)  # 礼貌延迟
+        log.info(f"  🔍 Carnegie metadata 验证: {len(results)} → {len(verified)}")
+        results = verified
 
     # ── 按日期排序（最新优先），有日期的排前面 ──
     def _sort_key(a):
@@ -485,8 +657,26 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None)
     log.info(f"  ✅ {nm}: {len(unique)} 篇候选 → {len(results)} 篇保留（RSS:{rss_n} HTML:{html_n}）\n")
     return results
 
+def _date_gte(date_str: str, cutoff: str) -> bool:
+    """
+    判断 date_str（YYYY-MM-DD / YYYY-MM / YYYY）是否 >= cutoff（YYYY-MM-DD）。
+    不完整日期取最早可能值（月初 / 年初），保守保留。
+    """
+    if not date_str:
+        return False
+    if re.match(r'^\d{4}-\d{2}-\d{2}$', date_str):
+        cmp = date_str
+    elif re.match(r'^\d{4}-\d{2}$', date_str):
+        cmp = date_str + "-28"   # 取月末（28日所有月通用），保守保留当月文章
+    elif re.match(r'^\d{4}$', date_str):
+        cmp = date_str + "-12-31"  # 取年末，保守保留（不确定具体月份时不误删）
+    else:
+        return True  # 格式未知，保守保留
+    return cmp >= cutoff
+
 def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
-                countries=None, max_per_tank=50, dedup_db=DEDUP_DB_PATH, dedup_days=1):
+                countries=None, max_per_tank=50, dedup_db=DEDUP_DB_PATH, dedup_days=1,
+                filter_undated=True, max_age_days=30):
     if tanks is None:
         tanks = THINK_TANKS
     if countries:
@@ -494,7 +684,7 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
         tanks = [t for t in tanks if t["country"].lower() in country_filter]
 
     print("=" * 60)
-    print(f"GCC智库研究抓取系统 v2.1\n运行时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n目标智库: {len(tanks)} 个")
+    print(f"GCC智库研究抓取系统 v2.3\n运行时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n目标智库: {len(tanks)} 个")
     print(f"JS渲染: {'✅ Playwright' if use_playwright and HAS_PLAYWRIGHT else '❌ 仅requests'}")
     print(f"AI筛选: {'✅ 已启用 (' + ai_client.provider_info() + ')' if enable_ai and HAS_AI else '❌ 未启用'}")
     print(f"RSS:    {'✅ feedparser' if HAS_FEEDPARSER else '❌ 未安装'}")
@@ -503,18 +693,22 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
     else:
         print(f"去重DB: ❌ 已禁用")
     print(f"每站上限: {max_per_tank} 篇")
+    if max_age_days:
+        cutoff_display = (datetime.now() - timedelta(days=max_age_days)).strftime('%Y-%m-%d')
+        print(f"时效过滤: 近 {max_age_days} 天（{cutoff_display} 之后）")
     print("=" * 60 + "\n")
 
     all_articles = []
 
-    # ── 抓取阶段：如果启用 Playwright，复用一个浏览器实例 ──
-    if use_playwright and HAS_PLAYWRIGHT:
+    # ── 抓取阶段：如果启用 Playwright 或有站点强制需要，复用一个浏览器实例 ──
+    needs_playwright = use_playwright or any(t.get("use_playwright") for t in tanks)
+    if needs_playwright and HAS_PLAYWRIGHT:
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             for tk in tanks:
                 try:
                     all_articles.extend(scrape_think_tank(
-                        tk, use_playwright=True, max_per_tank=max_per_tank, browser=browser
+                        tk, use_playwright=use_playwright, max_per_tank=max_per_tank, browser=browser
                     ))
                 except Exception as e:
                     log.error(f"❌ 抓取 {tk['name']} 失败: {e}")
@@ -543,6 +737,23 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
         if dedup_filtered:
             log.info(f"🔁 去重过滤: 跳过 {dedup_filtered} 篇（{dedup_days}天内已处理），剩余 {len(all_articles)} 篇新文章")
 
+    # ── 无日期过滤：机构介绍页/导航页通常无发布日期，以此兜底过滤残余噪声 ──
+    if filter_undated:
+        before_ud = len(all_articles)
+        all_articles = [a for a in all_articles if a.date]
+        removed_ud = before_ud - len(all_articles)
+        if removed_ud:
+            log.info(f"📅 无日期过滤: 移除 {removed_ud} 篇无日期文章，剩余 {len(all_articles)} 篇")
+
+    # ── 时效过滤：只保留 max_age_days 天内的文章 ──
+    if max_age_days and max_age_days > 0:
+        cutoff = (datetime.now() - timedelta(days=max_age_days)).strftime('%Y-%m-%d')
+        before_age = len(all_articles)
+        all_articles = [a for a in all_articles if _date_gte(a.date, cutoff)]
+        removed_age = before_age - len(all_articles)
+        if removed_age:
+            log.info(f"⏰ 时效过滤: 移除 {removed_age} 篇 {max_age_days} 天前的文章（截止 {cutoff}），剩余 {len(all_articles)} 篇")
+
     # ── 按优先级排序 ──
     priority_order = {"priority_read": 0, "normal": 1, "low": 2}
     all_articles.sort(key=lambda a: priority_order.get(a.priority, 1))
@@ -562,7 +773,7 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
 def export_markdown(articles,filepath=None):
     now=datetime.now().strftime("%Y-%m-%d %H:%M")
     filepath=filepath or f"gcc_research_{datetime.now().strftime('%Y%m%d_%H%M')}.md"
-    L=[f"# GCC智库研究动态\n",f"> 抓取时间: {now} | 文章总数: {len(articles)} 篇 | 系统: v2.1 — 成都创新金融研究院\n"]
+    L=[f"# GCC智库研究动态\n",f"> 抓取时间: {now} | 文章总数: {len(articles)} 篇 | 系统: v2.3 — 成都创新金融研究院\n"]
     gs={"priority_read":("⭐ 优先阅读（深度报告/政策分析）",[]),"normal":("📄 常规文章",[]),"low":("📋 简讯/公告",[])}
     for a in articles:k=a.priority if a.priority in gs else "normal";gs[k][1].append(a)
     for key in["priority_read","normal","low"]:
@@ -582,7 +793,7 @@ def export_markdown(articles,filepath=None):
 
 def export_json(articles,filepath=None):
     filepath=filepath or f"gcc_research_{datetime.now().strftime('%Y%m%d_%H%M')}.json"
-    data={"metadata":{"scraped_at":datetime.now().isoformat(),"total_articles":len(articles),"system":"GCC Think Tank Scraper v2.1"},"articles":[a.to_dict() for a in articles]}
+    data={"metadata":{"scraped_at":datetime.now().isoformat(),"total_articles":len(articles),"system":"GCC Think Tank Scraper v2.3"},"articles":[a.to_dict() for a in articles]}
     with open(filepath,"w",encoding="utf-8") as f:json.dump(data,f,ensure_ascii=False,indent=2)
     log.info(f"💾 JSON 数据已保存: {filepath}");return filepath
 
@@ -705,11 +916,34 @@ def batch_translate_titles(articles, api_key=None):
     print(f"  ✅ 已翻译 {translated}/{len(need)} 个标题")
     return articles
 
+def _backfill_dates_from_analysis(all_analyses: list, articles: list):
+    """
+    从 AI 生成的分析文本里提取「发布日期」，回填到 articles 中
+    日期为 None 或空字符串的条目。仅接受含四位年份的日期字符串。
+    """
+    full_text = "\n\n".join(all_analyses)
+    # 匹配 ### [N] 开头的块，捕获到下一个 ### [N] 或文末
+    for block_m in re.finditer(r'###\s*\[(\d+)\][^\n]*\n((?:(?!###\s*\[).)+)', full_text, re.DOTALL):
+        idx = int(block_m.group(1)) - 1  # 转为 0-based
+        block = block_m.group(2)
+        date_m = re.search(r'\|\s*\*\*发布日期\*\*\s*\|\s*([^|\n]+?)\s*\|', block)
+        if not date_m:
+            continue
+        date_str = date_m.group(1).strip()
+        # 只接受含年份（4位数字）、且不是占位词的日期
+        if (re.search(r'\d{4}', date_str)
+                and date_str not in ('未知', '日期不详', '-', '不详', '未提供', 'N/A', 'n/a')):
+            if 0 <= idx < len(articles) and not articles[idx].date:
+                normalized = normalize_date(date_str)
+                if normalized:
+                    articles[idx].date = normalized
+                    log.debug(f"  📅 回填日期 [{idx+1}]: {normalized}")
+
 def generate_ai_summary(articles, api_key=None):
     """
     分三步生成结构化研究简报：
-      1. 本地构建目录（带锚点超链接）
-      2. 分批调用 AI，每批 10 篇完整解析（解决 token 超限问题）
+      1. 分批调用 AI，每批 10 篇完整解析（解决 token 超限问题）
+      2. 从 AI 输出回填缺失的发布日期，再本地构建目录（带锚点超链接）
       3. 一次额外调用生成跨文章趋势信号
     """
     ready, key = check_ai_ready(api_key)
@@ -725,26 +959,20 @@ def generate_ai_summary(articles, api_key=None):
     client = ai_client.create_client(key)
     BATCH_SIZE = 10  # 每批 10 篇，8000 token 足够覆盖全部字段
 
+    # ── 预处理：按日期降序排列，有日期的在前，日期未知的在后 ──────────
+    def _date_sort_key(a):
+        d = a.date or ""
+        # (1, date_str) 表示有日期，(0, "") 表示无日期
+        # reverse=True 时：有日期 > 无日期，较新日期 > 较旧日期
+        if re.match(r'\d{4}-\d{2}-\d{2}', d): return (1, d)
+        if re.match(r'\d{4}-\d{2}', d):        return (1, d + "-99")
+        if re.match(r'\d{4}', d):               return (1, d[:4] + "-99-99")
+        return (0, "")  # 无日期排最后
+    articles = sorted(articles, key=_date_sort_key, reverse=True)
+
     print(f"\n🤖 正在生成结构化研究简报（{n} 篇文章，分 {(n + BATCH_SIZE - 1) // BATCH_SIZE} 批，{ai_client.provider_info()}）...")
 
-    # ── 第一步：本地生成带锚点的文章目录 ────────────────────────────
-    toc_lines = []
-    for i, a in enumerate(articles, 1):
-        title_display = a.title_cn or a.title
-        date_str = a.date or "日期未知"
-        toc_lines.append(f"{i}. [{title_display}](#article-{i}) — {a.source} · {date_str}")
-
-    header = (
-        f"# GCC研究动态内部简报\n\n"
-        f"> **生成时间**：{now_str} &nbsp;|&nbsp; **收录文章**：{n} 篇 &nbsp;|&nbsp; 成都创新金融研究院\n\n"
-        "---\n\n"
-        "## 一、文章目录\n\n"
-        + "\n".join(toc_lines)
-        + "\n\n---\n\n"
-        "## 二、逐篇内容解析\n\n"
-    )
-
-    # ── 第二步：分批调用 AI ──────────────────────────────────────────
+    # ── 第一步：分批调用 AI ──────────────────────────────────────────
     all_analyses: list[str] = []
     total_batches = (n + BATCH_SIZE - 1) // BATCH_SIZE
 
@@ -758,7 +986,7 @@ def generate_ai_summary(articles, api_key=None):
             abs_idx = start + j
             cn_note = f"（中文：{a.title_cn}）" if a.title_cn else ""
             articles_input += f"{abs_idx}. {a.title}{cn_note}\n"
-            articles_input += f"   来源：{a.source}（{a.source_country}）| 日期：{a.date or '未知'}\n"
+            articles_input += f"   来源：{a.source}（{a.source_country}）| 日期：{a.date or '待推断'}\n"
             articles_input += f"   链接：{a.url}\n"
             if a.snippet:
                 articles_input += f"   摘要：{a.snippet[:400]}\n"
@@ -774,6 +1002,7 @@ def generate_ai_summary(articles, api_key=None):
 3. "对华关联"若无明显关联，写"暂无直接关联线索，但可关注……（补充潜在联系）"
 4. "关键数据或事件"若无具体数字，写"原文未提供具体数据"
 5. 必须覆盖全部 {len(batch)} 篇，严禁合并或省略任何一篇
+6. 发布日期：优先使用已提供日期；若标注"待推断"，请从URL路径（如/2024/03/）、摘要或标题中推断，确实无法判断则填"日期不详"
 
 ## 每篇输出格式（严格执行，字段顺序不变）
 
@@ -784,7 +1013,7 @@ def generate_ai_summary(articles, api_key=None):
 |------|------|
 | **原标题** | {{英文原标题}} |
 | **来源平台** | {{智库名称（国家/地区）}} |
-| **发布日期** | {{日期}} |
+| **发布日期** | {{日期，格式尽量为YYYY-MM-DD或YYYY-MM，确实不明则填"日期不详"}} |
 | **原文链接** | [查看原文]({{URL}}) |
 
 **核心议题**
@@ -823,6 +1052,25 @@ def generate_ai_summary(articles, api_key=None):
                 )
             all_analyses.append("\n\n".join(placeholder_lines))
         time.sleep(0.5)
+
+    # ── 第二步：从 AI 输出回填缺失日期，再生成目录 ───────────────────
+    _backfill_dates_from_analysis(all_analyses, articles)
+
+    toc_lines = []
+    for i, a in enumerate(articles, 1):
+        title_display = a.title_cn or a.title
+        date_str = a.date or "日期不详"
+        toc_lines.append(f"{i}. [{title_display}](#article-{i}) — {a.source} · {date_str}")
+
+    header = (
+        f"# GCC研究动态内部简报\n\n"
+        f"> **生成时间**：{now_str} &nbsp;|&nbsp; **收录文章**：{n} 篇 &nbsp;|&nbsp; 成都创新金融研究院\n\n"
+        "---\n\n"
+        "## 一、文章目录\n\n"
+        + "\n".join(toc_lines)
+        + "\n\n---\n\n"
+        "## 二、逐篇内容解析\n\n"
+    )
 
     # ── 第三步：生成趋势信号 ─────────────────────────────────────────
     print(f"  📊 生成跨文章趋势信号...")
@@ -933,15 +1181,18 @@ def export_summary_pdf(summary_text: str, filepath: str) -> str:
     def _with_links(text: str) -> str:
         """
         将 Markdown 链接 [label](url_or_#anchor) 转为 reportlab XML <a> 标签。
-        非链接部分做 XML 转义，链接部分内容也做转义。
-        最后再处理 **粗体**。
+        非链接部分做 XML 转义，href 属性中的 & < > 也单独转义（防止 XML 格式错误）。
         """
         parts = []
         last = 0
         for m in re.finditer(r'\[([^\]]+)\]\(\s*([^)]+?)\s*\)', text):
             before = _esc(text[last:m.start()])
             label  = _esc(m.group(1))
-            href   = m.group(2).strip()
+            # URL 里 & 必须转为 &amp;，否则 XML 非法 → reportlab 中途崩溃 → 文件损坏
+            href   = (m.group(2).strip()
+                      .replace("&", "&amp;")
+                      .replace("<", "&lt;")
+                      .replace(">", "&gt;"))
             parts.append(before)
             parts.append(f'<a href="{href}" color="{C_LINK.hexval()}">'
                          f'<u>{label}</u></a>')
@@ -990,7 +1241,7 @@ def export_summary_pdf(summary_text: str, filepath: str) -> str:
         tbl_data = []
         for ri, row in enumerate(padded):
             tbl_data.append([
-                Paragraph(_with_links(_plain(c)), s_cell) for c in row
+                Paragraph(_with_links(c), s_cell) for c in row  # 保留链接，不预先调 _plain
             ])
         tbl = Table(tbl_data, colWidths=col_ws, repeatRows=1, hAlign='LEFT')
         tbl.setStyle(TableStyle([
@@ -1116,29 +1367,38 @@ def export_summary_pdf(summary_text: str, filepath: str) -> str:
                 clean.append(item)
         return clean
 
+    import os as _os
     try:
         doc.build(story)
         log.info(f"📄 PDF 简报已保存: {filepath}")
         return filepath
     except Exception as e:
-        if "destination" in str(e).lower() or "format not resolved" in str(e).lower():
-            log.warning(f"⚠️  PDF 内部链接解析失败，降级为纯文本模式重试: {e}")
+        # 任何异常都可能导致文件半写损坏，先删除残留文件
+        log.warning(f"⚠️  PDF 首次生成失败（{e}），降级为纯文本链接模式重试...")
+        try:
+            if _os.path.exists(filepath):
+                _os.remove(filepath)
+        except OSError:
+            pass
+        try:
+            doc2 = SimpleDocTemplate(
+                filepath, pagesize=A4,
+                leftMargin=2.5 * cm, rightMargin=2.5 * cm,
+                topMargin=2.5 * cm, bottomMargin=2.5 * cm,
+                title="GCC研究动态内部简报",
+                author="成都创新金融研究院",
+            )
+            doc2.build(_strip_pdf_links(story))
+            log.info(f"📄 PDF 简报已保存（纯文本链接模式）: {filepath}")
+            return filepath
+        except Exception as e2:
             try:
-                doc2 = SimpleDocTemplate(
-                    filepath, pagesize=A4,
-                    leftMargin=2.5 * cm, rightMargin=2.5 * cm,
-                    topMargin=2.5 * cm, bottomMargin=2.5 * cm,
-                    title="GCC研究动态内部简报",
-                    author="成都创新金融研究院",
-                )
-                doc2.build(_strip_pdf_links(story))
-                log.info(f"📄 PDF 简报已保存（纯文本模式）: {filepath}")
-                return filepath
-            except Exception as e2:
-                log.error(f"❌ PDF 生成失败: {e2}")
-                return ""
-        log.error(f"❌ PDF 生成失败: {e}")
-        return ""
+                if _os.path.exists(filepath):
+                    _os.remove(filepath)
+            except OSError:
+                pass
+            log.error(f"❌ PDF 生成彻底失败: {e2}")
+            return ""
 
 if __name__ == "__main__":
     import argparse
@@ -1154,6 +1414,10 @@ if __name__ == "__main__":
     parser.add_argument("--dedup-days", type=int, default=1,
                         help="去重时间窗口（天），只过滤该天数内已处理的文章，默认1天。"
                              "0=关闭去重效果，None效果同--no-dedup")
+    parser.add_argument("--days", type=int, default=30,
+                        help="只收录近 N 天内发布的文章（默认30天；常用值：3/10/30；0=不限）")
+    parser.add_argument("--keep-undated", action="store_true",
+                        help="保留无发布日期的文章（默认过滤，用于调试）")
     parser.add_argument("--debug", action="store_true", help="调试日志")
     args = parser.parse_args()
 
@@ -1184,6 +1448,8 @@ if __name__ == "__main__":
         max_per_tank=args.max_per_tank,
         dedup_db=dedup_db,
         dedup_days=args.dedup_days,
+        filter_undated=not args.keep_undated,
+        max_age_days=args.days,
     )
     scrape_sec = time.time() - t_scrape
 

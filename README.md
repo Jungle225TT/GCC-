@@ -1,8 +1,8 @@
-# GCC智库研究抓取系统 v2.1
+# GCC智库研究抓取系统 v2.3
 
-> 成都创新金融研究院 — 姜亭汀 | 更新于 2026-04-17
+> 成都创新金融研究院 — 姜亭汀 | 更新于 2026-04-22
 
-自动抓取 21 个 GCC / 泛MENA 智库的最新研究文章，经四层漏斗筛选后输出 Markdown 报告、JSON 数据，并可选推送至飞书多维表格。
+自动抓取 21 个 GCC / 泛MENA 智库的最新研究文章，经四层漏斗筛选后输出 Markdown 报告、JSON 数据、AI 研究简报 PDF，并可选推送至飞书多维表格。
 
 ---
 
@@ -33,7 +33,8 @@ GccScraper/
 ├── output/                       # 主脚本输出目录（自动创建）
 │   ├── gcc_research_YYYYMMDD_HHMM.md
 │   ├── gcc_research_YYYYMMDD_HHMM.json
-│   └── gcc_summary_YYYYMMDD_HHMM.md   # 仅 --ai 模式生成
+│   ├── gcc_summary_YYYYMMDD_HHMM.md    # 仅 --ai 模式生成
+│   └── gcc_summary_YYYYMMDD_HHMM.pdf   # 仅 --ai 模式生成
 └── output_fulltext/              # 全文PDF输出目录（自动创建）
 ```
 
@@ -63,7 +64,7 @@ pip install requests beautifulsoup4
 pip install feedparser
 ```
 
-**JS 渲染**（SPA 网站必须，如 EPC、Future Center）：
+**JS 渲染**（SPA 网站必须，如 Carnegie MEC、EPC、Future Center）：
 
 ```bash
 pip install playwright
@@ -74,6 +75,12 @@ playwright install chromium
 
 ```bash
 pip install anthropic
+```
+
+**AI 研究简报 PDF 生成**（`--ai` 模式输出 PDF 需要）：
+
+```bash
+pip install reportlab
 ```
 
 **全文PDF生成**（仅 fulltext_to_pdf.py 需要）：
@@ -91,7 +98,7 @@ pip install python-dotenv
 **一键安装全部依赖**：
 
 ```bash
-pip install requests beautifulsoup4 feedparser playwright anthropic trafilatura reportlab python-dotenv
+pip install requests beautifulsoup4 feedparser playwright anthropic reportlab trafilatura python-dotenv
 playwright install chromium
 ```
 
@@ -116,10 +123,12 @@ echo 'ANTHROPIC_API_KEY=sk-ant-xxxxx...' > .env
 ### 功能
 
 - 抓取 21 个智库的最新研究文章（HTML + RSS 双通道）
+- 深层专题页直接抓取（Carnegie GCC 专题、Al Sharq 国家标签、Arab Reform 国家标签）
 - 四层漏斗筛选（来源可信度 → 关键词评分 → 内容类型 → AI辅助）
+- 日期标准化：统一输出 `YYYY-MM-DD` 格式，自动过滤无日期文章（机构介绍页兜底）
+- 时效过滤：只收录近 N 天的文章，默认 30 天
 - SQLite 增量去重（自动跳过上次已处理的文章）
-- 可选：Claude Haiku 边界文章分类、标题批量翻译、Claude Sonnet 研究简报生成
-- 输出 Markdown 报告 + JSON 数据
+- 可选：Claude Haiku 边界文章分类、标题批量翻译、Claude Sonnet 研究简报（输出 MD + PDF）
 
 ### 运行方式
 
@@ -129,7 +138,7 @@ echo 'ANTHROPIC_API_KEY=sk-ant-xxxxx...' > .env
 python gcc_thinktank_scraper_v2.py
 ```
 
-仅用 requests 抓取，不调用 AI，结果写入 `./output/`。
+仅用 requests 抓取，不调用 AI，默认收录近 30 天文章，结果写入 `./output/`。
 
 ---
 
@@ -140,12 +149,30 @@ export ANTHROPIC_API_KEY="sk-ant-xxxxx..."
 python gcc_thinktank_scraper_v2.py --playwright --ai
 ```
 
-- `--playwright`：启用 Chromium 渲染 JS 页面，覆盖更多智库
-- `--ai`：启用 Claude Haiku 边界文章分类 + 标题翻译 + Claude Sonnet 研究简报
+- `--playwright`：启用 Chromium 渲染 JS 页面（Carnegie MEC 等 SPA 站点必须）
+- `--ai`：启用 Claude Haiku 边界文章分类 + 标题翻译 + Claude Sonnet 研究简报（输出 MD + PDF）
 
 ---
 
-**③ 只抓特定国家**
+**③ 控制时效：只收最近 N 天**
+
+```bash
+# 只收近 3 天（日报场景）
+python gcc_thinktank_scraper_v2.py --ai --playwright --days 3
+
+# 只收近 10 天（周报场景）
+python gcc_thinktank_scraper_v2.py --ai --playwright --days 10
+
+# 近 30 天（默认值，月报场景）
+python gcc_thinktank_scraper_v2.py --ai --playwright
+
+# 不限时效（全量历史）
+python gcc_thinktank_scraper_v2.py --ai --days 0
+```
+
+---
+
+**④ 只抓特定国家**
 
 ```bash
 # 只抓 UAE 和沙特
@@ -155,11 +182,11 @@ python gcc_thinktank_scraper_v2.py --countries UAE "Saudi Arabia" --playwright -
 python gcc_thinktank_scraper_v2.py --countries Qatar
 ```
 
-`--countries` 支持多个值，用空格分隔，国家名需与 THINK_TANKS 配置中的 `country` 字段一致。
+`--countries` 支持多个值，用空格分隔，国家名需与 `THINK_TANKS` 配置中的 `country` 字段一致。
 
 ---
 
-**④ 控制每站抓取量**
+**⑤ 控制每站抓取量**
 
 ```bash
 # 精读模式：每站最多 20 篇
@@ -173,22 +200,16 @@ python gcc_thinktank_scraper_v2.py --max-per-tank 100
 
 ---
 
-**⑤ 调试模式**
-
-```bash
-# 显示每个候选条目（标题、URL、被过滤原因）
-python gcc_thinktank_scraper_v2.py --countries UAE --playwright --debug
-```
-
----
-
 **⑥ 增量去重**
 
 首次运行会自动创建 `gcc_dedup.db`，此后每次运行自动跳过已处理文章：
 
 ```bash
-# 正常运行（默认启用去重）
+# 正常运行（默认启用去重，1 天窗口）
 python gcc_thinktank_scraper_v2.py --ai --playwright
+
+# 扩大去重窗口至 7 天（防止一周内重复推送）
+python gcc_thinktank_scraper_v2.py --dedup-days 7
 
 # 禁用去重（每次全量处理）
 python gcc_thinktank_scraper_v2.py --no-dedup
@@ -197,18 +218,35 @@ python gcc_thinktank_scraper_v2.py --no-dedup
 python gcc_thinktank_scraper_v2.py --dedup-db /path/to/custom.db
 ```
 
+---
+
+**⑦ 调试模式**
+
+```bash
+# 显示每个候选条目（标题、URL、被过滤原因）
+python gcc_thinktank_scraper_v2.py --countries UAE --playwright --debug
+
+# 保留无日期文章（查看被无日期过滤器拦截的内容）
+python gcc_thinktank_scraper_v2.py --keep-undated --debug
+```
+
+---
+
 ### 参数说明
 
 | 参数 | 默认值 | 说明 |
 |------|--------|------|
+| `--days` | `30` | 只收录近 N 天内发布的文章；常用值：`3`（日报）、`10`（周报）、`30`（月报）；`0` = 不限时效 |
 | `--countries` | 全部 | 只抓指定国家，可多个（空格分隔） |
-| `--playwright` | 关闭 | 启用 Chromium JS 渲染 |
-| `--ai` | 关闭 | 启用 AI 筛选 + 翻译 + 研究简报 |
+| `--playwright` | 关闭 | 启用 Chromium JS 渲染（Carnegie MEC 等 SPA 站点必须） |
+| `--ai` | 关闭 | 启用 AI 筛选 + 翻译 + 研究简报（输出 MD + PDF） |
 | `--api-key` | 读环境变量 | Anthropic API Key（建议用环境变量代替） |
 | `--output-dir` | `./output` | 输出目录 |
-| `--max-per-tank` | 50 | 每个智库最多保留篇数 |
+| `--max-per-tank` | `50` | 每个智库最多保留篇数 |
 | `--no-dedup` | 关闭 | 禁用 SQLite 增量去重 |
 | `--dedup-db` | `gcc_dedup.db` | 去重数据库路径 |
+| `--dedup-days` | `1` | 去重时间窗口（天）；`0` = 关闭去重效果 |
+| `--keep-undated` | 关闭 | 保留无发布日期的文章（默认过滤，用于调试） |
 | `--debug` | 关闭 | 显示调试日志 |
 
 ### 输出文件
@@ -219,7 +257,8 @@ python gcc_thinktank_scraper_v2.py --dedup-db /path/to/custom.db
 |------|------|
 | `gcc_research_YYYYMMDD_HHMM.md` | Markdown 报告，按优先级（⭐/📄/📋）分组 |
 | `gcc_research_YYYYMMDD_HHMM.json` | 完整数据，可导入飞书/Notion |
-| `gcc_summary_YYYYMMDD_HHMM.md` | AI 研究简报（仅 `--ai` 模式） |
+| `gcc_summary_YYYYMMDD_HHMM.md` | AI 结构化研究简报，含目录+逐篇解析+趋势信号（仅 `--ai`） |
+| `gcc_summary_YYYYMMDD_HHMM.pdf` | 同上，排版后的 PDF 版本，可直接分发（仅 `--ai`，需 `reportlab`） |
 
 ---
 
@@ -246,7 +285,7 @@ python scoring_test.py
 **② 指定实际抓取数据**
 
 ```bash
-python scoring_test.py --json output/gcc_research_20260417_1000.json
+python scoring_test.py --json output/gcc_research_20260422_1000.json
 ```
 
 额外显示各智库实际文章数分布，以及泛MENA文章的具体评分。
@@ -297,7 +336,6 @@ TITLE_MULTIPLIER = 2      # 标题命中得分翻倍
 **方式一：.env 文件（推荐）**
 
 ```bash
-# 创建 .env 文件（已加入 .gitignore，不会被提交）
 cat > .env << 'EOF'
 FEISHU_APP_ID=cli_xxxxx
 FEISHU_APP_SECRET=xxxxx
@@ -320,7 +358,7 @@ export FEISHU_TABLE_ID="tblxxxxx"
 **① 同步指定 JSON 文件**
 
 ```bash
-python feishu_sync.py output/gcc_research_20260417_1000.json
+python feishu_sync.py output/gcc_research_20260422_1000.json
 ```
 
 **② 通配符同步多个文件**
@@ -346,7 +384,7 @@ python gcc_thinktank_scraper_v2.py --ai --playwright && python feishu_sync.py
 
 | 字段名 | 类型 | 说明 |
 |--------|------|------|
-| 发布日期 | 文本 | 文章发布日期 |
+| 发布日期 | 文本 | 文章发布日期（YYYY-MM-DD 格式） |
 | 平台 | 文本 | 智库名称 |
 | 标题 | 文本 | 英文原标题 |
 | 中文标题 | 文本 | Claude 翻译（需 --ai） |
@@ -461,41 +499,50 @@ python fulltext_to_pdf.py --site kapsarc --debug
 原始文章（HTML / RSS）
         │
         ▼
-┌─────────────────────────────────┐
-│  第一层：来源可信度              │
-│  core_gcc 智库 → 直接通过（99分）│
-│  pan_mena 智库 → 进入第二层      │
-└──────────────┬──────────────────┘
+┌─────────────────────────────────────┐
+│  第一层：来源可信度                  │
+│  core_gcc 智库 → 直接通过（99分）   │
+│  deep_topic 专题页 → 自动通过（5分）│  ← v2.3 新增
+│  pan_mena 智库 → 进入第二层         │
+└──────────────┬──────────────────────┘
                ▼
-┌─────────────────────────────────┐
-│  第二层：关键词评分              │
-│  GCC / 海合会 = 3分             │
-│  国家名（UAE/Saudi...）= 2分    │
-│  Gulf / MENA / 中东 = 1分      │
-│  标题命中 ×2                    │
-│  总分 ≥ 3 → 通过                │
-└──────────────┬──────────────────┘
+┌─────────────────────────────────────┐
+│  第二层：关键词评分                  │
+│  GCC / 海合会 = 3分                │
+│  国家名（UAE/Saudi...）= 2分       │
+│  Gulf / MENA / 中东 = 1分         │
+│  标题命中 ×2                       │
+│  总分 ≥ 3 → 通过                   │
+└──────────────┬──────────────────────┘
                ▼
-┌─────────────────────────────────┐
-│  第三层：内容类型识别            │
-│  排除：Register / Vacancy...    │
-│  高价值：report / analysis → ⭐  │
-│  中价值：blog / opinion → 📄    │
-│  低价值：newsletter → 📋        │
-└──────────────┬──────────────────┘
+┌─────────────────────────────────────┐
+│  第三层：内容类型识别                │
+│  排除：Register / Vacancy / 招聘... │
+│  高价值：report / analysis → ⭐     │
+│  中价值：blog / opinion → 📄       │
+│  低价值：newsletter → 📋           │
+└──────────────┬──────────────────────┘
                ▼
-┌─────────────────────────────────┐
-│  第四层：AI 辅助（可选）         │
-│  评分 2–4 的边界文章             │
-│  → Claude Haiku 快速二分类      │
-└──────────────┬──────────────────┘
+┌─────────────────────────────────────┐
+│  第四层：AI 辅助（可选）             │
+│  评分 2–4 的边界文章                │
+│  → Claude Haiku 快速二分类          │
+└──────────────┬──────────────────────┘
                ▼
-          最终文章列表
+┌─────────────────────────────────────┐
+│  后处理过滤                          │
+│  无日期文章 → 过滤（机构页兜底）     │  ← v2.3 新增
+│  超出时效窗口 → 过滤（--days 控制）  │  ← v2.3 新增
+└──────────────┬──────────────────────┘
+               ▼
+          最终文章列表（按发布日期降序）
 ```
 
-### 增量去重机制
+### deep_topic 深层专题页机制
 
-每次运行在翻译/导出前自动过滤：
+对 Carnegie MEC、Al Sharq Forum、Arab Reform Initiative 三个泛MENA站点，v2.3 改为直接抓取各智库自己整理好的 GCC 国别专题页和标签页（如 `/regions/saudi-arabia`、`/tag/gcc/`），跳过首页随机内容。从这些专题页抓到的文章默认通过来源可信度关卡（得 5 分），不再走关键词评分，大幅提升召回率。
+
+### 增量去重机制
 
 ```
 抓取结果
@@ -513,6 +560,18 @@ python fulltext_to_pdf.py --site kapsarc --debug
 - 可用 `--no-dedup` 跳过（全量重处理）
 - 飞书同步有**独立的飞书层去重**，两层去重互不干扰
 
+### 日期标准化
+
+所有来源的日期统一为 `YYYY-MM-DD` 格式（或 `YYYY-MM` / `YYYY`）：
+
+| 原始格式 | 标准化后 |
+|---------|---------|
+| `April 22, 2026` / `22 Apr 2026` | `2026-04-22` |
+| `2024-03-15T10:30:00Z` | `2024-03-15` |
+| `March 2025` | `2025-03` |
+| `15/03/2024` | `2024-03-15` |
+| 无法解析 | `None`（触发无日期过滤） |
+
 ### 数据流
 
 ```
@@ -520,7 +579,8 @@ gcc_thinktank_scraper_v2.py
         │
         ├─ output/gcc_research_*.json  ──→  feishu_sync.py  ──→  飞书多维表格
         ├─ output/gcc_research_*.md    ──→  直接阅读 / 分发
-        └─ output/gcc_summary_*.md     ──→  研究团队内部简报
+        ├─ output/gcc_summary_*.md     ──→  研究团队内部简报
+        └─ output/gcc_summary_*.pdf    ──→  可直接分发的 PDF 简报
 ```
 
 ### 覆盖的智库（21 个）
@@ -535,15 +595,16 @@ gcc_thinktank_scraper_v2.py
 | 🇰🇼 科威特 | API, KISR |
 | 🇧🇭 巴林 | Derasat |
 | 🇴🇲 阿曼 | Tawasul |
+| 🇺🇸 美国 | AGSIW（Arab Gulf States Institute in Washington）|
 
-**泛 MENA 智库（4个，需关键词评分 ≥ 3）**
+**泛 MENA 智库（4个，GCC 专题页直接通过 / 首页需关键词评分 ≥ 3）**
 
-| 国家 | 智库 |
-|------|------|
-| 🇱🇧 黎巴嫩 | Carnegie Middle East Center |
-| 🇪🇬 埃及 | Al-Ahram Center |
-| 🇹🇷 土耳其 | Al Sharq Forum |
-| 🇫🇷 法国 | Arab Reform Initiative |
+| 国家 | 智库 | 抓取方式 |
+|------|------|---------|
+| 🇱🇧 黎巴嫩 | Carnegie Middle East Center | deep_topic 专题页（需 Playwright） |
+| 🇪🇬 埃及 | Al-Ahram Center | 首页 + 关键词评分 |
+| 🇹🇷 土耳其 | Al Sharq Forum | deep_topic 国别标签页 |
+| 🇫🇷 法国 | Arab Reform Initiative | deep_topic 国别标签页 |
 
 ---
 
@@ -555,9 +616,9 @@ gcc_thinktank_scraper_v2.py
 # 编辑 crontab
 crontab -e
 
-# 每天早上 8 点运行全量抓取 + 飞书同步
+# 每天早上 8 点运行全量抓取（近30天）+ 飞书同步
 0 8 * * * cd /path/to/GccScraper && \
-    /usr/bin/python3 gcc_thinktank_scraper_v2.py --playwright --ai >> logs/scraper.log 2>&1 && \
+    /usr/bin/python3 gcc_thinktank_scraper_v2.py --playwright --ai --days 30 >> logs/scraper.log 2>&1 && \
     /usr/bin/python3 feishu_sync.py >> logs/feishu.log 2>&1
 ```
 
@@ -585,9 +646,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install requests beautifulsoup4 feedparser playwright anthropic python-dotenv
+      - run: pip install requests beautifulsoup4 feedparser playwright anthropic reportlab python-dotenv
       - run: playwright install chromium
-      - run: python gcc_thinktank_scraper_v2.py --playwright --ai
+      - run: python gcc_thinktank_scraper_v2.py --playwright --ai --days 30
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       - run: python feishu_sync.py
@@ -617,6 +678,26 @@ python gcc_thinktank_scraper_v2.py --countries UAE --debug
 - 如果看到 `requests 失败`，通常是 JS 渲染问题 → 加 `--playwright`
 - 如果看到大量 `❌ 排除` 或 `⏭️ 评分不足`，说明筛选过严 → 考虑降低阈值或检查选择器
 
+### Q：结果都是 0 篇，显示"时效过滤"移除了很多？
+
+默认只收录近 30 天的文章。如需收录更早的内容：
+
+```bash
+# 扩大至近 90 天
+python gcc_thinktank_scraper_v2.py --days 90
+
+# 不限时效
+python gcc_thinktank_scraper_v2.py --days 0
+```
+
+### Q：结果包含机构介绍页或无日期文章？
+
+v2.3 默认开启无日期过滤（机构介绍页通常没有发布日期）。如需调试查看被过滤的内容：
+
+```bash
+python gcc_thinktank_scraper_v2.py --keep-undated --debug
+```
+
 ### Q：如何添加新智库？
 
 在 `THINK_TANKS` 列表中新增一项，用浏览器 F12 找到文章卡片的 CSS 选择器：
@@ -629,6 +710,9 @@ python gcc_thinktank_scraper_v2.py --countries UAE --debug
     "base_url": "https://example.com",
     "pages": ["/publications/"],
     "rss_feeds": ["https://example.com/feed/"],  # 有RSS优先用RSS
+    # 以下两个字段仅用于泛MENA站点的深层专题页（可选）：
+    # "deep_topic": True,               # 从专题页抓取，跳过关键词评分
+    # "use_playwright": True,           # SPA 站点需要 JS 渲染
     "selectors": {
         "article": "article, .card",     # 文章卡片容器
         "title": "h2 a, h3 a",           # 标题链接
@@ -680,7 +764,7 @@ python gcc_thinktank_scraper_v2.py --ai
 # 方案2：本次跳过去重，不影响数据库（推荐）
 python gcc_thinktank_scraper_v2.py --no-dedup --ai
 
-# 方案3：彻底关闭去重窗口（每次都全量处理）
+# 方案3：关闭去重窗口（每次都全量处理）
 python gcc_thinktank_scraper_v2.py --dedup-days 0 --ai
 ```
 
@@ -717,3 +801,11 @@ python fulltext_to_pdf.py --site ajcs --playwright
 ```
 
 若某篇文章正文仍为空，说明该网站需要登录或有反爬，目前无解。
+
+### Q：PDF 打不开或损坏？
+
+v2.3 已修复 URL 中 `&` 字符导致的 XML 格式错误（会使 reportlab 写出损坏文件）。如仍遇到问题：
+
+1. 确认 `reportlab` 版本 ≥ 3.6：`pip install --upgrade reportlab`
+2. 检查运行日志，若有 `⚠️ PDF 首次生成失败，降级重试` 提示，降级模式下链接不可点击但 PDF 可正常打开
+3. 删除损坏的 PDF 文件后重新运行

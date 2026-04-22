@@ -1,0 +1,621 @@
+{
+  "metadata": {
+    "scraped_at": "2026-04-22T10:11:57.878938",
+    "total_articles": 34,
+    "system": "GCC Think Tank Scraper v2.3"
+  },
+  "articles": [
+    {
+      "title": "When War and Peace Are Just Means, the End Signifies Nothing",
+      "url": "https://agsi.org/analysis/when-war-and-peace-are-just-means-the-end-signifies-nothing/",
+      "source": "Arab Gulf States Institute in Washington (AGSIW)",
+      "source_country": "USA",
+      "source_tier": "core_gcc",
+      "date": "2026-04-07",
+      "snippet": "Apr 7, 2026",
+      "title_cn": "当战争与和平仅为手段，结局毫无意义",
+      "keyword_score": 99.0,
+      "content_type": "high",
+      "priority": "priority_read",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "The United States Plus: Gulf States Contemplate Regional Security After Iran War",
+      "url": "https://agsi.org/analysis/the-united-states-plus-gulf-states-contemplate-regional-security-after-iran-war/",
+      "source": "Arab Gulf States Institute in Washington (AGSIW)",
+      "source_country": "USA",
+      "source_tier": "core_gcc",
+      "date": "2026-04-06",
+      "snippet": "Apr 6, 2026",
+      "title_cn": "美国plus：海湾国家考虑后伊朗战争地区安全",
+      "keyword_score": 99.0,
+      "content_type": "high",
+      "priority": "priority_read",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "IRAN IN A WEEK April 9-15, 2026",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/iran-in-a-week/iran-in-a-week-april-9-15-2026/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-16",
+      "snippet": "",
+      "title_cn": "伊朗一周 2026年4月9-15日",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Eroding Trust and the Future of Iran–Gulf Engagement",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/articles/eroding-trust-and-the-future-of-iran-gulf-engagement/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-15",
+      "snippet": "The Iran war has invariably changed the nature of regional dynamics in the Middle East. As Iran’s strategy to diversify the escalation to increase the cost of the war advanced, it severely damaged the progress made in recent years in establishing mechanisms and channels between Iran and the Gulf states to reduce mistrust and skepticism. [&#8230;]",
+      "title_cn": "信任侵蚀与伊朗-海湾接触的未来",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Shock, Adaptation and Resilience: The Global Economic Fallout of the 2026 Hormuz Crisis",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/shock-adaptation-and-resilience-the-global-economic-fallout-of-the-2026-hormuz-crisis/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-15",
+      "snippet": "The economic repercussions of the Iran–US Israel conflict, which erupted on February 28, 2026 and culminated in a fragile ceasefire on&#160; April 8, constitute one of the most severe energy supply shocks in recent history. What began with coordinated US and Israeli strikes on Iranian nuclear facilities, military infrastructure and leadership targets — including the [&#8230;]",
+      "title_cn": "冲击、适应与韧性：2026年霍尔木兹危机的全球经济影响",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Leverage at the Chokepoint: Wartime Power, Peacetime Limits",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/leverage-at-the-chokepoint-wartime-power-peacetime-limits/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-15",
+      "snippet": "The Strait of Hormuz, a narrow corridor only 21 miles wide at its narrowest point, emerged as the epicenter of maritime disruption during the 40-day Iranian conflict in 2026. Following the launch of Operation Epic Fury on February 28, in which US and Israeli forces struck Iranian nuclear and military infrastructure and killed Supreme Leader [&#8230;]",
+      "title_cn": "咽喉要道的杠杆：战时力量与和平限制",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Rasanah’s Monthly Iran Case File: February-March 2026",
+      "url": "https://rasanah-iiis.org/english/news/rasanahs-monthly-iran-case-file-february-march-2026/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-15",
+      "snippet": "The International Institute for Iranian Studies (Rasanah) has released its Iran Case File (ICF) for February and March 2026, offering both general readers and specialists a detailed account of developments during the period under review. The ICF seeks to assess Iran’s internal and external conditions while evaluating the interplay between its various political, economic and [&#8230;]",
+      "title_cn": "Rasanah月度伊朗档案：2026年2-3月",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "IRAN IN A WEEK March April 2-8, 2026",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/iran-in-a-week/iran-in-a-week-march-april-2-8-2026/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-09",
+      "snippet": "",
+      "title_cn": "伊朗一周 2026年3月26日-4月1日",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "US-European Disagreements Over the War in Iran and NATO’s Future",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/us-european-disagreements-over-the-war-in-iran-and-natos-future/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-08",
+      "snippet": "The military confrontation that began on February 28, 2026 between the United States and Israel against Iran is more than a short-lived regional escalation. It represents a turning point that has exposed deeper tensions within the international system, particularly the widening gap between European strategic interests and Washington’s increasingly unilateral approach to decision-making. Following the [&#8230;]",
+      "title_cn": "美欧在伊朗战争与北约未来上的分歧",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "The US-Israel War on Iran: Trajectories and Future Prospects",
+      "url": "https://rasanah-iiis.org/english/position-estimate/the-us-israel-war-on-iran-trajectories-and-future-prospects/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-06",
+      "snippet": "The US-Israel war on Iran, which erupted on February 28, 2026, has evolved from an anticipated rapid military campaign into a protracted war of attrition, with its duration and ultimate outcome increasingly uncertain. This uncertainty is compounded by a degree of ambiguity in the United States’ articulation of the war’s objectives and timeline. At the [&#8230;]",
+      "title_cn": "美以对伊朗战争：轨迹与前景",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "IRAN IN A WEEK March 26-April 1, 2026",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/iran-in-a-week/iran-in-a-week-march-26-april-1-2026/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-02",
+      "snippet": "",
+      "title_cn": "伊朗一周 2026年3月26日-4月1日",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Saudi Arabia as a Stabilizer: Managing the Strait of Hormuz Closure Crisis",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/saudi-arabia-as-a-stabilizer-managing-the-strait-of-hormuz-closure-crisis/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "date": "2026-04-01",
+      "snippet": "In the early hours of March 26, 2026, global trade came to a halt at one of its most critical chokepoints. Following the closure of the Strait of Hormuz against the backdrop of unprecedented military escalation between the United States and Israel on one side and Iran on the other, the global economy was thrust [&#8230;]",
+      "title_cn": "沙特作为稳定器：应对霍尔木兹海峡关闭危机",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Gains and Losses: Assessing the Trajectories of the War on Iran",
+      "url": "http://studies.aljazeera.net/en/policy-briefs/gains-and-losses-assessing-trajectories-war-iran",
+      "source": "Al Jazeera Centre for Studies (AJCS)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "2026-04-08",
+      "snippet": "The three main parties to the conflict—the United States and Israel on one side, and Iran on the other—have achieved certain gains and suffered setbacks, yet none has reached the conclusion that the expected benefits no longer justify the costs involved.",
+      "title_cn": "得失之间：评估对伊朗战争的轨迹",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Escalation Without Exit: Strategic Disorientation and Potential Scenarios in the US–Israeli War on Iran",
+      "url": "http://studies.aljazeera.net/en/analyses/escalation-without-exit-strategic-disorientation-and-potential-scenarios-us%E2%80%93israeli-war",
+      "source": "Al Jazeera Centre for Studies (AJCS)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "2026-04-06",
+      "snippet": "More than a month into the US-Israeli war on Iran, early assumptions of rapid victory have unravelled. Strategic ambiguity, escalation dynamics and resilient Iranian responses point to a protracted conflict with regional spillovers, infrastructure targeting and rising global economic risks, with no clear end-state.",
+      "title_cn": "升级无出路：美以对伊朗战争的战略迷失与潜在场景",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Iran’s Strategic Options: Rethinking Negotiation with America",
+      "url": "http://studies.aljazeera.net/en/analyses/iran%E2%80%99s-strategic-options-rethinking-negotiation-america",
+      "source": "Al Jazeera Centre for Studies (AJCS)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "2026-04-01",
+      "snippet": "Iranian realism rejects reliance on US promises, emphasising deterrence, domestic strength and tangible power. Historical US treaty breaches, unilateral withdrawals, and interventionism justify Iran’s pragmatic strategy: conditional diplomacy, active deterrence and prioritised national security over formal agreements.",
+      "title_cn": "伊朗的战略选择：重新思考与美国谈判",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Secularism and Sacred Narratives: The Contradictions of US Political Rhetoric in the 2026 Iran War",
+      "url": "http://studies.aljazeera.net/en/analyses/secularism-and-sacred-narratives-contradictions-us-political-rhetoric-2026-iran-war",
+      "source": "Al Jazeera Centre for Studies (AJCS)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "2026-03-26",
+      "snippet": "The US presents itself as a secular democracy, yet its wartime rhetoric frequently incorporates moral and religious language. The 2026 US-Israeli war on Iran highlights a structural tension between formal secularism and the practical reliance on religious narratives to justify and sustain military action.",
+      "title_cn": "世俗主义与神圣叙事：2026年伊朗战争中美国政治修辞的矛盾",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "The War No One Can Win: Why Shattering the Iranian Regime Is a Strategic Miscalculation",
+      "url": "http://studies.aljazeera.net/en/analyses/war-no-one-can-win-why-shattering-iranian-regime-strategic-miscalculation",
+      "source": "Al Jazeera Centre for Studies (AJCS)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "2026-03-26",
+      "snippet": "The collapse of the Iranian regime risks catastrophic horizontal war and political collapse, with Israel as the region’s main existential threat. US policies dismantling its own system push the Middle East back into 19th-century power politics, ending the brief ‘Dengist era’ and its connectivity projects.",
+      "title_cn": "无人能赢的战争：粉碎伊朗政权是战略误判",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Digital Activism within the Coptic Community in North America: New Transnational Opportunities or Emerging Threats?",
+      "url": "https://www.dohainstitute.org/en/ResearchAndStudies/Pages/digital-activism-within-the-coptic-community-in-north-america.aspx",
+      "source": "Arab Center for Research and Policy Studies (Doha Institute)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "2026",
+      "snippet": "",
+      "title_cn": "北美科普特社群数字行动主义：跨国机遇还是新兴威胁？",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "The Ceasefire in the War on Iran: Determinants and Prospects",
+      "url": "https://www.dohainstitute.org/en/PoliticalStudies/Pages/the-ceasefire-in-the-war-on-iran-determinants-and-prospects.aspx",
+      "source": "Arab Center for Research and Policy Studies (Doha Institute)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "2026",
+      "snippet": "",
+      "title_cn": "伊朗战争停火：决定因素与前景",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Taiwan: Between China’s Isolation Efforts and US Strategic Ambiguity",
+      "url": "https://www.dohainstitute.org/en/PoliticalStudies/Pages/taiwan-between-dealing-with-chinese-isolation-and-us-strategic-ambiguity.aspx",
+      "source": "Arab Center for Research and Policy Studies (Doha Institute)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "date": "2026",
+      "snippet": "",
+      "title_cn": "台湾：在中国孤立努力与美国战略模糊之间",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "The Non-Financial Benefits of Bahrain’s Demands for Compensation",
+      "url": "https://www.derasat.org.bh/en/the-non-financial-benefits-of-bahrains-demands-for-compensation/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "date": "2026-04-20",
+      "snippet": "The Kingdom of Bahrain’s latest communication with the United Nations Security Council (UNSC) explicitly raises the issue of compensation from Iran for the damage caused by its extrajudicial attacks on the Kingdom. Behind the ostensibly financial motivation for lodging the demands is a more subtle strategy aiming at locking in Iran’s legal liability at an [&#8230;]\n&lt;p&gt;The post The Non-Financial Benefits of Bahrain’s Demands for Compensation first appeared on Derasat.&lt;/p&gt;",
+      "title_cn": "巴林赔偿要求的非财务收益",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Combating Iran’s “Mutually Assured Destruction” Doctrine: Lessons from History",
+      "url": "https://www.derasat.org.bh/en/combating-irans-mutually-assured-destruction-doctrine-lessons-from-history/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "date": "2026-04-16",
+      "snippet": "The principle of mutually assured destruction (MAD) that emerged during the Cold War disincentivized aggression by making adversaries scared that an attack would result in total global annihilation. During the 21st century, Iran has developed an economic version, whereby its response to an existential threat is for it to induce a catastrophic contraction in the [&#8230;]\n&lt;p&gt;The post Combating Iran’s “Mutually Assured Destruction” Doctrine: Lessons from History first appeared on Derasat.&lt",
+      "title_cn": "对抗伊朗“相互确保摧毁”学说：历史教训",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Bahrain’s Cabinet Announces a Timely Economic Support Package",
+      "url": "https://www.derasat.org.bh/en/bahrains-cabinet-announces-a-timely-economic-support-package/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "date": "2026-04-14",
+      "snippet": "Iran’s attacks during the current conflict have created significant economic implications for the Kingdom of Bahrain and the rest of the Gulf Cooperation Council (GCC) countries. Drawing upon the practical lessons learned during Covid-19, on 13th April, Bahrain’s cabinet, led by HRH Crown Prince Salman bin Hamad Al Khalifa, Prime Minister of the Kingdom of [&#8230;]\n&lt;p&gt;The post Bahrain’s Cabinet Announces a Timely Economic Support Package first appeared on Derasat.&lt;/p&gt;",
+      "title_cn": "巴林内阁宣布及时经济支持方案",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Bahrain’s Diplomacy in a Time of Tensions: Strategic Coordination Across Global and Regional Platforms",
+      "url": "https://www.derasat.org.bh/en/bahrains-diplomacy-in-a-time-of-tensions-strategic-coordination-across-global-and-regional-platforms/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "date": "2026-04-14",
+      "snippet": "The current regional tensions and two-week ceasefire deal has underscored a defining transformation in contemporary diplomacy: influence is no longer derived solely from participation in international institutions, but from the ability to shape agendas across interconnected global and regional platforms. In this context, the Kingdom of Bahrain’s leadership across the United Nations Security Council, the [&#8230;]\n&lt;p&gt;The post Bahrain’s Diplomacy in a Time of Tensions: Strategic Coordination",
+      "title_cn": "紧张时期的巴林外交：全球与区域平台的战略协调",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "The End of the Era of Containment and the Reconstruction of the Concept of Collective Security",
+      "url": "https://www.derasat.org.bh/en/the-end-of-the-era-of-containment-and-the-reconstruction-of-the-concept-of-collective-security/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "date": "2026-04-13",
+      "snippet": "The regional order in the Middle East has long relied, to a large extent, on the principle of containment as one of the main tools for preventing crises from escalating. This approach has been evident over the past decades in how various regional tensions have been managed. Although it has achieved relative success in mitigating [&#8230;]\n&lt;p&gt;The post The End of the Era of Containment and the Reconstruction of the Concept of Collective Security first appeared on Derasat.&lt;/p&gt;",
+      "title_cn": "遏制时代终结与集体安全概念重构",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "How the World Trade Organization can help defuse the current US-Israel-Iran conflict",
+      "url": "https://www.derasat.org.bh/en/how-the-world-trade-organization-can-help-defuse-the-current-us-israel-iran-conflict/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "date": "2026-04-13",
+      "snippet": "The fallout from the current US-Israel-Iran war is both global and acute, with immediate consequences for energy markets, trade flows, and economic stability. This creates a clear role for international organizations, such as the World Trade Organization (WTO), to help contain and discipline the economic disruption, even though the ultimate resolution of the conflict rests [&#8230;]\n&lt;p&gt;The post How the World Trade Organization can help defuse the current US-Israel-Iran conflict first appea",
+      "title_cn": "世贸组织如何助解当前美以伊冲突",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "The Importance of IRU-Led Measures to Secure Global Land Corridors Amid Current Developments in the Strait of Hormuz",
+      "url": "https://www.derasat.org.bh/en/the-importance-of-iru-led-measures-to-secure-global-land-corridors-amid-current-developments-in-the-strait-of-hormuz/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "date": "2026-04-12",
+      "snippet": "The current developments involving Iran, Israel, and the United States has already disrupted global trade through the Strait of Hormuz, one of the world’s most critical energy corridors. Iranian actions, including attacks on commercial vessels and restrictions on navigation, have significantly reduced maritime traffic, increased insurance costs, and triggered volatility in global energy markets. This [&#8230;]\n&lt;p&gt;The post The Importance of IRU-Led Measures to Secure Global Land Corridors A",
+      "title_cn": "IRU主导措施确保全球陆路走廊在霍尔木兹海峡局势中的重要性",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Derasat Researchers participate in an EGIC dialogue on current developments",
+      "url": "https://www.derasat.org.bh/en/derasat-researchers-participate-in-an-egic-dialogue-on-current-developments/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "date": "2026-04-12",
+      "snippet": "Researchers from the Bahrain Center for Strategic, International and Energy Studies (Derasat) participated in a dialogue on current developments organized by the Euro-Gulf Information Centre (EGIC). The discussion, titled &#8220;Research and Resilience: A Euro-Gulf Dialogue”, saw participants exchange views on the current regional crisis, emphasizing the importance of dialogue between researchers from Europe and the [&#8230;]\n&lt;p&gt;The post Derasat Researchers participate in an EGIC dialogue ",
+      "title_cn": "Derasat研究员参与EGIC当前局势对话",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Pakistan-Mediated Ceasefire in the Iran-US&Israel War: A Tactical Pause in the Conflict, Not an End",
+      "url": "https://research.sharqforum.org/2026/04/10/pakistan-mediated-ceasefire-in-the-iran-usisrael-war-a-tactical-pause-in-the-conflict-not-an-end/",
+      "source": "Al Sharq Forum",
+      "source_country": "Turkey",
+      "source_tier": "pan_mena",
+      "date": "2026-04-10",
+      "snippet": "With the outbreak of the 2026 February war and the U.S. and Israeli strikes on Iranian territory—which resulted in the killing of Ayatollah Ali Khamenei, Iran’s Supreme Leader, several senior military commanders, and the targeting of military and missile facilities—Iran initially responded not only by attacking Israel but also by striking U.S. bases and [...]",
+      "title_cn": "巴基斯坦斡旋伊朗与美以战争停火：冲突战术暂停而非终结",
+      "keyword_score": 5.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Where Does Russia Stand in the War Imposed on Iran by Israel and the US Duo?",
+      "url": "https://research.sharqforum.org/2026/04/08/where-does-russia-stand-in-the-war-imposed-on-iran-by-israel-and-the-us-duo/",
+      "source": "Al Sharq Forum",
+      "source_country": "Turkey",
+      "source_tier": "pan_mena",
+      "date": "2026-04-08",
+      "snippet": "The US-Israeli military operation against Iran did not catch Russia off guard. According to media sources, Russian intelligence learned in advance of the exact date the military campaign would begin and warned Russian diplomats and Iranian authorities. Specifically, the Russian Embassy in Tehran announced the urgent evacuation of its staff three days before the airstrikes [...]",
+      "title_cn": "俄罗斯在以色列与美国对伊战争中的立场",
+      "keyword_score": 5.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "STEP and the Possibility of a New Regional Bloc in the Middle East",
+      "url": "https://research.sharqforum.org/2026/04/08/step-and-the-us-to-coordinate-for-a-new-regional-security-in-the-gulf/",
+      "source": "Al Sharq Forum",
+      "source_country": "Turkey",
+      "source_tier": "pan_mena",
+      "date": "2026-04-08",
+      "snippet": "The joint US-Israel war on Iran predictably initiated without regional consultation or support from the NATO allies in Europe. The war might have started with the assumption that knocking out the top Iranian leaders would quickly embolden anti-regime forces within Iran, expediting regime change. The main objectives of denuclearization of Iran and destroying Iran’s [...]",
+      "title_cn": "STEP与中东新区域集团的可能性",
+      "keyword_score": 5.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Iraq’s Fatal Dilemma: Axis of Resistance or Regional Integration?",
+      "url": "https://research.sharqforum.org/2026/04/01/iraqs-fatal-dilemma-axis-of-resistance-or-regional-integration/",
+      "source": "Al Sharq Forum",
+      "source_country": "Turkey",
+      "source_tier": "pan_mena",
+      "date": "2026-04-01",
+      "snippet": "The war initiated by the US and Israel on February 28 has not only engulfed Iran and the immediate theaters of conflict; it has also begun to draw in Iraq, one of the region’s most fragile political systems. In a reality where Iran has horizontally escalated the conflict, extending it toward the Gulf states, [...]",
+      "title_cn": "伊拉克的致命困境：抵抗轴心还是区域一体化？",
+      "keyword_score": 5.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Western Sahara in Transition: Geopolitics, Diplomacy, and Uncertain Future",
+      "url": "https://research.sharqforum.org/2026/04/01/western-sahara-in-transition-geopolitics-diplomacy-and-uncertain-future/",
+      "source": "Al Sharq Forum",
+      "source_country": "Turkey",
+      "source_tier": "pan_mena",
+      "date": "2026-04-01",
+      "snippet": "IntroductionThe conflict in Western Sahara has entered a decisive phase following the adoption of UN Security Council Resolution 2797 (2025), which renewed the mandate of the United Nations Mission for the Referendum in Western Sahara (MINURSO)[1] and explicitly reaffirmed that Morocco’s Autonomy Plan constitutes a serious and credible basis for negotiations. This represents a notable [...]",
+      "title_cn": "西撒哈拉的过渡：地缘政治、外交与不确定的未来",
+      "keyword_score": 5.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "AL SHARQ STRATEGIC RESEARCH INTERNSHIP PROGRAM ANNOUNCEMENT",
+      "url": "https://research.sharqforum.org/2026/04/08/al-sharq-strategic-research-internship-program-announcement-2/",
+      "source": "Al Sharq Forum",
+      "source_country": "Turkey",
+      "source_tier": "pan_mena",
+      "date": "2026-04-08",
+      "snippet": "Al Sharq Strategic Research is seeking interns for its internship program, which will start on May 1, 2026. The internship position is for young fellows who have an interest and experience in studying the MENA region. Part-time (3 full working days) and full- time (5 working days) options are available for this position. Internship start [...]",
+      "title_cn": "AL SHARQ战略研究实习项目公告",
+      "keyword_score": 5.0,
+      "content_type": "low",
+      "priority": "low",
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "rss"
+    }
+  ]
+}
