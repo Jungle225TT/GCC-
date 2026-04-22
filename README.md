@@ -11,12 +11,13 @@
 1. [文件结构](#文件结构)
 2. [环境准备](#环境准备)
 3. [主抓取脚本：gcc_thinktank_scraper_v2.py](#主抓取脚本)
-4. [评分阈值测试：scoring_test.py](#评分阈值测试)
-5. [飞书同步：feishu_sync.py](#飞书同步)
-6. [全文转PDF：fulltext_to_pdf.py](#全文转pdf)
-7. [架构说明：四层漏斗 + 增量去重](#架构说明)
-8. [定时任务配置](#定时任务配置)
-9. [常见问题](#常见问题)
+4. [过滤规则配置：filter_rules.yaml](#过滤规则配置)
+5. [评分阈值测试：scoring_test.py](#评分阈值测试)
+6. [飞书同步：feishu_sync.py](#飞书同步)
+7. [全文转PDF：fulltext_to_pdf.py](#全文转pdf)
+8. [架构说明：四层漏斗 + 增量去重](#架构说明)
+9. [定时任务配置](#定时任务配置)
+10. [常见问题](#常见问题)
 
 ---
 
@@ -25,6 +26,8 @@
 ```
 GccScraper/
 ├── gcc_thinktank_scraper_v2.py   # 主抓取脚本（核心）
+├── filter_rules.yaml             # 过滤规则配置（标题黑名单 + URL正则，可直接编辑）
+├── ai_client.py                  # AI接口抽象层（DeepSeek / Anthropic 切换）
 ├── feishu_sync.py                # 将JSON结果推送到飞书多维表格
 ├── fulltext_to_pdf.py            # 全文抓取并输出PDF/HTML（AI训练数据）
 ├── scoring_test.py               # 关键词评分阈值对比测试工具
@@ -93,6 +96,12 @@ pip install reportlab
 pip install trafilatura reportlab
 ```
 
+**外置过滤规则**（`filter_rules.yaml` 需要）：
+
+```bash
+pip install pyyaml
+```
+
 **飞书同步 + .env 支持**（仅 feishu_sync.py 需要）：
 
 ```bash
@@ -102,7 +111,7 @@ pip install python-dotenv
 **一键安装全部依赖**：
 
 ```bash
-pip install requests beautifulsoup4 feedparser playwright openai reportlab trafilatura python-dotenv
+pip install requests beautifulsoup4 feedparser playwright openai reportlab trafilatura pyyaml python-dotenv
 playwright install chromium
 ```
 
@@ -278,6 +287,62 @@ python gcc_thinktank_scraper_v2.py --keep-undated --debug
 | `gcc_research_YYYYMMDD_HHMM.json` | 完整数据，可导入飞书/Notion |
 | `gcc_summary_YYYYMMDD_HHMM.md` | AI 结构化研究简报，含目录+逐篇解析+趋势信号（仅 `--ai`） |
 | `gcc_summary_YYYYMMDD_HHMM.pdf` | 同上，排版后的 PDF 版本，可直接分发（仅 `--ai`，需 `reportlab`） |
+
+---
+
+## 过滤规则配置
+
+**文件：** `filter_rules.yaml`
+
+### 作用
+
+控制 `_is_likely_article()` 函数的判定逻辑，决定哪些链接被认定为"导航/介绍页"而丢弃。包含两个规则集：
+
+| 规则集 | 匹配方式 | 用途 |
+|--------|---------|------|
+| `nav_exact` | 标题精确匹配（大小写不敏感） | 过滤导航词、机构全称、栏目名等 |
+| `nav_url_patterns` | URL 正则匹配（Python `re.search`） | 过滤分类页、成员页、活动页、部门页等 |
+
+### 加载机制
+
+脚本启动时自动读取同目录下的 `filter_rules.yaml`（需安装 `pyyaml`）：
+
+- **文件存在且 pyyaml 已装**：加载 YAML，启动日志输出规则数量
+- **文件不存在**：静默使用代码内置默认值（与 YAML 内容保持同步）
+- **pyyaml 未安装**：打印警告，使用内置默认值
+
+```
+📋 过滤规则已加载：130 条精确匹配，35 条 URL 模式
+```
+
+### 编辑方法
+
+直接打开 `filter_rules.yaml`，在对应列表下追加或删除条目，保存后下次运行即生效，**无需改动 Python 代码**。
+
+**添加标题黑名单（nav_exact）：**
+
+```yaml
+nav_exact:
+  - publications          # 已有条目
+  - my new nav term       # 新增：直接追加
+```
+
+**添加 URL 正则黑名单（nav_url_patterns）：**
+
+```yaml
+nav_url_patterns:
+  - '/category/'          # 已有条目
+  - '/my-section/'        # 新增：普通路径片段
+  - '/archive/\d{4}/'     # 新增：含正则（年份归档页）
+```
+
+> **注意**：`nav_url_patterns` 的每一项是 Python 正则表达式，匹配前 URL 已转为小写。含特殊字符（如 `[`, `?`, `\`）的模式建议用单引号括起来。
+
+### 常见场景
+
+**某智库的栏目页反复误入结果**，在 `nav_exact` 末尾加一行该栏目的英文标题（全小写）即可。
+
+**某智库的 URL 路径规律性地对应介绍页**（如 `/insight/category/`），在 `nav_url_patterns` 末尾加对应正则即可。
 
 ---
 
@@ -716,6 +781,17 @@ v2.3 默认开启无日期过滤（机构介绍页通常没有发布日期）。
 ```bash
 python gcc_thinktank_scraper_v2.py --keep-undated --debug
 ```
+
+如果某个机构介绍页反复出现，将其标题（全小写）加入 `filter_rules.yaml` 的 `nav_exact` 列表，或将其 URL 路径规律加入 `nav_url_patterns`，下次运行即生效。详见[过滤规则配置](#过滤规则配置)章节。
+
+### Q：修改过滤规则后不生效？
+
+检查以下几点：
+
+1. 确认已安装 `pyyaml`：`pip install pyyaml`
+2. 确认 `filter_rules.yaml` 与 `gcc_thinktank_scraper_v2.py` 在同一目录
+3. 启动时日志应出现 `📋 过滤规则已加载：...` 字样；若出现 `使用内置默认规则` 说明 YAML 未被读取
+4. YAML 格式错误（如缩进不一致）会导致加载失败，检查报错信息后修正
 
 ### Q：如何添加新智库？
 

@@ -300,8 +300,13 @@ def extract_articles_from_page(html,base_url,page_url,selectors,tank_name):
     articles=[a for a in articles if _is_likely_article(a["title"],a["url"])]
     return articles
 
-# 导航/菜单链接黑名单
-_NAV_EXACT={"publications","research","our experts","experts","advisory services",
+# ── 过滤规则（从 filter_rules.yaml 加载，缺失时用内置默认值） ────────
+
+_FILTER_RULES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "filter_rules.yaml")
+
+# 内置默认值（与 filter_rules.yaml 保持同步，作为 fallback）
+_NAV_EXACT_DEFAULT = {
+    "publications","research","our experts","experts","advisory services",
     "solutions","data portal","event calendar","events","job opportunities","jobs",
     "careers","life at","work with us","newsroom","media center","about us","about",
     "our offerings","school of public policy","today","story","our story","history",
@@ -323,56 +328,47 @@ _NAV_EXACT={"publications","research","our experts","experts","advisory services
     "message from the chairman","our team","our partners","our mission",
     "expo 2020 dubai","youthinkgulf",
     "strategic and international studies","sound of thought podcast",
-    # 阿拉伯语导航词
     "للمزيد","المزيد","الرئيسية","اتصل بنا","من نحن","الأخبار",
     "مجلة التنمية والسياسات الاقتصادية",
-    # 机构介绍/成员类（新增站点常见）
-    "in the news", "agsiw in the news", "media mentions", "press coverage",
-    "our fellows", "agsiw fellows", "senior fellows", "visiting fellows",
-    "board of directors", "board of advisors", "advisory board",
-    "support our work", "donate", "get involved",
-    "who we are", "mission and history", "our history", "our mission",
-    "in memoriam", "memoriam",
-    # 部门/学科/服务名称（API、KISR 等常见导航词）
-    "commercialization", "geoinformatics", "technology economics",
-    "sme center", "sme centre", "small and medium enterprises",
-    "entrepreneurship and sme development", "entrepreneurship",
+    "in the news","agsiw in the news","media mentions","press coverage",
+    "our fellows","agsiw fellows","senior fellows","visiting fellows",
+    "board of directors","board of advisors","advisory board",
+    "support our work","get involved",
+    "who we are","mission and history","our history","our mission",
+    "in memoriam","memoriam",
+    "commercialization","geoinformatics","technology economics",
+    "sme center","sme centre","small and medium enterprises",
+    "entrepreneurship and sme development","entrepreneurship",
     "local, regional and international cooperation",
-    "economic policy modeling", "economic policy modelling",
-    "training and capacity building", "capacity building",
+    "economic policy modeling","economic policy modelling",
+    "training and capacity building","capacity building",
     "information and communication technology",
-    "environment and natural resources", "food and water security",
-    "energy and environment", "marine and fisheries",
-    "biotechnology", "petroleum research", "refining and petrochemicals",
-    "water resources", "agriculture", "aridland agriculture",
-    # 报告分类/栏目名（KISR、API 常见）
-    "periodic reports", "regular reports", "technical reports", "annual reports",
-    "working papers", "working paper series", "occasional papers",
-    "economic policy modeling and formulation", "economic policy modelling and formulation",
-    "local, regional and international cooperation",
-    "entrepreneurship and sme development", "smes development",
-    "center for smes", "centre for smes", "sme development center",
-    # 机构全称（当标题就是机构名时，一定是导航/介绍页）
-    "arab planning institute", "arab planning institute (api)",
+    "environment and natural resources","food and water security",
+    "energy and environment","marine and fisheries",
+    "biotechnology","petroleum research","refining and petrochemicals",
+    "water resources","agriculture","aridland agriculture",
+    "periodic reports","regular reports","technical reports","annual reports",
+    "working papers","working paper series","occasional papers",
+    "economic policy modeling and formulation","economic policy modelling and formulation",
+    "smes development","center for smes","centre for smes","sme development center",
+    "arab planning institute","arab planning institute (api)",
     "kuwait arab planning institute",
     "malcolm h. kerr carnegie middle east center",
     "the malcolm kerr carnegie middle east center",
-    "carnegie middle east center",          # 仅作为独立标题时过滤
+    "carnegie middle east center",
     "king abdullah petroleum studies and research centre",
     "king faisal center for research and islamic studies",
     "emirates center for strategic studies and research",
-    "gulf research center", "dubai public policy research center",
+    "gulf research center","dubai public policy research center",
     "al jazeera centre for studies",
     "arab center for research and policy studies",
-    # 通用栏目词
-    "publications and reports", "reports and publications",
-    "research and analysis", "papers and reports",
-    "latest publications", "recent publications", "all publications",
-    "featured research", "highlights",
+    "publications and reports","reports and publications",
+    "research and analysis","papers and reports",
+    "latest publications","recent publications","all publications",
+    "featured research","highlights",
 }
 
-# URL中含这些路径片段 → 分类/索引页，不是文章
-_NAV_URL_PATTERNS=[
+_NAV_URL_PATTERNS_DEFAULT = [
     r'/category/', r'/categories/', r'/index/', r'/mainpage/category/',
     r'/mainpage/index/', r'/list/', r'/tag/', r'/tags/', r'/topic/',
     r'/topics/', r'/activity/category/', r'/multimedia/', r'/release/category/',
@@ -381,22 +377,39 @@ _NAV_URL_PATTERNS=[
     r'/author/', r'/authors/', r'/researcher/', r'/researchers/',
     r'/profile/', r'/staff/', r'/team/', r'/experts/',
     r'/podcast', r'/podcasts',
-    r'/featured/', r'/units/', r'/about-us/',  # EPC 话题/单元/关于页面
-    r'/biography/', r'/bio/', r'/in-the-news/', r'/media-mention',  # 人物传记/媒体报道
-    r'/leadership/', r'/board/', r'/fellows/',                       # 机构成员页
-    r'/event/', r'/events/', r'/webinar/', r'/conference/',          # 活动页
-    r'/newsletter/', r'/newsletters/', r'/subscribe',                # 订阅/通讯
-    # 部门/中心/学科导航页（API、KISR 等网站的 CMS 结构）
-    r'[?&]tabid=',          # ASPX CMS tab导航（arab-api.org 等老站）
-    r'/sector[s]?/',        # 研究部门
-    r'/division[s]?/',      # 部门
-    r'/department[s]?/',    # 系/处
-    r'/research-center[s]?/', r'/research-centre[s]?/',  # 研究中心目录页
-    r'/center[s]?/(?!brookings|carnegie|doha|gulf)',     # 通用中心页（白名单已知智库名）
-    r'/service[s]?/',       # 服务页
-    r'/program[s]?/',       # 项目目录
-    r'/about/?$',           # /about 或 /about/ 精确匹配
+    r'/featured/', r'/units/', r'/about-us/',
+    r'/biography/', r'/bio/', r'/in-the-news/', r'/media-mention',
+    r'/leadership/', r'/board/', r'/fellows/',
+    r'/event/', r'/events/', r'/webinar/', r'/conference/',
+    r'/newsletter/', r'/newsletters/', r'/subscribe',
+    r'[?&]tabid=',
+    r'/sector[s]?/', r'/division[s]?/', r'/department[s]?/',
+    r'/research-center[s]?/', r'/research-centre[s]?/',
+    r'/center[s]?/(?!brookings|carnegie|doha|gulf)',
+    r'/service[s]?/', r'/program[s]?/', r'/about/?$',
 ]
+
+def _load_filter_rules():
+    """从 filter_rules.yaml 加载黑名单规则；文件缺失或 pyyaml 未装时用内置默认值。"""
+    try:
+        import yaml
+    except ImportError:
+        log.warning("⚠️  未安装 pyyaml，使用内置过滤规则（pip install pyyaml 可启用外置配置）")
+        return _NAV_EXACT_DEFAULT, _NAV_URL_PATTERNS_DEFAULT
+    try:
+        with open(_FILTER_RULES_PATH, encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+        exact    = {str(x).lower().strip() for x in data.get("nav_exact", [])}
+        patterns = [str(x) for x in data.get("nav_url_patterns", [])]
+        log.info(f"📋 过滤规则已加载：{len(exact)} 条精确匹配，{len(patterns)} 条 URL 模式")
+        return exact, patterns
+    except FileNotFoundError:
+        log.debug("filter_rules.yaml 未找到，使用内置默认规则")
+    except Exception as e:
+        log.warning(f"⚠️  filter_rules.yaml 加载失败（{e}），使用内置默认规则")
+    return _NAV_EXACT_DEFAULT, _NAV_URL_PATTERNS_DEFAULT
+
+_NAV_EXACT, _NAV_URL_PATTERNS = _load_filter_rules()
 
 def _is_likely_article(title,url):
     """判断是否可能是真正的文章（而非导航/菜单链接）"""
@@ -1184,6 +1197,17 @@ def export_summary_pdf(summary_text: str, filepath: str) -> str:
     s_toc    = _style("TOC",   10, 16, before=2,  after=2,  indent=6,  color=C_BODY)
     s_meta   = _style("Meta",   9, 14, before=0,  after=3,  color=C_META)
     s_cell   = _style("Cell",   9, 13, before=2,  after=2,  color=C_BODY)
+    # 逐篇解析字段标签（核心议题 / 主要判断 / 对GCC地区的影响 / 对华关联 / 关键数据或事件）
+    from reportlab.lib.enums import TA_LEFT as _TA_LEFT
+    s_label  = ParagraphStyle(
+        "Label", fontName=cn_font, fontSize=10, leading=16,
+        spaceBefore=10, spaceAfter=3,
+        leftIndent=0, rightIndent=0,
+        textColor=colors.HexColor("#1B4F72"),
+        backColor=colors.HexColor("#EBF5FB"),
+        borderPadding=(4, 8, 4, 8),
+        alignment=_TA_LEFT, allowWidows=1,
+    )
 
     # ── XML 工具 ─────────────────────────────────────────────────
     def _esc(text: str) -> str:
@@ -1356,9 +1380,9 @@ def export_summary_pdf(summary_text: str, filepath: str) -> str:
         # 空行
         elif not stripped:
             story.append(Spacer(1, 0.15 * cm))
-        # **粗体** 独占行（字段标签，如 **核心议题**）
+        # **粗体** 独占行（字段标签，如 **核心议题**）→ 蓝底蓝字标签样式
         elif re.match(r'^\*\*.+\*\*$', stripped):
-            story.append(Paragraph(_safe(stripped), s_bold))
+            story.append(Paragraph(_safe(stripped), s_label))
         # 普通正文（含行内粗体/链接）
         else:
             story.append(Paragraph(_with_links(line), s_body))

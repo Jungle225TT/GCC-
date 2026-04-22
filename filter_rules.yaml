@@ -1,0 +1,306 @@
+# GCC智库抓取系统 — 过滤规则配置文件
+# 修改此文件后，下次运行时自动加载，无需改动代码。
+# 依赖：pip install pyyaml
+#
+# 两个规则集说明：
+#   nav_exact        — 标题精确匹配黑名单（大小写不敏感）
+#                      标题完全等于其中任意一项 → 判定为导航/介绍页，丢弃
+#   nav_url_patterns — URL 路径正则黑名单（Python re.search，URL 已转小写）
+#                      URL 匹配任意一项 → 判定为分类/索引/成员页，丢弃
+
+# ── 标题精确匹配黑名单 ────────────────────────────────────────────────
+nav_exact:
+
+  # 通用导航词
+  - publications
+  - research
+  - our experts
+  - experts
+  - advisory services
+  - solutions
+  - data portal
+  - event calendar
+  - events
+  - job opportunities
+  - jobs
+  - careers
+  - life at
+  - work with us
+  - newsroom
+  - media center
+  - about us
+  - about
+  - our offerings
+  - school of public policy
+  - today
+  - story
+  - our story
+  - history
+  - board of trustees
+  - contact us
+  - newsletter
+  - subscribe
+  - archives
+  - library
+  - programs
+  - projects
+  - blog
+  - podcasts
+  - podcast
+  - videos
+  - video
+  - gallery
+  - press
+  - donate
+  - faq
+  - sitemap
+  - resources
+  - services
+  - overview
+  - mission
+  - vision
+  - team
+  - staff
+  - fellows
+  - scholars
+  - partnerships
+  - sponsors
+  - annual report
+  - annual reports
+  - journal
+  - journals
+  - books
+  - book
+  - magazine
+  - proceedings
+  - commentary
+  - opinion
+  - editorial
+  - press releases
+  - media
+  - news
+  - all news
+  - more
+  - read more
+  - see more
+  - view all
+  - show more
+  - load more
+  - next
+  - previous
+  - research & commentary
+  - diversity, equity, and inclusion
+  - analysis
+  - policy briefs
+  - opinions
+  - workshops
+  - interviews
+  - multimedia
+  - infographics
+  - recent news
+  - all articles
+  - all publications
+  - all research
+  - all reports
+
+  # 研究方向/主题类栏目词（ACRPS 等站点）
+  - political transformations
+  - security studies
+  - economic trends
+  - technological developments
+  - socio-cultural interactions
+  - media trends
+  - strategic foresight
+  - climate change
+  - majority world
+  - latin america
+  - africa
+  - russia
+  - asia trends
+  - sharepoint
+  - education & community development
+  - message from his highness
+  - message from the chairman
+  - our team
+  - our partners
+  - our mission
+  - expo 2020 dubai
+  - youthinkgulf
+  - strategic and international studies
+  - sound of thought podcast
+
+  # 阿拉伯语导航词
+  - للمزيد
+  - المزيد
+  - الرئيسية
+  - اتصل بنا
+  - من نحن
+  - الأخبار
+  - مجلة التنمية والسياسات الاقتصادية
+
+  # 机构介绍/成员类（AGSIW 等站点）
+  - in the news
+  - agsiw in the news
+  - media mentions
+  - press coverage
+  - our fellows
+  - agsiw fellows
+  - senior fellows
+  - visiting fellows
+  - board of directors
+  - board of advisors
+  - advisory board
+  - support our work
+  - get involved
+  - who we are
+  - mission and history
+  - our history
+  - our mission
+  - in memoriam
+  - memoriam
+
+  # 部门/学科/服务名称（API、KISR 等网站常见导航词）
+  - commercialization
+  - geoinformatics
+  - technology economics
+  - sme center
+  - sme centre
+  - small and medium enterprises
+  - entrepreneurship and sme development
+  - entrepreneurship
+  - local, regional and international cooperation
+  - economic policy modeling
+  - economic policy modelling
+  - training and capacity building
+  - capacity building
+  - information and communication technology
+  - environment and natural resources
+  - food and water security
+  - energy and environment
+  - marine and fisheries
+  - biotechnology
+  - petroleum research
+  - refining and petrochemicals
+  - water resources
+  - agriculture
+  - aridland agriculture
+
+  # 报告分类/栏目名（KISR、API 常见）
+  - periodic reports
+  - regular reports
+  - technical reports
+  - working papers
+  - working paper series
+  - occasional papers
+  - economic policy modeling and formulation
+  - economic policy modelling and formulation
+  - smes development
+  - center for smes
+  - centre for smes
+  - sme development center
+
+  # 机构全称（当标题就是机构名时，判定为介绍页）
+  - arab planning institute
+  - arab planning institute (api)
+  - kuwait arab planning institute
+  - malcolm h. kerr carnegie middle east center
+  - the malcolm kerr carnegie middle east center
+  - carnegie middle east center
+  - king abdullah petroleum studies and research centre
+  - king faisal center for research and islamic studies
+  - emirates center for strategic studies and research
+  - gulf research center
+  - dubai public policy research center
+  - al jazeera centre for studies
+  - arab center for research and policy studies
+
+  # 通用栏目词
+  - publications and reports
+  - reports and publications
+  - research and analysis
+  - papers and reports
+  - latest publications
+  - recent publications
+  - featured research
+  - highlights
+
+
+# ── URL 路径正则黑名单（Python re.search，URL 已转小写） ──────────────
+nav_url_patterns:
+
+  # 分类/索引/标签页
+  - '/category/'
+  - '/categories/'
+  - '/index/'
+  - '/mainpage/category/'
+  - '/mainpage/index/'
+  - '/list/'
+  - '/tag/'
+  - '/tags/'
+  - '/topic/'
+  - '/topics/'
+  - '/activity/category/'
+  - '/multimedia/'
+  - '/release/category/'
+  - '/release/index/'
+
+  # SharePoint 站点
+  - 'sharepoint\.com'
+  - '\.sharepoint\.'
+
+  # 协议类（非 HTTP 链接）
+  - '^tel:'
+  - '^mailto:'
+
+  # 人物/团队页
+  - '/author/'
+  - '/authors/'
+  - '/researcher/'
+  - '/researchers/'
+  - '/profile/'
+  - '/staff/'
+  - '/team/'
+  - '/experts/'
+
+  # 音频/多媒体
+  - '/podcast'
+  - '/podcasts'
+
+  # EPC 话题/单元/关于页面
+  - '/featured/'
+  - '/units/'
+  - '/about-us/'
+
+  # 人物传记/媒体报道
+  - '/biography/'
+  - '/bio/'
+  - '/in-the-news/'
+  - '/media-mention'
+
+  # 机构成员页
+  - '/leadership/'
+  - '/board/'
+  - '/fellows/'
+
+  # 活动页
+  - '/event/'
+  - '/events/'
+  - '/webinar/'
+  - '/conference/'
+
+  # 订阅/通讯页
+  - '/newsletter/'
+  - '/newsletters/'
+  - '/subscribe'
+
+  # 部门/中心/学科导航页（API、KISR 等网站的 CMS 结构）
+  - '[?&]tabid='          # ASPX CMS tab 导航（arab-api.org 等老站）
+  - '/sector[s]?/'        # 研究部门
+  - '/division[s]?/'      # 部门
+  - '/department[s]?/'    # 系/处
+  - '/research-center[s]?/'
+  - '/research-centre[s]?/'
+  - '/center[s]?/(?!brookings|carnegie|doha|gulf)'  # 通用中心页（白名单已知智库名）
+  - '/service[s]?/'       # 服务页
+  - '/program[s]?/'       # 项目目录
+  - '/about/?$'           # /about 或 /about/ 精确匹配
