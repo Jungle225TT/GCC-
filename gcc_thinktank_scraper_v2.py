@@ -45,7 +45,7 @@ log = logging.getLogger("gcc_scraper")
 
 # ── SQLite 增量去重 ──────────────────────────────────────────────
 
-DEDUP_DB_PATH = "gcc_dedup.db"
+DEDUP_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "gcc_dedup.db")
 
 def load_seen_urls(db_path=DEDUP_DB_PATH, days=1):
     """

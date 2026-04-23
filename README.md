@@ -16,8 +16,9 @@
 6. [飞书同步：feishu_sync.py](#飞书同步)
 7. [全文转PDF：fulltext_to_pdf.py](#全文转pdf)
 8. [架构说明：四层漏斗 + 增量去重](#架构说明)
-9. [定时任务配置](#定时任务配置)
-10. [常见问题](#常见问题)
+9. [Google Drive + Colab 协同](#google-drive--colab-协同)
+10. [定时任务配置](#定时任务配置)
+11. [常见问题](#常见问题)
 
 ---
 
@@ -25,20 +26,47 @@
 
 ```
 GccScraper/
-├── gcc_thinktank_scraper_v2.py   # 主抓取脚本（核心）
-├── filter_rules.yaml             # 过滤规则配置（标题黑名单 + URL正则，可直接编辑）
-├── ai_client.py                  # AI接口抽象层（DeepSeek / Anthropic 切换）
-├── feishu_sync.py                # 将JSON结果推送到飞书多维表格
-├── fulltext_to_pdf.py            # 全文抓取并输出PDF/HTML（AI训练数据）
-├── scoring_test.py               # 关键词评分阈值对比测试工具
-├── dedup.py                      # SQLite去重模块（供外部调用）
-├── .gitignore                    # 忽略output/、*.db、.env等
-├── output/                       # 主脚本输出目录（自动创建）
+├── README.md                          # 项目主文档
+├── requirements.txt                   # Python 依赖清单（pip install -r requirements.txt）
+├── .gitignore
+│
+├── # ─── 核心源码（根目录直接运行）──────────────────────────────
+├── gcc_thinktank_scraper_v2.py        # 主抓取脚本
+├── ai_client.py                       # AI 接口抽象层（DeepSeek / Anthropic）
+├── feishu_sync.py                     # 飞书多维表格同步
+├── fulltext_to_pdf.py                 # 全文抓取并输出 PDF/HTML
+├── scoring_test.py                    # 关键词评分阈值测试
+├── dedup.py                           # SQLite 去重模块
+├── filter_rules.yaml                  # 过滤规则配置（直接编辑，无需改代码）
+│
+├── notebooks/                         # Google Colab 协同工作
+│   └── GCC_Scraper_Colab.ipynb        # 一键运行笔记本（挂载 Drive → 安装 → 运行）
+│
+├── docs/                              # 项目文档与进展汇报
+│   ├── GCC智库抓取系统_项目进展汇报.docx
+│   ├── GCC智库抓取系统进展v2.3.docx
+│   ├── 技术变更记录_20260415.docx
+│   ├── 筛选思路改进.docx
+│   └── 飞书对接指南.md
+│
+├── assets/                            # 截图等静态资源
+│   ├── 爬取测试.png
+│   ├── 阈值测试.png
+│   ├── 阈值测试2.png
+│   └── 飞书表格.png
+│
+├── scripts/                           # 辅助脚本（Windows 本地运行）
+│   ├── setup.bat
+│   └── test_run.bat
+│
+├── output/                            # 主脚本输出（gitignored，自动创建）
 │   ├── gcc_research_YYYYMMDD_HHMM.md
 │   ├── gcc_research_YYYYMMDD_HHMM.json
-│   ├── gcc_summary_YYYYMMDD_HHMM.md    # 仅 --ai 模式生成
-│   └── gcc_summary_YYYYMMDD_HHMM.pdf   # 仅 --ai 模式生成
-└── output_fulltext/              # 全文PDF输出目录（自动创建）
+│   ├── gcc_summary_YYYYMMDD_HHMM.md  # 仅 --ai 模式
+│   └── gcc_summary_YYYYMMDD_HHMM.pdf # 仅 --ai 模式
+├── output_fulltext/                   # 全文 PDF 输出（gitignored，自动创建）
+└── data/                              # 本地数据库（gitignored，自动创建）
+    └── gcc_dedup.db                   # SQLite 增量去重数据库
 ```
 
 ---
@@ -689,6 +717,54 @@ gcc_thinktank_scraper_v2.py
 | 🇪🇬 埃及 | Al-Ahram Center | 首页 + 关键词评分 |
 | 🇹🇷 土耳其 | Al Sharq Forum | deep_topic 国别标签页 |
 | 🇫🇷 法国 | Arab Reform Initiative | deep_topic 国别标签页 |
+
+---
+
+## Google Drive + Colab 协同
+
+项目已内置 `notebooks/GCC_Scraper_Colab.ipynb`，团队成员无需本地配置 Python 环境，通过浏览器即可运行完整抓取流程。
+
+### 首次上传（项目负责人操作一次）
+
+1. 将整个 `GccScraper/` 文件夹上传至 Google Drive（建议放在 `我的云端硬盘` 根目录）
+2. 用 Google Drive 打开 `notebooks/GCC_Scraper_Colab.ipynb`，选择 **用 Google Colab 打开**
+
+### 团队成员使用流程
+
+```
+打开 Colab 笔记本
+    │
+    ▼  Step 1：挂载 Google Drive（授权一次）
+    │
+    ▼  Step 2：安装依赖（首次约 2–3 分钟）
+    │
+    ▼  Step 3：配置 API Key（推荐存入 Colab Secrets，左侧 🔑 图标）
+    │
+    ▼  Step 4：选择模式运行（日报/周报/月报/单国调试）
+    │
+    ▼  Step 5：在笔记本内预览 Markdown 简报 / 从 Drive 下载 PDF
+```
+
+### API Key 安全配置（Colab Secrets）
+
+不要将 Key 直接写入笔记本代码（防止共享后泄露）。使用 Colab Secrets：
+
+1. Colab 左侧栏点击 **🔑 Secrets**
+2. 添加名称 `DEEPSEEK_API_KEY`，值填你的 Key，开启"笔记本访问权限"
+3. 笔记本 Step 3 会自动读取，无需手动粘贴
+
+| Secret 名称 | 用途 |
+|------------|------|
+| `DEEPSEEK_API_KEY` | DeepSeek AI（默认） |
+| `ANTHROPIC_API_KEY` | Anthropic Claude（可选） |
+| `FEISHU_APP_ID` | 飞书同步（可选） |
+| `FEISHU_APP_SECRET` | 飞书同步（可选） |
+| `FEISHU_APP_TOKEN` | 飞书同步（可选） |
+| `FEISHU_TABLE_ID` | 飞书同步（可选） |
+
+### 输出文件位置
+
+运行完成后，结果文件自动保存在 Google Drive 的 `GccScraper/output/` 中，团队成员均可直接访问。
 
 ---
 

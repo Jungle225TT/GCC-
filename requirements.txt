@@ -1,0 +1,29 @@
+# GCC智库抓取系统 — Python 依赖清单
+# 安装：pip install -r requirements.txt
+
+# ── 核心抓取 ──────────────────────────────────────────────────────
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+
+# ── RSS 支持 ──────────────────────────────────────────────────────
+feedparser>=6.0.0
+
+# ── JS 渲染（SPA 站点，如 Carnegie MEC）─────────────────────────
+playwright>=1.40.0
+# 安装完成后还需运行：playwright install chromium
+
+# ── AI 功能（DeepSeek 默认 / 可选 Anthropic Claude）─────────────
+openai>=1.12.0        # DeepSeek 使用 openai 兼容接口（默认）
+# anthropic>=0.25.0   # 切换 Anthropic 时取消注释
+
+# ── PDF 生成 ─────────────────────────────────────────────────────
+reportlab>=3.6.0
+
+# ── 全文提取（fulltext_to_pdf.py）────────────────────────────────
+trafilatura>=1.6.0
+
+# ── 外置过滤规则（filter_rules.yaml）─────────────────────────────
+pyyaml>=6.0.0
+
+# ── 飞书同步 + .env 支持（feishu_sync.py）────────────────────────
+python-dotenv>=1.0.0
