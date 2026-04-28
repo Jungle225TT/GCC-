@@ -242,7 +242,31 @@ python gcc_thinktank_scraper_v2.py --countries Qatar
 
 ---
 
-**⑤ 控制每站抓取量**
+**⑤ 按维度分类抓取**
+
+```bash
+# 只抓 GCC 本地智库
+python gcc_thinktank_scraper_v2.py --regions gcc --ai --playwright
+
+# 只抓域外英美视角
+python gcc_thinktank_scraper_v2.py --regions western --ai --days 10
+
+# 只抓能源议题相关智库（KAPSARC / KISR / Derasat / OIES / Baker / CSIS …）
+python gcc_thinktank_scraper_v2.py --topics energy --ai --playwright
+
+# 只抓独立智库的安全议题
+python gcc_thinktank_scraper_v2.py --org-types independent --topics security --ai
+
+# 按区域分组输出 Markdown（不同于默认的优先级分组）
+python gcc_thinktank_scraper_v2.py --ai --group-by region
+
+# 按议题分组输出
+python gcc_thinktank_scraper_v2.py --ai --group-by topic
+```
+
+---
+
+**⑥ 控制每站抓取量**
 
 ```bash
 # 精读模式：每站最多 20 篇
@@ -293,14 +317,18 @@ python gcc_thinktank_scraper_v2.py --keep-undated --debug
 | 参数 | 默认值 | 说明 |
 |------|--------|------|
 | `--days` | `30` | 只收录近 N 天内发布的文章；常用值：`3`（日报）、`10`（周报）、`30`（月报）；`0` = 不限时效 |
-| `--countries` | 全部 | 只抓指定国家，可多个（空格分隔） |
+| `--countries` | 全部 | 按国家过滤，可多个，如 `--countries Qatar UAE` |
+| `--regions` | 全部 | 按区域过滤：`gcc` / `mena` / `western`，可多个 |
+| `--org-types` | 全部 | 按机构性质过滤：`official` / `university` / `independent`，可多个 |
+| `--topics` | 全部 | 按议题标签过滤（至少含其一的智库才被纳入）：`energy` / `security` / `economy` / `politics` / `society` / `technology` |
+| `--group-by` | 无（按优先级） | Markdown 输出分组方式：`region` / `org_type` / `topic` |
 | `--playwright` | 关闭 | 启用 Chromium JS 渲染（Carnegie MEC 等 SPA 站点必须） |
 | `--ai` | 关闭 | 启用 AI 筛选 + 翻译 + 研究简报（输出 MD + PDF） |
 | `--api-key` | 读环境变量 | AI API Key（DeepSeek 或 Anthropic，建议用环境变量代替） |
 | `--output-dir` | `./output` | 输出目录 |
 | `--max-per-tank` | `50` | 每个智库最多保留篇数 |
 | `--no-dedup` | 关闭 | 禁用 SQLite 增量去重 |
-| `--dedup-db` | `gcc_dedup.db` | 去重数据库路径 |
+| `--dedup-db` | `data/gcc_dedup.db` | 去重数据库路径 |
 | `--dedup-days` | `1` | 去重时间窗口（天）；`0` = 关闭去重效果 |
 | `--keep-undated` | 关闭 | 保留无发布日期的文章（默认过滤，用于调试） |
 | `--debug` | 关闭 | 显示调试日志 |
@@ -697,26 +725,78 @@ gcc_thinktank_scraper_v2.py
 
 ### 覆盖的智库（21 个）
 
-**核心 GCC 智库（17个，直接通过筛选）**
+智库库共 **29 个**，按三个维度分类管理。
 
-| 国家 | 智库 |
-|------|------|
-| 🇸🇦 沙特 | KAPSARC, Rasanah IIIS, King Faisal Center |
-| 🇦🇪 阿联酋 | EPC, ECSSR, GRC, Bhuth, Al Qasimi Foundation, Future Center |
-| 🇶🇦 卡塔尔 | AJCS, Brookings Doha, Doha Institute |
-| 🇰🇼 科威特 | API, KISR |
-| 🇧🇭 巴林 | Derasat |
-| 🇴🇲 阿曼 | Tawasul |
-| 🇺🇸 美国 | AGSIW（Arab Gulf States Institute in Washington）|
+**维度一：地区（region）**
 
-**泛 MENA 智库（4个，GCC 专题页直接通过 / 首页需关键词评分 ≥ 3）**
-
-| 国家 | 智库 | 抓取方式 |
+| 区域 | 数量 | 代表机构 |
 |------|------|---------|
-| 🇱🇧 黎巴嫩 | Carnegie Middle East Center | deep_topic 专题页（需 Playwright） |
-| 🇪🇬 埃及 | Al-Ahram Center | 首页 + 关键词评分 |
-| 🇹🇷 土耳其 | Al Sharq Forum | deep_topic 国别标签页 |
-| 🇫🇷 法国 | Arab Reform Initiative | deep_topic 国别标签页 |
+| `gcc` GCC核心 | 16个 | KAPSARC、EPC、AJCS、Derasat … |
+| `mena` 泛MENA | 4个 | Carnegie MEC、Al-Ahram、Al Sharq Forum、Arab Reform |
+| `western` 域外英美 | 9个 | AGSIW、MEI、CSIS、Atlantic Council、Chatham House、OIES、Baker Institute、Wilson Center、IISS |
+
+**维度二：机构性质（org_type）**
+
+| 类型 | 说明 | 代表机构 |
+|------|------|---------|
+| `official` 官方/政府 | 政府资助或官方背景 | KAPSARC、EPC、AJCS、API … |
+| `university` 大学研究 | 依托高校的研究中心 | Brookings Doha、Doha Institute、OIES、Baker Institute |
+| `independent` 独立智库 | 独立运营的研究机构 | GRC、Carnegie MEC、AGSIW、MEI、CSIS、Chatham House … |
+
+**维度三：议题（topics）**
+
+| 标签 | 覆盖智库示例 |
+|------|------------|
+| `energy` ⚡ | KAPSARC、KISR、Derasat、OIES、Baker Institute、CSIS |
+| `security` 🛡️ | Rasanah、ECSSR、EPC、Carnegie MEC、IISS、Atlantic Council |
+| `economy` 💰 | EPC、GRC、API、Brookings Doha、Wilson Center、CSIS |
+| `politics` 🏛 | King Faisal、EPC、AJCS、Carnegie MEC、MEI、Chatham House |
+| `society` 👥 | Al Qasimi Foundation、Doha Institute、Al Sharq Forum、Arab Reform |
+| `technology` 💻 | KISR |
+
+**GCC 核心智库（tier=core_gcc，16个，直接通过评分）**
+
+| 国家 | 智库 | 性质 | 议题 |
+|------|------|------|------|
+| 🇸🇦 沙特 | KAPSARC | official | energy, economy |
+| 🇸🇦 沙特 | Rasanah IIIS | independent | security, politics |
+| 🇸🇦 沙特 | King Faisal Center | official | politics, society, security |
+| 🇦🇪 阿联酋 | EPC | official | politics, economy, security |
+| 🇦🇪 阿联酋 | ECSSR | official | security, politics |
+| 🇦🇪 阿联酋 | GRC | independent | politics, economy, security |
+| 🇦🇪 阿联酋 | Bhuth | official | politics, economy |
+| 🇦🇪 阿联酋 | Al Qasimi Foundation | official | society, economy |
+| 🇦🇪 阿联酋 | Future Center | official | politics, security, economy |
+| 🇶🇦 卡塔尔 | AJCS | official | politics, security, society |
+| 🇶🇦 卡塔尔 | Brookings Doha | university | politics, economy, security |
+| 🇶🇦 卡塔尔 | Doha Institute | university | politics, society, security |
+| 🇰🇼 科威特 | API | official | economy |
+| 🇰🇼 科威特 | KISR | official | energy, technology, economy |
+| 🇧🇭 巴林 | Derasat | official | security, energy, economy |
+| 🇴🇲 阿曼 | Tawasul | independent | politics, economy |
+
+**泛 MENA 智库（tier=pan_mena，4个，GCC 专题页直接通过 / 首页需关键词评分 ≥ 3）**
+
+| 国家 | 智库 | 抓取方式 | 性质 | 议题 |
+|------|------|---------|------|------|
+| 🇱🇧 黎巴嫩 | Carnegie MEC | deep_topic + Playwright | independent | politics, security |
+| 🇪🇬 埃及 | Al-Ahram Center | 首页 + 关键词评分 | official | politics, security |
+| 🇹🇷 土耳其 | Al Sharq Forum | deep_topic 国别标签页 | independent | politics, society |
+| 🇫🇷 法国 | Arab Reform Initiative | deep_topic 国别标签页 | independent | politics, society |
+
+**域外英美智库（tier=pan_mena，9个，GCC/MENA 专题页或关键词评分）**
+
+| 国家 | 智库 | 性质 | 议题 |
+|------|------|------|------|
+| 🇺🇸 美国 | AGSIW | independent | politics, economy, security |
+| 🇺🇸 美国 | MEI | independent | politics, security, economy |
+| 🇺🇸 美国 | CSIS | independent | energy, security, economy |
+| 🇺🇸 美国 | Atlantic Council | independent | security, politics, economy |
+| 🇺🇸 美国 | Baker Institute | university | energy, economy |
+| 🇺🇸 美国 | Wilson Center | official | politics, economy |
+| 🇬🇧 英国 | Chatham House | independent | politics, security, economy |
+| 🇬🇧 英国 | OIES | university | energy |
+| 🇬🇧 英国 | IISS | independent | security, politics |
 
 ---
 

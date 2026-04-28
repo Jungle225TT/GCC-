@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-GCC智库研究抓取系统 v2.3
+GCC智库研究抓取系统 v2.4
 成都创新金融研究院 — 姜亭汀
 四层漏斗筛选：来源可信度 → 关键词评分 → 内容类型 → AI辅助
 数据源：HTML抓取 + RSS订阅
@@ -101,6 +101,9 @@ class Article:
     source: str
     source_country: str
     source_tier: str
+    source_region: str = ""        # gcc / mena / western
+    source_org_type: str = ""      # official / university / independent
+    source_topics: list = field(default_factory=list)  # energy/security/economy/politics/society/technology
     date: Optional[str] = None
     snippet: Optional[str] = None
     title_cn: Optional[str] = None
@@ -114,27 +117,38 @@ class Article:
         return asdict(self)
 
 THINK_TANKS = [
-    {"name":"King Abdullah Petroleum Studies and Research Centre (KAPSARC)","country":"Saudi Arabia","tier":"core_gcc","base_url":"https://www.kapsarc.org","pages":["/our-offerings/publications/","/newsroom/news/"],"rss_feeds":["https://www.kapsarc.org/feed/"],"selectors":{"article":"article, .publication-item, .research-item, .card, [class*='post'], [class*='article'], [class*='publication']","title":"h4 a, h3 a, h2 a, .title a, [class*='title'] a","link":"a[href]","snippet":"p, .excerpt, .summary, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date'], [datetime]"}},
-    {"name":"International Institute for Iranian Studies (Rasanah)","country":"Saudi Arabia","tier":"core_gcc","base_url":"https://rasanah-iiis.org/english","pages":["/","/category/publications/","/category/publications/monthly-reports/","/category/the-journal/"],"rss_feeds":["https://rasanah-iiis.org/english/feed/"],"selectors":{"article":"article, .post, .entry, [class*='post'], [class*='article']","title":"h2 a, h3 a, .entry-title a, [class*='title'] a","link":"a[href]","snippet":".entry-content p, .excerpt, [class*='excerpt']","date":"time, .date, [class*='date']"}},
-    {"name":"King Faisal Center for Research and Islamic Studies","country":"Saudi Arabia","tier":"core_gcc","base_url":"https://www.kfcris.com/en","pages":["/research","/publications","/research/dirasat"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Emirates Policy Center (EPC)","country":"UAE","tier":"core_gcc","base_url":"https://www.epc.ae","pages":["/en/publications","/en/details/featured/gcc"],"selectors":{"article":".MuiCard-root, article, .card, [class*='publication'], [class*='item'], [class*='post']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Emirates Center for Strategic Studies and Research (ECSSR)","country":"UAE","tier":"core_gcc","base_url":"https://www.ecssr.ae","pages":["/en/research-programs","/en/publications"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Gulf Research Center (GRC)","country":"UAE","tier":"core_gcc","base_url":"https://www.grc.ae","pages":["/research","/publications"],"requests_timeout":5,"playwright_timeout":8000,"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Dubai Public Policy Research Center (Bhuth)","country":"UAE","tier":"core_gcc","base_url":"https://bhuth.ae","pages":["/en/publications","/en/research"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item'], [class*='post']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Sheikh Saud bin Saqr Al Qasimi Foundation","country":"UAE","tier":"core_gcc","base_url":"https://publications.alqasimifoundation.com","pages":["/en","/blog"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Future Center for Advanced Researches and Studies","country":"UAE","tier":"core_gcc","base_url":"https://futureuae.com","pages":["/en-US","/en-US/Release/Index/2/publications"],"requests_timeout":5,"playwright_timeout":8000,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Al Jazeera Centre for Studies (AJCS)","country":"Qatar","tier":"core_gcc","base_url":"https://studies.aljazeera.net","pages":["/en/","/en/reports"],"rss_feeds":["https://studies.aljazeera.net/en/rss.xml"],"selectors":{"article":"article, .card, [class*='post'], [class*='item'], [class*='article']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Brookings Doha Center","country":"Qatar","tier":"core_gcc","base_url":"https://www.brookings.edu","pages":["/center/brookings-doha-center/"],"rss_feeds":["https://www.brookings.edu/feed/?center=brookings-doha-center"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Arab Center for Research and Policy Studies (Doha Institute)","country":"Qatar","tier":"core_gcc","base_url":"https://www.dohainstitute.org","pages":["/en/Pages/index.aspx"],"selectors":{"article":"article, .card, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Arab Planning Institute (API)","country":"Kuwait","tier":"core_gcc","base_url":"https://www.arab-api.org","pages":["/default.aspx"],"selectors":{"article":"article, .card, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
-    {"name":"Kuwait Institute for Scientific Research (KISR)","country":"Kuwait","tier":"core_gcc","base_url":"https://www.kisr.edu.kw","pages":["/en/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Bahrain Center for Strategic, International and Energy Studies (Derasat)","country":"Bahrain","tier":"core_gcc","base_url":"https://www.derasat.org.bh","pages":["/en/home_en/","/knowledge-center/publications-page/","/en/research/"],"rss_feeds":["https://www.derasat.org.bh/en/feed/","https://www.derasat.org.bh/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Tawasul","country":"Oman","tier":"core_gcc","base_url":"https://tawasul.co.om","pages":["/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
-    {"name":"Carnegie Middle East Center","country":"Lebanon","tier":"pan_mena","base_url":"https://carnegieendowment.org","pages":["/regions/gulf","/regions/saudi-arabia","/regions/united-arab-emirates","/regions/qatar","/regions/kuwait","/regions/bahrain","/regions/oman","/middle-east/regions/saudi-arabia","/middle-east/regions/united-arab-emirates","/middle-east/regions/qatar","/middle-east/regions/kuwait","/middle-east/regions/bahrain","/middle-east/regions/oman","/sada/region/692?lang=en"],"rss_feeds":["https://carnegie-mec.org/feed","https://carnegieendowment.org/feeds/middle-east"],"use_playwright":True,"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post'], a[href*='/research/'], a[href*='/diwan/'], a[href*='/emissary/'], a[href*='/sada/']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},  # v2.3: 泛MENA深层抓取
-    {"name":"Al-Ahram Center for Political and Strategic Studies","country":"Egypt","tier":"pan_mena","base_url":"https://acpss.ahram.org.eg","pages":["/"],"selectors":{"article":"article, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
-    {"name":"Al Sharq Forum","country":"Turkey","tier":"pan_mena","base_url":"https://research.sharqforum.org","pages":["/region/middle-east/ksa/","/region/middle-east/uae/","/region/middle-east/qatar/","/region/middle-east/kuwait/","/region/middle-east/bahrain/","/region/middle-east/oman/","/tag/gcc/"],"rss_feeds":["https://research.sharqforum.org/feed/"],"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},  # v2.3: 泛MENA深层抓取
-    {"name":"Arab Reform Initiative","country":"France","tier":"pan_mena","base_url":"https://www.arab-reform.net","pages":["/tag/saudi-arabia/","/tag/united-arab-emirates/","/tag/qatar/","/tag/kuwait/","/tag/bahrain/","/tag/oman/","/tag/gulf/","/tag/gcc/"],"rss_feeds":["https://www.arab-reform.net/feed/"],"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},  # v2.3: 泛MENA深层抓取
-    {"name":"Arab Gulf States Institute in Washington (AGSIW)","country":"USA","tier":"core_gcc","base_url":"https://agsiw.org","pages":["/topic/politics-and-governance/","/topic/economics-and-energy/","/topic/security-and-defense/","/topic/society/"],"rss_feeds":["https://agsiw.org/feed/"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},  # v2.3: 新增AGSIW
+    # ── GCC 核心智库（17个）────────────────────────────────────────────────────────
+    {"name":"King Abdullah Petroleum Studies and Research Centre (KAPSARC)","country":"Saudi Arabia","tier":"core_gcc","region":"gcc","org_type":"official","topics":["energy","economy"],"base_url":"https://www.kapsarc.org","pages":["/our-offerings/publications/","/newsroom/news/"],"rss_feeds":["https://www.kapsarc.org/feed/"],"selectors":{"article":"article, .publication-item, .research-item, .card, [class*='post'], [class*='article'], [class*='publication']","title":"h4 a, h3 a, h2 a, .title a, [class*='title'] a","link":"a[href]","snippet":"p, .excerpt, .summary, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date'], [datetime]"}},
+    {"name":"International Institute for Iranian Studies (Rasanah)","country":"Saudi Arabia","tier":"core_gcc","region":"gcc","org_type":"independent","topics":["security","politics"],"base_url":"https://rasanah-iiis.org/english","pages":["/","/category/publications/","/category/publications/monthly-reports/","/category/the-journal/"],"rss_feeds":["https://rasanah-iiis.org/english/feed/"],"selectors":{"article":"article, .post, .entry, [class*='post'], [class*='article']","title":"h2 a, h3 a, .entry-title a, [class*='title'] a","link":"a[href]","snippet":".entry-content p, .excerpt, [class*='excerpt']","date":"time, .date, [class*='date']"}},
+    {"name":"King Faisal Center for Research and Islamic Studies","country":"Saudi Arabia","tier":"core_gcc","region":"gcc","org_type":"official","topics":["politics","society","security"],"base_url":"https://www.kfcris.com/en","pages":["/research","/publications","/research/dirasat"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Emirates Policy Center (EPC)","country":"UAE","tier":"core_gcc","region":"gcc","org_type":"official","topics":["politics","economy","security"],"base_url":"https://www.epc.ae","pages":["/en/publications","/en/details/featured/gcc"],"selectors":{"article":".MuiCard-root, article, .card, [class*='publication'], [class*='item'], [class*='post']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Emirates Center for Strategic Studies and Research (ECSSR)","country":"UAE","tier":"core_gcc","region":"gcc","org_type":"official","topics":["security","politics"],"base_url":"https://www.ecssr.ae","pages":["/en/research-programs","/en/publications"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Gulf Research Center (GRC)","country":"UAE","tier":"core_gcc","region":"gcc","org_type":"independent","topics":["politics","economy","security"],"base_url":"https://www.grc.ae","pages":["/research","/publications"],"requests_timeout":5,"playwright_timeout":8000,"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Dubai Public Policy Research Center (Bhuth)","country":"UAE","tier":"core_gcc","region":"gcc","org_type":"official","topics":["politics","economy"],"base_url":"https://bhuth.ae","pages":["/en/publications","/en/research"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item'], [class*='post']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Sheikh Saud bin Saqr Al Qasimi Foundation","country":"UAE","tier":"core_gcc","region":"gcc","org_type":"official","topics":["society","economy"],"base_url":"https://publications.alqasimifoundation.com","pages":["/en","/blog"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Future Center for Advanced Researches and Studies","country":"UAE","tier":"core_gcc","region":"gcc","org_type":"official","topics":["politics","security","economy"],"base_url":"https://futureuae.com","pages":["/en-US","/en-US/Release/Index/2/publications"],"requests_timeout":5,"playwright_timeout":8000,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Al Jazeera Centre for Studies (AJCS)","country":"Qatar","tier":"core_gcc","region":"gcc","org_type":"official","topics":["politics","security","society"],"base_url":"https://studies.aljazeera.net","pages":["/en/","/en/reports"],"rss_feeds":["https://studies.aljazeera.net/en/rss.xml"],"selectors":{"article":"article, .card, [class*='post'], [class*='item'], [class*='article']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Brookings Doha Center","country":"Qatar","tier":"core_gcc","region":"gcc","org_type":"university","topics":["politics","economy","security"],"base_url":"https://www.brookings.edu","pages":["/center/brookings-doha-center/"],"rss_feeds":["https://www.brookings.edu/feed/?center=brookings-doha-center"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Arab Center for Research and Policy Studies (Doha Institute)","country":"Qatar","tier":"core_gcc","region":"gcc","org_type":"university","topics":["politics","society","security"],"base_url":"https://www.dohainstitute.org","pages":["/en/Pages/index.aspx"],"selectors":{"article":"article, .card, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Arab Planning Institute (API)","country":"Kuwait","tier":"core_gcc","region":"gcc","org_type":"official","topics":["economy"],"base_url":"https://www.arab-api.org","pages":["/default.aspx"],"selectors":{"article":"article, .card, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
+    {"name":"Kuwait Institute for Scientific Research (KISR)","country":"Kuwait","tier":"core_gcc","region":"gcc","org_type":"official","topics":["energy","technology","economy"],"base_url":"https://www.kisr.edu.kw","pages":["/en/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Bahrain Center for Strategic, International and Energy Studies (Derasat)","country":"Bahrain","tier":"core_gcc","region":"gcc","org_type":"official","topics":["security","energy","economy"],"base_url":"https://www.derasat.org.bh","pages":["/en/home_en/","/knowledge-center/publications-page/","/en/research/"],"rss_feeds":["https://www.derasat.org.bh/en/feed/","https://www.derasat.org.bh/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Tawasul","country":"Oman","tier":"core_gcc","region":"gcc","org_type":"independent","topics":["politics","economy"],"base_url":"https://tawasul.co.om","pages":["/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
+    {"name":"Arab Gulf States Institute in Washington (AGSIW)","country":"USA","tier":"core_gcc","region":"western","org_type":"independent","topics":["politics","economy","security"],"base_url":"https://agsiw.org","pages":["/topic/politics-and-governance/","/topic/economics-and-energy/","/topic/security-and-defense/","/topic/society/"],"rss_feeds":["https://agsiw.org/feed/"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    # ── 泛MENA智库（4个）──────────────────────────────────────────────────────────
+    {"name":"Carnegie Middle East Center","country":"Lebanon","tier":"pan_mena","region":"mena","org_type":"independent","topics":["politics","security"],"base_url":"https://carnegieendowment.org","pages":["/regions/gulf","/regions/saudi-arabia","/regions/united-arab-emirates","/regions/qatar","/regions/kuwait","/regions/bahrain","/regions/oman","/middle-east/regions/saudi-arabia","/middle-east/regions/united-arab-emirates","/middle-east/regions/qatar","/middle-east/regions/kuwait","/middle-east/regions/bahrain","/middle-east/regions/oman","/sada/region/692?lang=en"],"rss_feeds":["https://carnegie-mec.org/feed","https://carnegieendowment.org/feeds/middle-east"],"use_playwright":True,"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post'], a[href*='/research/'], a[href*='/diwan/'], a[href*='/emissary/'], a[href*='/sada/']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Al-Ahram Center for Political and Strategic Studies","country":"Egypt","tier":"pan_mena","region":"mena","org_type":"official","topics":["politics","security"],"base_url":"https://acpss.ahram.org.eg","pages":["/"],"selectors":{"article":"article, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
+    {"name":"Al Sharq Forum","country":"Turkey","tier":"pan_mena","region":"mena","org_type":"independent","topics":["politics","society"],"base_url":"https://research.sharqforum.org","pages":["/region/middle-east/ksa/","/region/middle-east/uae/","/region/middle-east/qatar/","/region/middle-east/kuwait/","/region/middle-east/bahrain/","/region/middle-east/oman/","/tag/gcc/"],"rss_feeds":["https://research.sharqforum.org/feed/"],"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Arab Reform Initiative","country":"France","tier":"pan_mena","region":"mena","org_type":"independent","topics":["politics","society"],"base_url":"https://www.arab-reform.net","pages":["/tag/saudi-arabia/","/tag/united-arab-emirates/","/tag/qatar/","/tag/kuwait/","/tag/bahrain/","/tag/oman/","/tag/gulf/","/tag/gcc/"],"rss_feeds":["https://www.arab-reform.net/feed/"],"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    # ── 域外英美智库（8个，关注GCC/能源/安全议题）──────────────────────────────────
+    {"name":"Middle East Institute (MEI)","country":"USA","tier":"pan_mena","region":"western","org_type":"independent","topics":["politics","security","economy"],"base_url":"https://www.mei.edu","pages":["/regions/gulf-states"],"rss_feeds":["https://www.mei.edu/rss.xml"],"deep_topic":True,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Center for Strategic and International Studies (CSIS)","country":"USA","tier":"pan_mena","region":"western","org_type":"independent","topics":["energy","security","economy"],"base_url":"https://www.csis.org","pages":["/programs/middle-east-program","/analysis"],"rss_feeds":["https://www.csis.org/analysis/feed"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='analysis']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Atlantic Council — Middle East Programs","country":"USA","tier":"pan_mena","region":"western","org_type":"independent","topics":["security","politics","economy"],"base_url":"https://www.atlanticcouncil.org","pages":["/programs/middle-east-programs/","/topic/middle-east/gulf/"],"rss_feeds":["https://www.atlanticcouncil.org/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='article']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Chatham House — Gulf States","country":"UK","tier":"pan_mena","region":"western","org_type":"independent","topics":["politics","security","economy"],"base_url":"https://www.chathamhouse.org","pages":["/regions/middle-east-north-africa/gulf-states","/topics/middle-east-north-africa"],"rss_feeds":["https://www.chathamhouse.org/rss.xml"],"deep_topic":True,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Oxford Institute for Energy Studies (OIES)","country":"UK","tier":"pan_mena","region":"western","org_type":"university","topics":["energy"],"base_url":"https://www.oxfordenergy.org","pages":["/research/natural-gas/","/research/oil-opec-and-energy-transition/","/research/"],"rss_feeds":["https://www.oxfordenergy.org/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Baker Institute for Public Policy (Rice University)","country":"USA","tier":"pan_mena","region":"western","org_type":"university","topics":["energy","economy"],"base_url":"https://www.bakerinstitute.org","pages":["/centers/center-for-energy-studies/","/research/"],"rss_feeds":["https://www.bakerinstitute.org/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Wilson Center — Middle East Program","country":"USA","tier":"pan_mena","region":"western","org_type":"official","topics":["politics","economy"],"base_url":"https://www.wilsoncenter.org","pages":["/program/middle-east-program/publications","/program/middle-east-program"],"rss_feeds":["https://www.wilsoncenter.org/rss.xml"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"International Institute for Strategic Studies (IISS)","country":"UK","tier":"pan_mena","region":"western","org_type":"independent","topics":["security","politics"],"base_url":"https://www.iiss.org","pages":["/topics/middle-east-and-north-africa","/research/"],"rss_feeds":["https://www.iiss.org/en/rss"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
 ]
 
 STRONG_KEYWORDS=["gcc","gulf cooperation council","海合会","مجلس التعاون الخليجي"]
@@ -653,6 +667,9 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None)
             ks, mk = compute_keyword_score(t, sn)
             if ks < RELEVANCE_THRESHOLD: log.debug(f"    ⏭️ 评分不足({ks}): {t[:60]}"); continue
         results.append(Article(title=t, url=u, source=nm, source_country=co, source_tier=ti,
+            source_region=tank.get("region",""),
+            source_org_type=tank.get("org_type",""),
+            source_topics=list(tank.get("topics",[])),
             date=normalize_date(it.get("date")), snippet=sn, keyword_score=ks, content_type=ct,
             priority=pr, matched_keywords=mk, fetch_method=it.get("fetch_method", "html")))
 
@@ -707,16 +724,31 @@ def _date_gte(date_str: str, cutoff: str) -> bool:
     return cmp >= cutoff
 
 def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
-                countries=None, max_per_tank=50, dedup_db=DEDUP_DB_PATH, dedup_days=1,
+                countries=None, regions=None, org_types=None, topics=None,
+                max_per_tank=50, dedup_db=DEDUP_DB_PATH, dedup_days=1,
                 filter_undated=True, max_age_days=30):
     if tanks is None:
         tanks = THINK_TANKS
     if countries:
         country_filter = [c.lower() for c in countries]
         tanks = [t for t in tanks if t["country"].lower() in country_filter]
+    if regions:
+        region_filter = [r.lower() for r in regions]
+        tanks = [t for t in tanks if t.get("region","").lower() in region_filter]
+    if org_types:
+        otype_filter = [o.lower() for o in org_types]
+        tanks = [t for t in tanks if t.get("org_type","").lower() in otype_filter]
+    if topics:
+        topic_filter = [tp.lower() for tp in topics]
+        tanks = [t for t in tanks if any(tp in [x.lower() for x in t.get("topics",[])] for tp in topic_filter)]
 
     print("=" * 60)
-    print(f"GCC智库研究抓取系统 v2.3\n运行时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n目标智库: {len(tanks)} 个")
+    print(f"GCC智库研究抓取系统 v2.4\n运行时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n目标智库: {len(tanks)} 个")
+    # 分维度统计
+    _r = {}
+    for t in tanks:
+        _r.setdefault(t.get("region","?"), 0); _r[t.get("region","?")] += 1
+    print(f"  地区分布: " + " | ".join(f"{k}×{v}" for k,v in sorted(_r.items())))
     print(f"JS渲染: {'✅ Playwright' if use_playwright and HAS_PLAYWRIGHT else '❌ 仅requests'}")
     print(f"AI筛选: {'✅ 已启用 (' + ai_client.provider_info() + ')' if enable_ai and HAS_AI else '❌ 未启用'}")
     print(f"RSS:    {'✅ feedparser' if HAS_FEEDPARSER else '❌ 未安装'}")
@@ -802,30 +834,75 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
     print("=" * 60)
     return all_articles, dedup_filtered
 
-def export_markdown(articles,filepath=None):
+_REGION_LABEL = {"gcc":"🇦🇪 GCC核心", "mena":"🌍 泛MENA", "western":"🌐 域外英美", "":"其他"}
+_ORGTYPE_LABEL = {"official":"🏛️ 官方/政府", "university":"🎓 大学研究", "independent":"🔬 独立智库", "":"其他"}
+_TOPIC_LABEL   = {"energy":"⚡能源","security":"🛡️安全","economy":"💰经济","politics":"🏛政治","society":"👥社会","technology":"💻技术"}
+
+def export_markdown(articles, filepath=None, group_by=None):
     now=datetime.now().strftime("%Y-%m-%d %H:%M")
     filepath=filepath or f"gcc_research_{datetime.now().strftime('%Y%m%d_%H%M')}.md"
-    L=[f"# GCC智库研究动态\n",f"> 抓取时间: {now} | 文章总数: {len(articles)} 篇 | 系统: v2.3 — 成都创新金融研究院\n"]
-    gs={"priority_read":("⭐ 优先阅读（深度报告/政策分析）",[]),"normal":("📄 常规文章",[]),"low":("📋 简讯/公告",[])}
-    for a in articles:k=a.priority if a.priority in gs else "normal";gs[k][1].append(a)
-    for key in["priority_read","normal","low"]:
-        lb,ar=gs[key]
-        if not ar:continue
-        L.append(f"---\n## {lb} ({len(ar)} 篇)\n")
-        L.append("| 日期 | 平台 | 标题 | 中文标题 | 链接 |")
-        L.append("|------|------|------|----------|------|")
+    L=[f"# GCC智库研究动态\n",f"> 抓取时间: {now} | 文章总数: {len(articles)} 篇 | 系统: v2.4 — 成都创新金融研究院\n"]
+
+    def _table_rows(ar):
+        rows=[]
+        rows.append("| 日期 | 平台 | 区域 | 类型 | 议题 | 标题 | 中文标题 | 链接 |")
+        rows.append("|------|------|------|------|------|------|----------|------|")
         for a in ar:
             d=a.date if a.date else "-"
             tc=a.title.replace("|","–").replace("\n"," ").strip()
             cn=(a.title_cn or "-").replace("|","–").replace("\n"," ").strip()
-            L.append(f"| {d} | {a.source.replace('|','–')} | {tc} | {cn} | [原文]({a.url}) |")
-        L.append("")
+            rg=_REGION_LABEL.get(a.source_region, a.source_region or "-")
+            ot=_ORGTYPE_LABEL.get(a.source_org_type, a.source_org_type or "-")
+            tps=" ".join(_TOPIC_LABEL.get(tp,tp) for tp in a.source_topics) or "-"
+            rows.append(f"| {d} | {a.source.replace('|','–')} | {rg} | {ot} | {tps} | {tc} | {cn} | [原文]({a.url}) |")
+        return rows
+
+    if group_by == "region":
+        groups = {}
+        for a in articles:
+            k = a.source_region or "other"
+            groups.setdefault(k, []).append(a)
+        for k in ["gcc","mena","western","other"]:
+            ar = groups.get(k,[])
+            if not ar: continue
+            L.append(f"---\n## {_REGION_LABEL.get(k,k)} ({len(ar)} 篇)\n")
+            L.extend(_table_rows(ar)); L.append("")
+    elif group_by == "org_type":
+        groups = {}
+        for a in articles:
+            k = a.source_org_type or "other"
+            groups.setdefault(k, []).append(a)
+        for k in ["official","university","independent","other"]:
+            ar = groups.get(k,[])
+            if not ar: continue
+            L.append(f"---\n## {_ORGTYPE_LABEL.get(k,k)} ({len(ar)} 篇)\n")
+            L.extend(_table_rows(ar)); L.append("")
+    elif group_by == "topic":
+        groups = {}
+        for a in articles:
+            for tp in (a.source_topics or ["other"]):
+                groups.setdefault(tp, []).append(a)
+        for k in ["energy","security","economy","politics","society","technology","other"]:
+            ar = groups.get(k,[])
+            if not ar: continue
+            L.append(f"---\n## {_TOPIC_LABEL.get(k,k)} 议题 ({len(ar)} 篇)\n")
+            L.extend(_table_rows(ar)); L.append("")
+    else:
+        # 默认：按优先级分组
+        gs={"priority_read":("⭐ 优先阅读（深度报告/政策分析）",[]),"normal":("📄 常规文章",[]),"low":("📋 简讯/公告",[])}
+        for a in articles: k=a.priority if a.priority in gs else "normal"; gs[k][1].append(a)
+        for key in["priority_read","normal","low"]:
+            lb,ar=gs[key]
+            if not ar: continue
+            L.append(f"---\n## {lb} ({len(ar)} 篇)\n")
+            L.extend(_table_rows(ar)); L.append("")
+
     with open(filepath,"w",encoding="utf-8") as f:f.write("\n".join(L))
     log.info(f"📝 Markdown 报告已保存: {filepath}");return filepath
 
 def export_json(articles,filepath=None):
     filepath=filepath or f"gcc_research_{datetime.now().strftime('%Y%m%d_%H%M')}.json"
-    data={"metadata":{"scraped_at":datetime.now().isoformat(),"total_articles":len(articles),"system":"GCC Think Tank Scraper v2.3"},"articles":[a.to_dict() for a in articles]}
+    data={"metadata":{"scraped_at":datetime.now().isoformat(),"total_articles":len(articles),"system":"GCC Think Tank Scraper v2.4"},"articles":[a.to_dict() for a in articles]}
     with open(filepath,"w",encoding="utf-8") as f:json.dump(data,f,ensure_ascii=False,indent=2)
     log.info(f"💾 JSON 数据已保存: {filepath}");return filepath
 
@@ -1447,6 +1524,14 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="GCC智库研究抓取系统 v2.1")
     parser.add_argument("--countries", nargs="+", default=None, help="只抓指定国家")
+    parser.add_argument("--regions", nargs="+", metavar="REGION",
+        help="只抓指定区域：gcc / mena / western（可多选）")
+    parser.add_argument("--org-types", nargs="+", metavar="TYPE", dest="org_types",
+        help="只抓指定机构类型：official / university / independent（可多选）")
+    parser.add_argument("--topics", nargs="+", metavar="TOPIC",
+        help="只抓包含指定议题的智库：energy / security / economy / politics / society / technology（可多选）")
+    parser.add_argument("--group-by", choices=["region","org_type","topic"], dest="group_by", default=None,
+        help="Markdown输出分组方式：region / org_type / topic（默认按优先级分组）")
     parser.add_argument("--playwright", action="store_true", help="启用JS渲染")
     parser.add_argument("--ai", action="store_true", help="启用AI筛选、翻译、汇总")
     parser.add_argument("--api-key", default=None, help="Anthropic API Key（建议改用 ANTHROPIC_API_KEY 环境变量）")
@@ -1488,6 +1573,9 @@ if __name__ == "__main__":
         enable_ai=args.ai,
         api_key=args.api_key,
         countries=args.countries,
+        regions=args.regions,
+        org_types=args.org_types,
+        topics=args.topics,
         max_per_tank=args.max_per_tank,
         dedup_db=dedup_db,
         dedup_days=args.dedup_days,
@@ -1506,7 +1594,7 @@ if __name__ == "__main__":
         translate_sec = time.time() - t_ai if args.ai else 0
 
         # ── 导出阶段 ──
-        md_path = export_markdown(articles, str(od / f"gcc_research_{ts}.md"))
+        md_path = export_markdown(articles, filepath=os.path.join(str(od), f"gcc_research_{ts}.md"), group_by=args.group_by)
         json_path = export_json(articles, str(od / f"gcc_research_{ts}.json"))
 
         # ── AI简报阶段 ──
