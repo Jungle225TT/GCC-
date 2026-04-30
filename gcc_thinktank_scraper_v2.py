@@ -110,6 +110,7 @@ class Article:
     keyword_score: float = 0.0
     content_type: str = "unknown"
     priority: str = "normal"
+    topic_relevance_score: float = 0.0   # 主题相关性综合评分 0–5，叠加在三维分类之上
     ai_verdict: Optional[str] = None
     matched_keywords: list = field(default_factory=list)
     fetch_method: str = "html"
@@ -215,6 +216,51 @@ def classify_content_type(title, url):
             return "low", "low"
 
     return "unknown", "normal"
+
+def compute_topic_relevance_score(keyword_score: float, content_type: str) -> float:
+    """
+    基于关键词评分与内容类型计算主题相关性综合评分（0–5），
+    作为第四维度叠加在三维分类（地区×机构×内容类型）之上。
+
+    keyword_score 映射：
+      >= 90 (core_gcc 自动通过) → 基础分 3.5
+      >= 6                       → 基础分 3.0
+      >= 4                       → 基础分 2.5
+      >= RELEVANCE_THRESHOLD(3)  → 基础分 2.0
+
+    content_type 加成：
+      high    → +1.5   medium  → +0.5
+      unknown →  0.0   low     → -0.5
+    """
+    if keyword_score >= 90:
+        base = 3.5
+    elif keyword_score >= 6:
+        base = 3.0
+    elif keyword_score >= 4:
+        base = 2.5
+    else:
+        base = 2.0
+    ct_bonus = {"high": 1.5, "medium": 0.5, "unknown": 0.0, "low": -0.5}
+    return min(5.0, max(0.0, base + ct_bonus.get(content_type, 0.0)))
+
+
+def _stars(score: float) -> str:
+    """将 0–5 分转为五星字符串，精度 0.5（半颗星用 '½' 表示，Markdown 纯文本场景）。"""
+    full = int(score)
+    half = 1 if (score - full) >= 0.5 else 0
+    empty = 5 - full - half
+    return "★" * full + ("½" if half else "") + "☆" * empty
+
+
+def _relevance_tier(score: float) -> str:
+    """将相关性评分映射到三档分流标签：优先 / 推荐 / 备查。"""
+    if score >= 4.0:
+        return "优先"
+    elif score >= 2.5:
+        return "推荐"
+    else:
+        return "备查"
+
 
 HEADERS={"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36","Accept-Language":"en-US,en;q=0.9,ar;q=0.8"}
 
@@ -671,7 +717,8 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None)
             source_org_type=tank.get("org_type",""),
             source_topics=list(tank.get("topics",[])),
             date=normalize_date(it.get("date")), snippet=sn, keyword_score=ks, content_type=ct,
-            priority=pr, matched_keywords=mk, fetch_method=it.get("fetch_method", "html")))
+            priority=pr, topic_relevance_score=compute_topic_relevance_score(ks, ct),
+            matched_keywords=mk, fetch_method=it.get("fetch_method", "html")))
 
     # ── Carnegie 二次验证：用官方 regions metadata 替代关键词匹配 ──
     if "Carnegie" in nm and tank.get("deep_topic"):
@@ -845,8 +892,8 @@ def export_markdown(articles, filepath=None, group_by=None):
 
     def _table_rows(ar):
         rows=[]
-        rows.append("| 日期 | 平台 | 区域 | 类型 | 议题 | 标题 | 中文标题 | 链接 |")
-        rows.append("|------|------|------|------|------|------|----------|------|")
+        rows.append("| 日期 | 平台 | 区域 | 类型 | 议题 | 相关性 | 标题 | 中文标题 | 链接 |")
+        rows.append("|------|------|------|------|------|--------|------|----------|------|")
         for a in ar:
             d=a.date if a.date else "-"
             tc=a.title.replace("|","–").replace("\n"," ").strip()
@@ -854,7 +901,8 @@ def export_markdown(articles, filepath=None, group_by=None):
             rg=_REGION_LABEL.get(a.source_region, a.source_region or "-")
             ot=_ORGTYPE_LABEL.get(a.source_org_type, a.source_org_type or "-")
             tps=" ".join(_TOPIC_LABEL.get(tp,tp) for tp in a.source_topics) or "-"
-            rows.append(f"| {d} | {a.source.replace('|','–')} | {rg} | {ot} | {tps} | {tc} | {cn} | [原文]({a.url}) |")
+            rel=f"{_stars(a.topic_relevance_score)} {a.topic_relevance_score:.1f}"
+            rows.append(f"| {d} | {a.source.replace('|','–')} | {rg} | {ot} | {tps} | {rel} | {tc} | {cn} | [原文]({a.url}) |")
         return rows
 
     if group_by == "region":
@@ -888,11 +936,16 @@ def export_markdown(articles, filepath=None, group_by=None):
             L.append(f"---\n## {_TOPIC_LABEL.get(k,k)} 议题 ({len(ar)} 篇)\n")
             L.extend(_table_rows(ar)); L.append("")
     else:
-        # 默认：按优先级分组
-        gs={"priority_read":("⭐ 优先阅读（深度报告/政策分析）",[]),"normal":("📄 常规文章",[]),"low":("📋 简讯/公告",[])}
-        for a in articles: k=a.priority if a.priority in gs else "normal"; gs[k][1].append(a)
-        for key in["priority_read","normal","low"]:
-            lb,ar=gs[key]
+        # 默认：按相关性评分三档分流（优先 / 推荐 / 备查）
+        gs={
+            "优先": ("🔴 优先（核心相关 · 深度报告）", []),
+            "推荐": ("🟡 推荐（较高相关 · 常规研究）", []),
+            "备查": ("🟢 备查（一般相关 · 简报动态）", []),
+        }
+        for a in articles:
+            gs[_relevance_tier(a.topic_relevance_score)][1].append(a)
+        for key in ["优先", "推荐", "备查"]:
+            lb, ar = gs[key]
             if not ar: continue
             L.append(f"---\n## {lb} ({len(ar)} 篇)\n")
             L.extend(_table_rows(ar)); L.append("")
