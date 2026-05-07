@@ -152,7 +152,58 @@ THINK_TANKS = [
     {"name":"International Institute for Strategic Studies (IISS)","country":"UK","tier":"pan_mena","region":"western","org_type":"independent","topics":["security","politics"],"base_url":"https://www.iiss.org","pages":["/topics/middle-east-and-north-africa","/research/"],"rss_feeds":["https://www.iiss.org/en/rss"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
 ]
 
-STRONG_KEYWORDS=["gcc","gulf cooperation council","海合会","مجلس التعاون الخليجي"]
+# === v2.4.1 新增：外置关键词配置加载（对应 5.1 节落地）===
+from pathlib import Path as _Path
+
+_KEYWORDS_YAML_PATH = _Path(__file__).parent / "keywords.yaml"
+
+def _load_keywords_config():
+    """加载 keywords.yaml，拍平为 set 便于匹配。所有词都先 .lower()。
+    返回 dict: {filter_set, demote_set, max_penalty, filter_title_only, demote_check_summary}
+    文件缺失或 yaml 未安装时返回空集，保持系统按 v2.4 原逻辑运行。
+    """
+    try:
+        import yaml as _yaml
+    except ImportError:
+        return {"filter_set": set(), "demote_set": set(), "max_penalty": -2,
+                "filter_title_only": True, "demote_check_summary": True}
+    if not _KEYWORDS_YAML_PATH.exists():
+        return {"filter_set": set(), "demote_set": set(), "max_penalty": -2,
+                "filter_title_only": True, "demote_check_summary": True}
+    with open(_KEYWORDS_YAML_PATH, encoding="utf-8") as _f:
+        _cfg = _yaml.safe_load(_f)
+    _filter_set = set()
+    for _words in (_cfg.get("hard_filter_words") or {}).values():
+        _filter_set.update((w or "").lower() for w in (_words or []) if w)
+    _demote_set = set()
+    for _words in (_cfg.get("demote_words") or {}).values():
+        _demote_set.update((w or "").lower() for w in (_words or []) if w)
+    _params = _cfg.get("parameters", {})
+    return {
+        "filter_set": _filter_set,
+        "demote_set": _demote_set,
+        "max_penalty": _params.get("max_demote_penalty", -2),
+        "filter_title_only": _params.get("filter_title_only", True),
+        "demote_check_summary": _params.get("demote_check_summary", True),
+    }
+
+_KW = _load_keywords_config()
+
+def reload_keywords():
+    """运行时重载 keywords.yaml（试运行调参用）。"""
+    global _KW
+    _KW = _load_keywords_config()
+
+# v2.4.1：补充关键救回词（必须）+ 高价值锚点词（建议），详见 keywords.yaml strong_signal_supplement
+STRONG_KEYWORDS=[
+    "gcc","gulf cooperation council","海合会","مجلس التعاون الخليجي",
+    # 关键救回词：确保绿色样本不被降权词误杀
+    "mutually assured destruction",  # 救 #25 含「Lessons from History」
+    "arabian gulf",                  # 救 #6  含「1979 Revolution」
+    "regional security",             # 救 #6  第二保险
+    # 高价值议题锚点
+    "opec","hormuz","strait of hormuz",
+]
 COUNTRY_KEYWORDS=["saudi arabia","saudi","kingdom of saudi arabia","ksa","uae","united arab emirates","emirates","qatar","qatari","kuwait","kuwaiti","bahrain","bahraini","oman","omani","السعودية","الإمارات","قطر","الكويت","البحرين","عمان","riyadh","jeddah","dubai","abu dhabi","doha","muscat","manama"]
 WEAK_KEYWORDS=["gulf","middle east","mena","arabian peninsula","الخليج","الشرق الأوسط"]
 SCORE_STRONG,SCORE_COUNTRY,SCORE_WEAK=3,2,1
@@ -214,6 +265,13 @@ def classify_content_type(title, url):
     for pattern in LOW_VALUE_PATTERNS:
         if re.search(pattern, combined):
             return "low", "low"
+
+    # === v2.4.1 新增：外置硬过滤词剔除（仅检查标题，filter_title_only=True）===
+    title_lower = title.lower()
+    text_for_filter = title_lower if _KW["filter_title_only"] else f"{title_lower} {url.lower()}"
+    for w in _KW["filter_set"]:
+        if w in text_for_filter:
+            return "excluded", "excluded"
 
     return "unknown", "normal"
 
@@ -634,7 +692,7 @@ def verify_carnegie_metadata(article_url, req_timeout=10):
     regions_raw = m.group(1).lower()
     return any(r in regions_raw for r in CARNEGIE_GCC_REGIONS)
 
-def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None):
+def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None, dry_run=False):
     nm, co, ti, bu = tank["name"], tank["country"], tank["tier"], tank["base_url"]
     # 站点级 Playwright 开关：Carnegie 这类 SPA 站点强制启用
     use_playwright = use_playwright or tank.get("use_playwright", False)
@@ -700,10 +758,18 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None)
 
     # ── 四层漏斗筛选 ──
     results = []
+    filtered_out = []  # v2.4.1: 试运行模式收集第三层硬过滤剔除的文章
     for it in unique:
         t, sn, u = it["title"], it.get("snippet", ""), it["url"]
         ct, pr = classify_content_type(t, u)
-        if ct == "excluded": log.debug(f"    ❌ 排除: {t[:60]}"); continue
+        if ct == "excluded":
+            log.debug(f"    ❌ 排除: {t[:60]}")
+            # === v2.4.1 新增：试运行模式下收集被硬过滤的文章 ===
+            if dry_run:
+                t_lower = t.lower()
+                filter_hit = next((w for w in _KW["filter_set"] if w in t_lower), "exclude_pattern")
+                filtered_out.append({"title": t, "url": u, "source": nm, "filter_hit": filter_hit})
+            continue
         if ti == "core_gcc":
             ks, mk = 99.0, ["core_gcc_auto_pass"]
         elif tank.get("deep_topic"):
@@ -712,13 +778,24 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None)
         else:
             ks, mk = compute_keyword_score(t, sn)
             if ks < RELEVANCE_THRESHOLD: log.debug(f"    ⏭️ 评分不足({ks}): {t[:60]}"); continue
-        results.append(Article(title=t, url=u, source=nm, source_country=co, source_tier=ti,
+        article = Article(title=t, url=u, source=nm, source_country=co, source_tier=ti,
             source_region=tank.get("region",""),
             source_org_type=tank.get("org_type",""),
             source_topics=list(tank.get("topics",[])),
             date=normalize_date(it.get("date")), snippet=sn, keyword_score=ks, content_type=ct,
             priority=pr, topic_relevance_score=compute_topic_relevance_score(ks, ct),
-            matched_keywords=mk, fetch_method=it.get("fetch_method", "html")))
+            matched_keywords=mk, fetch_method=it.get("fetch_method", "html"))
+        # === v2.4.1 新增：检测降权词命中，写入 _funnel_debug（供试运行模式输出）===
+        _text_demote = t.lower()
+        if _KW["demote_check_summary"]:
+            _text_demote += " " + sn.lower()
+        _demote_hits = [w for w in _KW["demote_set"] if w in _text_demote]
+        if _demote_hits:
+            article._funnel_debug = {
+                "demote_hits": _demote_hits,
+                "demote_penalty": _KW["max_penalty"],
+            }
+        results.append(article)
 
     # ── Carnegie 二次验证：用官方 regions metadata 替代关键词匹配 ──
     if "Carnegie" in nm and tank.get("deep_topic"):
@@ -751,7 +828,7 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None)
     rss_n = sum(1 for r in results if r.fetch_method == "rss")
     html_n = len(results) - rss_n
     log.info(f"  ✅ {nm}: {len(unique)} 篇候选 → {len(results)} 篇保留（RSS:{rss_n} HTML:{html_n}）\n")
-    return results
+    return results, filtered_out  # v2.4.1: 返回元组（兼容 dry_run 模式）
 
 def _date_gte(date_str: str, cutoff: str) -> bool:
     """
@@ -773,7 +850,7 @@ def _date_gte(date_str: str, cutoff: str) -> bool:
 def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
                 countries=None, regions=None, org_types=None, topics=None,
                 max_per_tank=50, dedup_db=DEDUP_DB_PATH, dedup_days=1,
-                filter_undated=True, max_age_days=30):
+                filter_undated=True, max_age_days=30, dry_run=False):
     if tanks is None:
         tanks = THINK_TANKS
     if countries:
@@ -810,6 +887,7 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
     print("=" * 60 + "\n")
 
     all_articles = []
+    all_filtered_out = []  # v2.4.1: 汇总所有被第三层硬过滤的文章（试运行模式用）
 
     # ── 抓取阶段：如果启用 Playwright 或有站点强制需要，复用一个浏览器实例 ──
     needs_playwright = use_playwright or any(t.get("use_playwright") for t in tanks)
@@ -818,18 +896,23 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
             browser = p.chromium.launch(headless=True)
             for tk in tanks:
                 try:
-                    all_articles.extend(scrape_think_tank(
-                        tk, use_playwright=use_playwright, max_per_tank=max_per_tank, browser=browser
-                    ))
+                    _arts, _fout = scrape_think_tank(
+                        tk, use_playwright=use_playwright, max_per_tank=max_per_tank,
+                        browser=browser, dry_run=dry_run
+                    )
+                    all_articles.extend(_arts)
+                    all_filtered_out.extend(_fout)
                 except Exception as e:
                     log.error(f"❌ 抓取 {tk['name']} 失败: {e}")
             browser.close()
     else:
         for tk in tanks:
             try:
-                all_articles.extend(scrape_think_tank(
-                    tk, use_playwright=False, max_per_tank=max_per_tank
-                ))
+                _arts, _fout = scrape_think_tank(
+                    tk, use_playwright=False, max_per_tank=max_per_tank, dry_run=dry_run
+                )
+                all_articles.extend(_arts)
+                all_filtered_out.extend(_fout)
             except Exception as e:
                 log.error(f"❌ 抓取 {tk['name']} 失败: {e}")
 
@@ -879,7 +962,7 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
     if rss_count:
         print(f"  (其中 RSS 获取: {rss_count} 篇)")
     print("=" * 60)
-    return all_articles, dedup_filtered
+    return all_articles, dedup_filtered, all_filtered_out  # v2.4.1: 三元组
 
 _REGION_LABEL = {"gcc":"🇦🇪 GCC核心", "mena":"🌍 泛MENA", "western":"🌐 域外英美", "":"其他"}
 _ORGTYPE_LABEL = {"official":"🏛️ 官方/政府", "university":"🎓 大学研究", "independent":"🔬 独立智库", "":"其他"}
@@ -1600,6 +1683,13 @@ if __name__ == "__main__":
     parser.add_argument("--keep-undated", action="store_true",
                         help="保留无发布日期的文章（默认过滤，用于调试）")
     parser.add_argument("--debug", action="store_true", help="调试日志")
+    parser.add_argument(
+        "--dry-run-keywords",
+        action="store_true",
+        dest="dry_run_keywords",
+        help="试运行模式：输出每篇文章的命中关键词与评分明细到 keyword_dryrun.json，"
+             "并额外导出被硬过滤的文章到 filtered_out.csv，便于回查",
+    )
     args = parser.parse_args()
 
     if args.debug:
@@ -1621,7 +1711,7 @@ if __name__ == "__main__":
 
     # ── 抓取阶段（含增量去重） ──
     t_scrape = time.time()
-    articles, dedup_filtered = run_scraper(
+    articles, dedup_filtered, _filtered_out = run_scraper(
         use_playwright=args.playwright,
         enable_ai=args.ai,
         api_key=args.api_key,
@@ -1634,8 +1724,36 @@ if __name__ == "__main__":
         dedup_days=args.dedup_days,
         filter_undated=not args.keep_undated,
         max_age_days=args.days,
+        dry_run=args.dry_run_keywords,
     )
     scrape_sec = time.time() - t_scrape
+
+    # === v2.4.1 新增：试运行模式输出 ===
+    if args.dry_run_keywords:
+        import csv
+        dryrun_records = []
+        for art in articles:
+            debug = getattr(art, "_funnel_debug", {}) or {}
+            dryrun_records.append({
+                "title": art.title,
+                "url": art.url,
+                "source": art.source,
+                "source_region": getattr(art, "source_region", ""),
+                "final_score": art.keyword_score,
+                "demote_hits": debug.get("demote_hits", []),
+                "demote_penalty": debug.get("demote_penalty", 0),
+            })
+        dryrun_path = os.path.join(str(od), "keyword_dryrun.json")
+        with open(dryrun_path, "w", encoding="utf-8") as _f:
+            json.dump(dryrun_records, _f, ensure_ascii=False, indent=2)
+        print(f"  📊 试运行模式：keyword_dryrun.json 已写入 ({len(dryrun_records)} 篇)")
+        fout_path = os.path.join(str(od), "filtered_out.csv")
+        with open(fout_path, "w", encoding="utf-8", newline="") as _f:
+            _w = csv.writer(_f)
+            _w.writerow(["title", "url", "source", "filter_word"])
+            for _rec in _filtered_out:
+                _w.writerow([_rec["title"], _rec["url"], _rec["source"], _rec["filter_hit"]])
+        print(f"  🚫 试运行模式：filtered_out.csv 已写入 ({len(_filtered_out)} 篇被硬过滤)")
 
     if articles:
         ts = datetime.now().strftime('%Y%m%d_%H%M')

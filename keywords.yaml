@@ -1,0 +1,307 @@
+# =============================================================================
+# GCC 智库简报 - 关键词配置文件
+# =============================================================================
+# 用途：为现有四层漏斗（funnel_current_v2.py）提供「降权词」与「硬过滤词」
+#       两份关键词表的外置配置，调整词表无需改代码。
+#
+# !! 语言重要说明 !!
+# 爬虫从智库网站抓取的标题是【英文原文】（少数智库可能含阿拉伯语原文）。
+# 项目中的中文标注和简报都是 AI 翻译后的产物，不参与漏斗筛选。
+# 因此本词表【以英文为主】，中文词条仅作为兼容保留（万一系统中存在已翻译的
+# 标题字段被同时检查时使用），实际命中以英文为准。
+# 匹配方式：大小写不敏感（funnel 加载时统一 .lower()）。
+#
+# 对应 v2.4 进展文档 5.1 节「关键词体系优化」的落地实现：
+#   - 降权词    → 接入【四层漏斗·第二层：关键词评分】，命中则总分 -2，
+#                可被现有「强信号词救回」机制救回
+#   - 硬过滤词  → 接入【四层漏斗·第三层：内容类型识别】，命中则直接剔除
+#
+# 反推依据：马老师对 gcc_summary_20260429_1901_标注版.pdf 的标注
+#            （43 篇英文原标题样本：🟢绿 16 / 🟡黄 17 / 🔴红 4）
+# =============================================================================
+
+version: "1.0"
+last_updated: "2026-04-30"
+based_on: "gcc_summary_20260429_1901 标注版（43篇英文原标题：绿16 / 黄17 / 红4）"
+
+# -----------------------------------------------------------------------------
+# 一、硬过滤词（hard_filter_words）→ 接入第三层「内容类型识别」
+# -----------------------------------------------------------------------------
+# 触发逻辑：标题命中任一词 → 直接剔除（同第三层既有的招聘/活动/讣告剔除策略）
+# 摘要级命中：仅触发降权（避免误杀），不剔除
+# 严格性：宁可放过 10 个，不可错杀 1 个
+# -----------------------------------------------------------------------------
+
+hard_filter_words:
+
+  # 类别 1：媒体活动公告类
+  # 来源样本：[19] Fourth episode of the sound of thoughts podcast（红删）
+  #          [39] AL SHARQ STRATEGIC RESEARCH INTERNSHIP PROGRAM ANNOUNCEMENT（同性质）
+  publication_announcement:
+    # 英文（首选）
+    - podcast
+    - episode of            # 锁定「episode of the X podcast」格式
+    - sound of thoughts     # #19 节目名,精确锁定
+    - internship program
+    - research internship
+    - program announcement
+    # 中文（兼容预翻译版本）
+    - 播客
+    - 节目预告
+
+  # 类别 2：纯人物履历 / 任命公告
+  # 来源样本：[7] Dr. Shaikh Mohamed Bin Hamad Al Khalifa（红删）
+  # 风险提示：单纯「Dr.」「Sheikh」太普遍（很多政治人物都被这么称呼），不能列入；
+  #          只锁定双重身份组合「Dr. Sheikh」「Dr. Shaikh」——这种格式的标题
+  #          几乎必然是个人履历介绍。
+  personal_profile:
+    - "Dr. Sheikh"
+    - "Dr. Shaikh"
+    - "Sheikh Dr."
+    - "Shaikh Dr."
+    # 风险提示:「biography of」「profile of」单独太泛——观察试运行后再决定是否加
+
+  # 类别 3：纯文化软实力 / 文献项目宣传
+  # 来源样本：[3] Two Leading Global Universities Add the Doha Historical Dictionary
+  #          to Their Digital Libraries（红删）
+  cultural_announcement:
+    - Historical Dictionary
+    - historical dictionary
+    - digital library      # 注意:这里是图书馆,不是数字银行——风险较低
+    - digital libraries
+    # 风险提示:单纯「dictionary」太泛(可能误命中政策词典/术语表),
+    # 必须配合「Historical」才精确
+
+  # 类别 4：远离 GCC 地理范围的偏题
+  # 来源样本：[17] Maritime Security in the Gulf of Guinea（红删）
+  # 风险提示：非洲不应整体过滤（GCC 在非洲有大量投资）；只锁定明确不在 GCC
+  #          关心范围的子地理。
+  out_of_scope_geography:
+    - Gulf of Guinea
+    - West African piracy
+    - Latin America
+    - Caribbean
+    - Sub-Saharan Africa   # 慎用:GCC 在撒哈拉以南确有投资,但纯撒哈拉以南安全分析偏题
+    # 中文兼容
+    - 几内亚湾
+    - 拉丁美洲
+    - 加勒比
+
+# -----------------------------------------------------------------------------
+# 二、降权词（demote_words）→ 接入第二层「关键词评分」
+# -----------------------------------------------------------------------------
+# 触发逻辑：标题或摘要命中任一词 → 总分 -2（封顶 -2，命中多个不重复扣分）
+# 救回机制：复用 v2.4 现有「强信号词救回」（v2.4 文档 5.1 节明确）——
+#           命中强信号词时整体评分被救回，本词表无需重复实现保护机制
+# 文章不剔除，扣分后仍可进入第四层 AI 评估，仅排序下沉
+# -----------------------------------------------------------------------------
+
+demote_words:
+
+  # 类别 A：周期性监测报告 ⭐（信号最强，4 篇样本全部命中）
+  # 来源样本：
+  #   [15] IRAN IN A WEEK March April 16-22, 2026
+  #   [24] IRAN IN A WEEK April 9-15, 2026
+  #   [34] IRAN IN A WEEK March April 2-8, 2026
+  #   [29] Rasanah's Monthly Iran Case File: February-March 2026
+  monitoring_report:
+    - IRAN IN A WEEK
+    - Iran in a Week
+    - in a week
+    - Monthly Iran Case File
+    - monthly iran case file
+    - Case File
+    - case file
+    - Weekly Digest
+    - weekly digest
+    - Monthly Report
+    - monthly report
+    # 中文兼容
+    - 伊朗一周
+    - 月度档案
+    - 周报
+    - 月报
+
+  # 类别 B：非 GCC 核心区域聚焦
+  # 来源样本：
+  #   [1]  The Washington–Vatican Rift                        → Vatican
+  #   [2]  Elections in Tunisia                                → Tunisia
+  #   [12] After Orbán: A Political Turning Point             → Orbán/Hungary
+  #   [35] US-European Disagreements ... and NATO's Future    → NATO
+  #   [43] Western Sahara in Transition                       → Western Sahara
+  #
+  # 故意未列入（避免误降）：
+  #   - Lebanon  ([18] 黎巴嫩与真主党、伊朗代理人战争是 GCC 安全核心)
+  #   - Pakistan ([33] CPEC 与海湾安全直接相关)
+  #   - Russia   ([37] 俄罗斯在中东角色密切)
+  #   - Turkey   (土耳其-海湾关系密切)
+  #   - Iraq     ([42] 伊拉克是绿色样本——核心相关)
+  #   - Egypt    (虽未出现于样本，但与海湾政经联动密切)
+  non_core_region:
+    # 北非（与马格里布相关，非 GCC 核心）
+    - Western Sahara
+    - Tunisia
+    - Tunisian
+    - Morocco
+    - Moroccan
+    - Algeria
+    - Algerian
+    - POLISARIO
+    - Polisario
+    - Maghreb
+
+    # 跨大西洋（除非直接关联霍尔木兹安全才豁免，靠强信号词救回）
+    - NATO
+    - North Atlantic Treaty
+    - transatlantic
+    - Vatican
+    - the Pope
+    - the Holy See
+
+    # 中东欧
+    - Orbán
+    - Orban
+    - Hungary
+    - Hungarian
+
+    # 中文兼容
+    - 西撒哈拉
+    - 突尼斯
+    - 摩洛哥
+    - 阿尔及利亚
+    - 北约
+    - 梵蒂冈
+    - 教皇
+    - 欧尔班
+    - 匈牙利
+
+  # 类别 C：侨民研究 / 跨国数字社会学
+  # 来源样本：[22] Digital Activism within the Coptic Community in North America
+  diaspora_sociology:
+    - Digital Activism
+    - digital activism
+    - Coptic
+    - Copts
+    - diaspora
+    - Diaspora
+    - transnational mobilization
+    - expatriate community
+    - 侨民
+    - 散居社区
+    - 数字行动主义
+    - 科普特
+
+  # 类别 D：历史回顾性分析（非时事）
+  # 来源样本：[5] How Did the IRGC Seize Power in Iran?
+  # ⚠️ 关键注意：[25] Combating Iran's "Mutually Assured Destruction" Doctrine:
+  #              Lessons from History 是绿色样本，含「Lessons from History」！
+  #              [6] Iranian Policies on Arabian Gulf ... from the 1979 Revolution
+  #              是绿色样本，含「1979 Revolution」！
+  #              这两条必须靠 funnel 现有的「强信号词救回」机制救回——
+  #              其中「Mutually Assured Destruction」「Arabian Gulf」「Regional
+  #              Security」必须存在于现有强信号词列表中（详见 strong_signal_supplement）。
+  historical_review:
+    - Lessons from History
+    - lessons from history
+    - 1979 Revolution
+    - 1979 revolution
+    - Seize Power
+    - seize power
+    - Rise to Power
+    - rise to power
+    # 中文兼容
+    - 历史教训
+    - 1979革命
+    - 夺取权力
+
+  # 类别 E：战争分析的重复性叠加（占位，本次不启用）
+  # 来源样本：
+  #   [36] Gains and Losses: Assessing the Trajectories of the War on Iran
+  #   [40] Escalation Without Exit: Strategic Disorientation
+  #   [41] Iran's Strategic Options: Rethinking Negotiation with America
+  # 但 [38] STEP and the Possibility of a New Regional Bloc 是绿色，
+  # 也是中东战争话题——简单关键词无法区分，需要「同主题去重」机制（v2.6）
+  war_analysis_redundancy:
+    []
+
+# -----------------------------------------------------------------------------
+# 三、强信号词补充建议（strong_signal_supplement）
+# -----------------------------------------------------------------------------
+# !! 重要 !! 本节列出的词【不直接被代码加载】，仅作为「建议补充到 funnel
+# 现有强信号词列表」的参考清单。Claude Code 改造时会先阅读 funnel 中现有的
+# 强信号词，与本清单去重合并后再评估是否需要补充。
+#
+# 来源：从 16 条绿色高亮样本提取的核心议题词，作为「优先阅读」的稳定锚点。
+#
+# 关键确认：以下三个词【必须】在最终的 funnel 强信号词列表中，否则两个绿色
+#           样本会被误降权：
+#   - "Mutually Assured Destruction"  → 救回 [25]（含 Lessons from History）
+#   - "Arabian Gulf"                  → 救回 [6]（含 1979 Revolution）
+#   - "Regional Security"             → 救回 [6] 第二保险
+# -----------------------------------------------------------------------------
+
+strong_signal_supplement:
+  # 关键救回词 ⭐⭐⭐（必须存在）
+  - Mutually Assured Destruction          # 救 [25]
+  - Arabian Gulf                          # 救 [6]
+  - Regional Security                     # 救 [6] 第二保险
+
+  # 核心议题锚点 ⭐⭐
+  - OPEC
+  - Hormuz
+  - Strait of Hormuz
+  - GCC
+  - Gulf Cooperation Council
+
+  # 高频政经议题词 ⭐
+  - Energy Security                       # [20]
+  - Currency Swap                         # [4]
+  - currency swap
+  - Iran Problem                          # [14]
+  - Iran-Gulf                             # [26]
+  - "Iran–Gulf"                           # 注意：[26] 用的是 en-dash 不是 hyphen
+  - Eroding Trust                         # [26]
+  - Iranian Policies                      # [6]
+  - Missile and Drone                     # [21]
+  - Arab Solidarity                       # [13]
+  - Hollow Promise                        # [13]
+  - Hormuz Crisis                         # [27]
+  - Hormuz Disruption                     # [20]
+  - Chokepoint                            # [28]
+  - Axis of Resistance                    # [42]
+  - Regional Integration                  # [42]
+  - "Bahrain's Cabinet"                   # [30]
+  - "Bahrain's Diplomacy"                 # [31]
+  - "Bahrain's Demands"                   # [23]
+  - Mediate                               # [16]
+  - Mediation
+  - Regional Bloc                         # [38]
+  - "UAE leaving OPEC"                    # [9]
+  - "decision to leave OPEC"              # [8]
+
+# -----------------------------------------------------------------------------
+# 四、参数（parameters）
+# -----------------------------------------------------------------------------
+
+parameters:
+  # 单篇文章最多扣分（封顶值，避免命中多个降权词导致评分崩盘）
+  max_demote_penalty: -2
+
+  # 硬过滤是否仅对标题生效（true = 仅标题；false = 标题或摘要）
+  filter_title_only: true
+
+  # 降权是否对标题和摘要都生效
+  demote_check_summary: true
+
+  # 大小写不敏感（funnel 加载时把所有词和标题/摘要都 .lower() 后匹配）
+  case_insensitive: true
+
+# =============================================================================
+# 修改日志
+# =============================================================================
+changelog:
+  - date: "2026-04-30"
+    author: "姜亭汀"
+    summary: "初版：基于马老师 4-29 标注的 43 篇英文原标题反推；
+              硬过滤 4 类约 25 词，降权 5 类约 50 词，强信号词补充建议 27 个。
+              语言以英文为主、中文为兼容补充。"
