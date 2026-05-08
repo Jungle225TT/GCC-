@@ -1,0 +1,51 @@
+[
+  {
+    "title": "Derasat Center Hosts the Ambassador of the Federal Republic of Germany for a Roundtable Discussion",
+    "url": "https://www.derasat.org.bh/en/derasat-center-hosts-the-ambassador-of-the-federal-republic-of-germany-for-a-roundtable-discussion-2/",
+    "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Derasat Center organizes a lecture titled “The Regional Landscape on the Day After”",
+    "url": "https://www.derasat.org.bh/en/derasat-center-organizes-a-lecture-titled-the-regional-landscape-on-the-day-after/",
+    "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Derasat Center hosts the Ambassador of the Federal Republic of Germany for a Roundtable Discussion",
+    "url": "https://www.derasat.org.bh/en/derasat-center-hosts-the-ambassador-of-the-federal-republic-of-germany-for-a-roundtable-discussion/",
+    "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Iranian Policies on Arabian Gulf andRegional Securityfrom the 1979 Revolution to the 2026 War",
+    "url": "https://www.derasat.org.bh/en/iranian-policies-on-arabian-gulf-andregional-securityfrom-the-1979-revolution-to-the-2026-war/",
+    "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [
+      "1979 revolution"
+    ],
+    "demote_penalty": -2
+  },
+  {
+    "title": "Europe’s Role in Ensuring Maritime Security in the Strait of Hormuz",
+    "url": "https://www.derasat.org.bh/en/europes-role-in-ensuring-maritime-security-in-the-strait-of-hormuz/",
+    "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [
+      "nato"
+    ],
+    "demote_penalty": -2
+  }
+]
