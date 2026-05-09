@@ -20,9 +20,9 @@
 #            （43 篇英文原标题样本：🟢绿 16 / 🟡黄 17 / 🔴红 4）
 # =============================================================================
 
-version: "1.0"
-last_updated: "2026-04-30"
-based_on: "gcc_summary_20260429_1901 标注版（43篇英文原标题：绿16 / 黄17 / 红4）"
+version: "1.1"
+last_updated: "2026-05-09"
+based_on: "gcc_summary_20260429_1901 标注版（43篇英文原标题：绿16 / 黄17 / 红4）+ dry-run 新发现"
 
 # -----------------------------------------------------------------------------
 # 一、硬过滤词（hard_filter_words）→ 接入第三层「内容类型识别」
@@ -48,6 +48,39 @@ hard_filter_words:
     # 中文（兼容预翻译版本）
     - 播客
     - 节目预告
+
+  # 类别 1b：线下活动公告（圆桌/讲座/研讨会）
+  # 来源样本（dry-run 发现）：
+  #   "Derasat Center Hosts the Ambassador...for a Roundtable Discussion"
+  #   "Derasat Center organizes a lecture titled..."
+  # 风险说明：
+  #   - "roundtable" 单词过宽（可出现于"Roundtable on Gulf Security"分析）
+  #   - "roundtable discussion" / "roundtable meeting" 作为结尾名词短语才是纯活动公告
+  #   - "organizes a lecture" / "holds a lecture" 几乎不出现在研究分析标题中
+  #   - "hosts the ambassador" 是外交活动消息，非研究输出
+  event_announcement:
+    - roundtable discussion
+    - roundtable meeting
+    - organizes a lecture
+    - hosts a lecture
+    - holds a lecture
+    - a lecture titled
+    - hosts the ambassador
+    - hosts ambassador
+    - signing ceremony
+    - launch ceremony
+    - graduation ceremony
+    - inaugural ceremony
+    - hosts a workshop
+    - holds a workshop
+    - holds a seminar
+    - hosts a seminar
+    # 中文兼容
+    - 圆桌讨论
+    - 举办讲座
+    - 签约仪式
+    - 启动仪式
+    - 研讨会公告
 
   # 类别 2：纯人物履历 / 任命公告
   # 来源样本：[7] Dr. Shaikh Mohamed Bin Hamad Al Khalifa（红删）
@@ -305,3 +338,8 @@ changelog:
     summary: "初版：基于马老师 4-29 标注的 43 篇英文原标题反推；
               硬过滤 4 类约 25 词，降权 5 类约 50 词，强信号词补充建议 27 个。
               语言以英文为主、中文为兼容补充。"
+  - date: "2026-05-09"
+    author: "姜亭汀"
+    summary: "v1.1：dry-run 发现两篇活动公告漏网（Roundtable Discussion / organizes a lecture）；
+              新增 hard_filter_words 类别 1b event_announcement（21词），
+              覆盖圆桌/讲座/研讨会/仪式类活动公告标题模式。"
