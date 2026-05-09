@@ -20,7 +20,7 @@
 #            （43 篇英文原标题样本：🟢绿 16 / 🟡黄 17 / 🔴红 4）
 # =============================================================================
 
-version: "1.1"
+version: "1.2"
 last_updated: "2026-05-09"
 based_on: "gcc_summary_20260429_1901 标注版（43篇英文原标题：绿16 / 黄17 / 红4）+ dry-run 新发现"
 
@@ -82,6 +82,24 @@ hard_filter_words:
     - 启动仪式
     - 研讨会公告
 
+  # 类别 1c：周期性监测报告（core_gcc 来源降权无效，须升级为硬过滤）
+  # 来源样本：
+  #   [15] IRAN IN A WEEK March April 16-22, 2026（黄→红升级）
+  #   [24] IRAN IN A WEEK April 9-15, 2026（黄→红升级）
+  #   [34] IRAN IN A WEEK March April 2-8, 2026（黄→红升级）
+  #   [29] Rasanah's Monthly Iran Case File: February-March 2026（黄→红升级）
+  # 升级原因：core_gcc 来源（如 Rasanah）自动赋分 99，降权 -2 无法过滤，
+  #           必须走硬过滤路径（第三层 classify_content_type，对所有 tier 生效）。
+  # 精确性：词条够长/够专有，误杀风险极低。
+  periodic_monitoring:
+    - IRAN IN A WEEK
+    - Iran in a Week
+    - Monthly Iran Case File
+    - monthly iran case file
+    # 中文兼容
+    - 伊朗一周
+    - 月度伊朗档案
+
   # 类别 2：纯人物履历 / 任命公告
   # 来源样本：[7] Dr. Shaikh Mohamed Bin Hamad Al Khalifa（红删）
   # 风险提示：单纯「Dr.」「Sheikh」太普遍（很多政治人物都被这么称呼），不能列入；
@@ -131,18 +149,11 @@ hard_filter_words:
 
 demote_words:
 
-  # 类别 A：周期性监测报告 ⭐（信号最强，4 篇样本全部命中）
-  # 来源样本：
-  #   [15] IRAN IN A WEEK March April 16-22, 2026
-  #   [24] IRAN IN A WEEK April 9-15, 2026
-  #   [34] IRAN IN A WEEK March April 2-8, 2026
-  #   [29] Rasanah's Monthly Iran Case File: February-March 2026
+  # 类别 A：周期性监测报告（通用软信号，专有词已升级至 hard_filter_words.periodic_monitoring）
+  # ⚠️ 注意：IRAN IN A WEEK / Monthly Iran Case File 已移至第三层硬过滤（1c 类），
+  #          此处仅保留通用降权词，用于其他来源的同类内容评分下沉。
   monitoring_report:
-    - IRAN IN A WEEK
-    - Iran in a Week
     - in a week
-    - Monthly Iran Case File
-    - monthly iran case file
     - Case File
     - case file
     - Weekly Digest
@@ -150,7 +161,6 @@ demote_words:
     - Monthly Report
     - monthly report
     # 中文兼容
-    - 伊朗一周
     - 月度档案
     - 周报
     - 月报
@@ -342,4 +352,8 @@ changelog:
     author: "姜亭汀"
     summary: "v1.1：dry-run 发现两篇活动公告漏网（Roundtable Discussion / organizes a lecture）；
               新增 hard_filter_words 类别 1b event_announcement（21词），
-              覆盖圆桌/讲座/研讨会/仪式类活动公告标题模式。"
+              覆盖圆桌/讲座/研讨会/仪式类活动公告标题模式。
+              v1.2：全量 dry-run 发现 Rasanah IRAN IN A WEEK 因 core_gcc tier 降权无效；
+              新增 hard_filter_words 类别 1c periodic_monitoring（6词），
+              将 IRAN IN A WEEK / Monthly Iran Case File 从降权升级为硬过滤；
+              demote_words.monitoring_report 保留通用软信号词。"

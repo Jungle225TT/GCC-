@@ -28,6 +28,11 @@ RED_TITLES = [
     "Dr. Shaikh Mohamed Bin Hamad Al Khalifa",
     "Maritime Security in the Gulf of Guinea: The Shift from Piracy to Proxy Conflicts",
     "Fourth episode of the sound of thoughts podcast",
+    # v1.2 升级：从降权词升级为硬过滤词（core_gcc tier 降权 -2 无效，须走第三层剔除）
+    "IRAN IN A WEEK March April 16-22, 2026",
+    "IRAN IN A WEEK April 9-15, 2026",
+    "Rasanah's Monthly Iran Case File: February-March 2026",
+    "IRAN IN A WEEK March April 2-8, 2026",
 ]
 
 YELLOW_DEMOTE_TITLES = [
@@ -35,11 +40,7 @@ YELLOW_DEMOTE_TITLES = [
     'Book Review: "The 2019 Legislative and Presidential Elections in Tunisia"',
     "How Did the IRGC Seize Power in Iran?",
     "After Orbán: A Political Turning Point",
-    "IRAN IN A WEEK March April 16-22, 2026",
     "Digital Activism within the Coptic Community in North America",
-    "IRAN IN A WEEK April 9-15, 2026",
-    "Rasanah's Monthly Iran Case File: February-March 2026",
-    "IRAN IN A WEEK March April 2-8, 2026",
     "US-European Disagreements Over the War in Iran and NATO's Future",
     "Western Sahara in Transition: Geopolitics, Diplomacy, and Uncertain Future",
 ]
