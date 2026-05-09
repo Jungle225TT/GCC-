@@ -159,17 +159,18 @@ _KEYWORDS_YAML_PATH = _Path(__file__).parent / "keywords.yaml"
 
 def _load_keywords_config():
     """加载 keywords.yaml，拍平为 set 便于匹配。所有词都先 .lower()。
-    返回 dict: {filter_set, demote_set, max_penalty, filter_title_only, demote_check_summary}
+    返回 dict: {filter_set, demote_set, title_only_demote_set, max_penalty,
+               filter_title_only, demote_check_summary}
     文件缺失或 yaml 未安装时返回空集，保持系统按 v2.4 原逻辑运行。
     """
     try:
         import yaml as _yaml
     except ImportError:
-        return {"filter_set": set(), "demote_set": set(), "max_penalty": -2,
-                "filter_title_only": True, "demote_check_summary": True}
+        return {"filter_set": set(), "demote_set": set(), "title_only_demote_set": set(),
+                "max_penalty": -2, "filter_title_only": True, "demote_check_summary": True}
     if not _KEYWORDS_YAML_PATH.exists():
-        return {"filter_set": set(), "demote_set": set(), "max_penalty": -2,
-                "filter_title_only": True, "demote_check_summary": True}
+        return {"filter_set": set(), "demote_set": set(), "title_only_demote_set": set(),
+                "max_penalty": -2, "filter_title_only": True, "demote_check_summary": True}
     with open(_KEYWORDS_YAML_PATH, encoding="utf-8") as _f:
         _cfg = _yaml.safe_load(_f)
     _filter_set = set()
@@ -178,10 +179,14 @@ def _load_keywords_config():
     _demote_set = set()
     for _words in (_cfg.get("demote_words") or {}).values():
         _demote_set.update((w or "").lower() for w in (_words or []) if w)
+    _title_only_demote_set = set()
+    for _words in (_cfg.get("title_only_demote_words") or {}).values():
+        _title_only_demote_set.update((w or "").lower() for w in (_words or []) if w)
     _params = _cfg.get("parameters", {})
     return {
         "filter_set": _filter_set,
         "demote_set": _demote_set,
+        "title_only_demote_set": _title_only_demote_set,
         "max_penalty": _params.get("max_demote_penalty", -2),
         "filter_title_only": _params.get("filter_title_only", True),
         "demote_check_summary": _params.get("demote_check_summary", True),
@@ -786,10 +791,14 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None,
             priority=pr, topic_relevance_score=compute_topic_relevance_score(ks, ct),
             matched_keywords=mk, fetch_method=it.get("fetch_method", "html"))
         # === v2.4.1 新增：检测降权词命中，写入 _funnel_debug（供试运行模式输出）===
-        _text_demote = t.lower()
+        # demote_set：标题+摘要均检查（demote_check_summary=True 时）
+        # title_only_demote_set：仅检查标题（避免摘要引用误触发，如 NATO）
+        _title_lower = t.lower()
+        _text_demote = _title_lower
         if _KW["demote_check_summary"]:
             _text_demote += " " + sn.lower()
         _demote_hits = [w for w in _KW["demote_set"] if w in _text_demote]
+        _demote_hits += [w for w in _KW["title_only_demote_set"] if w in _title_lower]
         if _demote_hits:
             article._funnel_debug = {
                 "demote_hits": _demote_hits,

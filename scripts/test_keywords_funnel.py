@@ -85,12 +85,15 @@ def score_with_demote(article):
     """
     方案 C2：第二层评分 + 降权词扣分。
     复现 scrape_think_tank 中的注入逻辑，供测试直接调用。
+    同步支持 title_only_demote_set（v1.3：NATO 等词仅检查标题）。
     """
     ks, mk = compute_keyword_score(article.title, article.snippet or "")
-    text_demote = article.title.lower()
+    title_lower = article.title.lower()
+    text_demote = title_lower
     if _KW["demote_check_summary"]:
         text_demote += " " + (article.snippet or "").lower()
     hits = [w for w in _KW["demote_set"] if w in text_demote]
+    hits += [w for w in _KW.get("title_only_demote_set", set()) if w in title_lower]
     if hits:
         ks += _KW["max_penalty"]
         if not hasattr(article, "_funnel_debug"):
