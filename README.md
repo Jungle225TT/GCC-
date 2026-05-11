@@ -1,8 +1,8 @@
-# GCC智库研究抓取系统 v2.3
+# GCC智库研究抓取系统 v2.4.1
 
-> 成都创新金融研究院 — 姜亭汀 | 更新于 2026-04-22
+> 成都创新金融研究院 — 姜亭汀 | 更新于 2026-05-11
 
-自动抓取 21 个 GCC / 泛MENA 智库的最新研究文章，经四层漏斗筛选后输出 Markdown 报告、JSON 数据、AI 研究简报 PDF，并可选推送至飞书多维表格。
+自动抓取 29 个 GCC / 泛MENA / 域外英美智库的最新研究文章，经四层漏斗筛选后输出 Markdown 报告、JSON 数据、AI 研究简报 PDF，并可选推送至飞书多维表格。
 
 ---
 
@@ -11,14 +11,15 @@
 1. [文件结构](#文件结构)
 2. [环境准备](#环境准备)
 3. [主抓取脚本：gcc_thinktank_scraper_v2.py](#主抓取脚本)
-4. [过滤规则配置：filter_rules.yaml](#过滤规则配置)
-5. [评分阈值测试：scoring_test.py](#评分阈值测试)
-6. [飞书同步：feishu_sync.py](#飞书同步)
-7. [全文转PDF：fulltext_to_pdf.py](#全文转pdf)
-8. [架构说明：四层漏斗 + 增量去重](#架构说明)
-9. [Google Drive + Colab 协同](#google-drive--colab-协同)
-10. [定时任务配置](#定时任务配置)
-11. [常见问题](#常见问题)
+4. [关键词配置：keywords.yaml](#关键词配置)
+5. [过滤规则配置：filter_rules.yaml](#过滤规则配置)
+6. [评分阈值测试：scoring_test.py](#评分阈值测试)
+7. [飞书同步：feishu_sync.py](#飞书同步)
+8. [全文转PDF：fulltext_to_pdf.py](#全文转pdf)
+9. [架构说明：四层漏斗 + 增量去重](#架构说明)
+10. [Google Drive + Colab 协同](#google-drive--colab-协同)
+11. [定时任务配置](#定时任务配置)
+12. [常见问题](#常见问题)
 
 ---
 
@@ -32,12 +33,13 @@ GccScraper/
 │
 ├── # ─── 核心源码（根目录直接运行）──────────────────────────────
 ├── gcc_thinktank_scraper_v2.py        # 主抓取脚本
+├── keywords.yaml                      # 关键词配置（硬过滤 / 降权 / 仅标题降权）
 ├── ai_client.py                       # AI 接口抽象层（DeepSeek / Anthropic）
 ├── feishu_sync.py                     # 飞书多维表格同步
 ├── fulltext_to_pdf.py                 # 全文抓取并输出 PDF/HTML
 ├── scoring_test.py                    # 关键词评分阈值测试
 ├── dedup.py                           # SQLite 去重模块
-├── filter_rules.yaml                  # 过滤规则配置（直接编辑，无需改代码）
+├── filter_rules.yaml                  # 导航链接过滤规则配置（直接编辑，无需改代码）
 │
 ├── notebooks/                         # Google Colab 协同工作
 │   └── GCC_Scraper_Colab.ipynb        # 一键运行笔记本（挂载 Drive → 安装 → 运行）
@@ -55,7 +57,8 @@ GccScraper/
 │   ├── 阈值测试2.png
 │   └── 飞书表格.png
 │
-├── scripts/                           # 辅助脚本（Windows 本地运行）
+├── scripts/                           # 辅助脚本
+│   ├── test_keywords_funnel.py        # 关键词漏斗回归测试（红/黄/绿测试集）
 │   ├── setup.bat
 │   └── test_run.bat
 │
@@ -178,7 +181,7 @@ export ANTHROPIC_API_KEY="sk-ant-xxxxx"
 
 ### 功能
 
-- 抓取 21 个智库的最新研究文章（HTML + RSS 双通道）
+- 抓取 29 个智库的最新研究文章（HTML + RSS 双通道）
 - 深层专题页直接抓取（Carnegie GCC 专题、Al Sharq 国家标签、Arab Reform 国家标签）
 - 四层漏斗筛选（来源可信度 → 关键词评分 → 内容类型 → AI辅助）
 - 日期标准化：统一输出 `YYYY-MM-DD` 格式，自动过滤无日期文章（机构介绍页兜底）
@@ -257,7 +260,7 @@ python gcc_thinktank_scraper_v2.py --topics energy --ai --playwright
 # 只抓独立智库的安全议题
 python gcc_thinktank_scraper_v2.py --org-types independent --topics security --ai
 
-# 按区域分组输出 Markdown（不同于默认的优先级分组）
+# 按区域分组输出 Markdown（不同于默认的两档分组）
 python gcc_thinktank_scraper_v2.py --ai --group-by region
 
 # 按议题分组输出
@@ -321,7 +324,7 @@ python gcc_thinktank_scraper_v2.py --keep-undated --debug
 | `--regions` | 全部 | 按区域过滤：`gcc` / `mena` / `western`，可多个 |
 | `--org-types` | 全部 | 按机构性质过滤：`official` / `university` / `independent`，可多个 |
 | `--topics` | 全部 | 按议题标签过滤（至少含其一的智库才被纳入）：`energy` / `security` / `economy` / `politics` / `society` / `technology` |
-| `--group-by` | 无（按优先级） | Markdown 输出分组方式：`region` / `org_type` / `topic` |
+| `--group-by` | 无（按相关性两档） | Markdown 输出分组方式：`region` / `org_type` / `topic`；默认按强相关/中等相关两档分组 |
 | `--playwright` | 关闭 | 启用 Chromium JS 渲染（Carnegie MEC 等 SPA 站点必须） |
 | `--ai` | 关闭 | 启用 AI 筛选 + 翻译 + 研究简报（输出 MD + PDF） |
 | `--api-key` | 读环境变量 | AI API Key（DeepSeek 或 Anthropic，建议用环境变量代替） |
@@ -331,6 +334,7 @@ python gcc_thinktank_scraper_v2.py --keep-undated --debug
 | `--dedup-db` | `data/gcc_dedup.db` | 去重数据库路径 |
 | `--dedup-days` | `1` | 去重时间窗口（天）；`0` = 关闭去重效果 |
 | `--keep-undated` | 关闭 | 保留无发布日期的文章（默认过滤，用于调试） |
+| `--dry-run-keywords` | 关闭 | 试运行模式：输出关键词命中明细（`keyword_dryrun.json`）和被硬过滤条目（`filtered_out.csv`），便于调参 |
 | `--debug` | 关闭 | 显示调试日志 |
 
 ### 输出文件
@@ -339,10 +343,58 @@ python gcc_thinktank_scraper_v2.py --keep-undated --debug
 
 | 文件 | 内容 |
 |------|------|
-| `gcc_research_YYYYMMDD_HHMM.md` | Markdown 报告，按优先级（⭐/📄/📋）分组 |
+| `gcc_research_YYYYMMDD_HHMM.md` | Markdown 报告，按相关性两档分组（⭐ 强相关置顶 / 📄 中等相关） |
 | `gcc_research_YYYYMMDD_HHMM.json` | 完整数据，可导入飞书/Notion |
 | `gcc_summary_YYYYMMDD_HHMM.md` | AI 结构化研究简报，含目录+逐篇解析+趋势信号（仅 `--ai`） |
 | `gcc_summary_YYYYMMDD_HHMM.pdf` | 同上，排版后的 PDF 版本，可直接分发（仅 `--ai`，需 `reportlab`） |
+
+---
+
+## 关键词配置
+
+**文件：** `keywords.yaml`
+
+### 作用
+
+控制漏斗第二层（关键词评分）和第三层（硬过滤）的行为，**无需改动 Python 代码**，直接编辑此文件后重新运行即生效。
+
+### 三类词表
+
+| 词表 | 触发层 | 效果 |
+|------|--------|------|
+| `hard_filter_words` | 第三层 | 命中则直接丢弃（对所有 tier 含 core_gcc 均生效） |
+| `demote_words` | 第二层 | 命中则评分 -2，检查标题 + 摘要 |
+| `title_only_demote_words` | 第二层 | 命中则评分 -2，**仅检查标题**（适合摘要中常被引用的词，如 NATO） |
+
+### 当前硬过滤分类（v1.3）
+
+| 分类 | 代表词 | 说明 |
+|------|--------|------|
+| `publication_announcement` | podcast、episode of | 播客/节目公告 |
+| `event_announcement` | roundtable discussion、organizes a lecture | 活动公告 |
+| `periodic_monitoring` | IRAN IN A WEEK、Monthly Iran Case File | 定期监控简报 |
+| `personal_profile` | Dr. Sheikh、Dr. Shaikh | 人物简介页 |
+| `cultural_announcement` | Historical Dictionary、digital libraries | 文化/资源公告 |
+| `out_of_scope_geography` | Gulf of Guinea、Latin America | 非目标地区 |
+
+### 试运行调参
+
+```bash
+# 本地试运行（输出命中明细，不调用 AI，不写去重库）
+python gcc_thinktank_scraper_v2.py \
+  --dry-run-keywords --no-dedup \
+  --output-dir "./output_test" --max-per-tank 20
+# 产出：output_test/keyword_dryrun.json（通过文章 + 降权明细）
+#       output_test/filtered_out.csv（被硬过滤文章）
+```
+
+运行时热重载词表（无需重启）：
+
+```python
+# 在 Python 交互环境 / Colab 中调用
+from gcc_thinktank_scraper_v2 import reload_keywords
+reload_keywords()
+```
 
 ---
 
@@ -642,40 +694,43 @@ python fulltext_to_pdf.py --site kapsarc --debug
 ┌─────────────────────────────────────┐
 │  第一层：来源可信度                  │
 │  core_gcc 智库 → 直接通过（99分）   │
-│  deep_topic 专题页 → 自动通过（5分）│  ← v2.3 新增
+│  deep_topic 专题页 → 自动通过（5分）│
 │  pan_mena 智库 → 进入第二层         │
 └──────────────┬──────────────────────┘
                ▼
 ┌─────────────────────────────────────┐
-│  第二层：关键词评分                  │
-│  GCC / 海合会 = 3分                │
-│  国家名（UAE/Saudi...）= 2分       │
-│  Gulf / MENA / 中东 = 1分         │
-│  标题命中 ×2                       │
-│  总分 ≥ 3 → 通过                   │
+│  第二层：关键词评分（keywords.yaml） │
+│  STRONG（gcc/海合会/hormuz...）= 3分│
+│  COUNTRY（UAE/Saudi...）= 2分      │
+│  WEAK（Gulf/MENA...）= 1分         │
+│  标题命中 ×2；降权词命中 -2        │
+│  total ≥ 3 → 通过                  │
 └──────────────┬──────────────────────┘
                ▼
 ┌─────────────────────────────────────┐
-│  第三层：内容类型识别                │
-│  排除：Register / Vacancy / 招聘... │
-│  高价值：report / analysis → ⭐     │
-│  中价值：blog / opinion → 📄       │
-│  低价值：newsletter → 📋           │
+│  第三层：内容类型 + 硬过滤           │
+│  （keywords.yaml hard_filter_words）│
+│  排除：podcast/event/人物介绍/非核心│  ← 对所有 tier 生效
+│  高价值：report/analysis → 相关性↑  │
+│  低价值：newsletter → 相关性↓       │
 └──────────────┬──────────────────────┘
                ▼
 ┌─────────────────────────────────────┐
 │  第四层：AI 辅助（可选）             │
 │  评分 2–4 的边界文章                │
-│  → Claude Haiku 快速二分类          │
+│  → DeepSeek / Claude 快速二分类     │
 └──────────────┬──────────────────────┘
                ▼
 ┌─────────────────────────────────────┐
 │  后处理过滤                          │
-│  无日期文章 → 过滤（机构页兜底）     │  ← v2.3 新增
-│  超出时效窗口 → 过滤（--days 控制）  │  ← v2.3 新增
+│  无日期文章 → 过滤（机构页兜底）     │
+│  超出时效窗口 → 过滤（--days 控制）  │
 └──────────────┬──────────────────────┘
                ▼
-          最终文章列表（按发布日期降序）
+     最终文章列表（按发布日期降序）
+     输出 Markdown：
+       ⭐ 推荐阅读（强相关，评分 ≥ 4.0）← 置顶，标题加⭐
+       📄 中等相关（评分 < 4.0）
 ```
 
 ### deep_topic 深层专题页机制
@@ -723,9 +778,9 @@ gcc_thinktank_scraper_v2.py
         └─ output/gcc_summary_*.pdf    ──→  可直接分发的 PDF 简报
 ```
 
-### 覆盖的智库（21 个）
+### 覆盖的智库（29 个）
 
-智库库共 **29 个**，按三个维度分类管理。
+共 **29 个**智库，按三个维度分类管理。
 
 **维度一：地区（region）**
 
