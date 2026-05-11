@@ -345,7 +345,7 @@ python gcc_thinktank_scraper_v2.py --keep-undated --debug
 |------|------|
 | `gcc_research_YYYYMMDD_HHMM.md` | Markdown 报告，按相关性两档分组（⭐ 强相关置顶 / 📄 中等相关） |
 | `gcc_research_YYYYMMDD_HHMM.json` | 完整数据，可导入飞书/Notion |
-| `gcc_summary_YYYYMMDD_HHMM.md` | AI 结构化研究简报，含目录+逐篇解析+趋势信号（仅 `--ai`） |
+| `gcc_summary_YYYYMMDD_HHMM.md` | AI 结构化研究简报：目录按两档分节（⭐ 推荐阅读 / 📄 中等相关）+ 逐篇解析（强相关章节标题加 ⭐）+ 趋势信号（仅 `--ai`） |
 | `gcc_summary_YYYYMMDD_HHMM.pdf` | 同上，排版后的 PDF 版本，可直接分发（仅 `--ai`，需 `reportlab`） |
 
 ---
@@ -774,8 +774,8 @@ gcc_thinktank_scraper_v2.py
         │
         ├─ output/gcc_research_*.json  ──→  feishu_sync.py  ──→  飞书多维表格
         ├─ output/gcc_research_*.md    ──→  直接阅读 / 分发
-        ├─ output/gcc_summary_*.md     ──→  研究团队内部简报
-        └─ output/gcc_summary_*.pdf    ──→  可直接分发的 PDF 简报
+        ├─ output/gcc_summary_*.md     ──→  研究团队内部简报（含两档目录与 ⭐ 标记）
+        └─ output/gcc_summary_*.pdf    ──→  可直接分发的 PDF 简报（同上）
 ```
 
 ### 覆盖的智库（29 个）
