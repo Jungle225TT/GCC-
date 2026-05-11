@@ -20,10 +20,16 @@
 - **强相关**（`topic_relevance_score >= 4.0`）：区块置顶，标题前加 `⭐`
 - **中等相关**（`topic_relevance_score < 4.0`）：紧随其后
 
-实现位置：
+**Markdown 报告**实现位置：
 - `_relevance_tier(score)` → `gcc_thinktank_scraper_v2.py:318`
 - `_table_rows()` 中的 `⭐` 标记 → `:989`
 - `export_markdown()` 默认分组 → `:1031`
+
+**AI 简报**（`generate_ai_summary`）同样遵循两档：
+- 文章排序：强相关全部在前，中等相关在后（tier 内各自按日期降序）
+- 目录分两节：`⭐ 推荐阅读（强相关）` / `📄 中等相关`，header 显示各档篇数
+- 章节标题后处理：`### [N]` → `### [⭐ N]`（强相关文章，索引 1 至 n_strong）
+- PDF 无需额外改动，`⭐` 随 Markdown 文本由 reportlab 渲染
 
 ### core_gcc 过滤规则
 - `core_gcc` 智库自动赋分 99，`demote_words` 降权（-2）对其无效（97 >> 阈值 3）
