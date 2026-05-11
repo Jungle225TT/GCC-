@@ -316,13 +316,11 @@ def _stars(score: float) -> str:
 
 
 def _relevance_tier(score: float) -> str:
-    """将相关性评分映射到三档分流标签：优先 / 推荐 / 备查。"""
+    """将相关性评分映射到两档分流标签：强相关 / 中等相关。"""
     if score >= 4.0:
-        return "优先"
-    elif score >= 2.5:
-        return "推荐"
+        return "强相关"
     else:
-        return "备查"
+        return "中等相关"
 
 
 HEADERS={"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36","Accept-Language":"en-US,en;q=0.9,ar;q=0.8"}
@@ -989,6 +987,8 @@ def export_markdown(articles, filepath=None, group_by=None):
         for a in ar:
             d=a.date if a.date else "-"
             tc=a.title.replace("|","–").replace("\n"," ").strip()
+            if a.topic_relevance_score >= 4.0:
+                tc = "⭐ " + tc
             cn=(a.title_cn or "-").replace("|","–").replace("\n"," ").strip()
             rg=_REGION_LABEL.get(a.source_region, a.source_region or "-")
             ot=_ORGTYPE_LABEL.get(a.source_org_type, a.source_org_type or "-")
@@ -1028,15 +1028,14 @@ def export_markdown(articles, filepath=None, group_by=None):
             L.append(f"---\n## {_TOPIC_LABEL.get(k,k)} 议题 ({len(ar)} 篇)\n")
             L.extend(_table_rows(ar)); L.append("")
     else:
-        # 默认：按相关性评分三档分流（优先 / 推荐 / 备查）
+        # 默认：按相关性评分两档分流（强相关 / 中等相关）
         gs={
-            "优先": ("🔴 优先（核心相关 · 深度报告）", []),
-            "推荐": ("🟡 推荐（较高相关 · 常规研究）", []),
-            "备查": ("🟢 备查（一般相关 · 简报动态）", []),
+            "强相关": ("⭐ 推荐阅读（强相关 · 核心议题）", []),
+            "中等相关": ("📄 中等相关（常规研究 · 背景参考）", []),
         }
         for a in articles:
             gs[_relevance_tier(a.topic_relevance_score)][1].append(a)
-        for key in ["优先", "推荐", "备查"]:
+        for key in ["强相关", "中等相关"]:
             lb, ar = gs[key]
             if not ar: continue
             L.append(f"---\n## {lb} ({len(ar)} 篇)\n")
