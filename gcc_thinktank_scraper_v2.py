@@ -1222,6 +1222,11 @@ def generate_ai_summary(articles, api_key=None):
         if re.match(r'\d{4}', d):               return (1, d[:4] + "-99-99")
         return (0, "")  # 无日期排最后
     articles = sorted(articles, key=_date_sort_key, reverse=True)
+    # 强相关优先：tier 内保持日期降序
+    _strong = [a for a in articles if a.topic_relevance_score >= 4.0]
+    _medium = [a for a in articles if a.topic_relevance_score < 4.0]
+    articles = _strong + _medium
+    n_strong = len(_strong)
 
     print(f"\n🤖 正在生成结构化研究简报（{n} 篇文章，分 {(n + BATCH_SIZE - 1) // BATCH_SIZE} 批，{ai_client.provider_info()}）...")
 
@@ -1310,14 +1315,23 @@ def generate_ai_summary(articles, api_key=None):
     _backfill_dates_from_analysis(all_analyses, articles)
 
     toc_lines = []
-    for i, a in enumerate(articles, 1):
-        title_display = a.title_cn or a.title
-        date_str = a.date or "日期不详"
-        toc_lines.append(f"{i}. [{title_display}](#article-{i}) — {a.source} · {date_str}")
+    if n_strong > 0:
+        toc_lines.append(f"**⭐ 推荐阅读（强相关 · {n_strong} 篇）**\n")
+        for i, a in enumerate(articles[:n_strong], 1):
+            title_display = a.title_cn or a.title
+            date_str = a.date or "日期不详"
+            toc_lines.append(f"{i}. [⭐ {title_display}](#article-{i}) — {a.source} · {date_str}")
+        toc_lines.append("")
+    if n_strong < n:
+        toc_lines.append(f"**📄 中等相关（{n - n_strong} 篇）**\n")
+        for i, a in enumerate(articles[n_strong:], n_strong + 1):
+            title_display = a.title_cn or a.title
+            date_str = a.date or "日期不详"
+            toc_lines.append(f"{i}. [{title_display}](#article-{i}) — {a.source} · {date_str}")
 
     header = (
         f"# GCC研究动态内部简报\n\n"
-        f"> **生成时间**：{now_str} &nbsp;|&nbsp; **收录文章**：{n} 篇 &nbsp;|&nbsp; 成都创新金融研究院\n\n"
+        f"> **生成时间**：{now_str} &nbsp;|&nbsp; **收录文章**：{n} 篇（⭐ 强相关 {n_strong} 篇 · 📄 中等相关 {n - n_strong} 篇）&nbsp;|&nbsp; 成都创新金融研究院\n\n"
         "---\n\n"
         "## 一、文章目录\n\n"
         + "\n".join(toc_lines)
@@ -1351,7 +1365,10 @@ def generate_ai_summary(articles, api_key=None):
         trends = f"## 三、本期趋势信号\n\n> ❌ 趋势信号生成失败：{e}"
 
     full_summary = header + "\n\n".join(all_analyses) + "\n\n---\n\n" + trends.strip()
-    print(f"✅ AI研究简报生成成功（{n} 篇 / {total_batches} 批）")
+    # ── 为强相关文章的章节标题注入 ⭐ ──────────────────────────────────
+    for idx in range(1, n_strong + 1):
+        full_summary = full_summary.replace(f"### [{idx}]", f"### [⭐ {idx}]")
+    print(f"✅ AI研究简报生成成功（{n} 篇 / {total_batches} 批，其中强相关 {n_strong} 篇）")
     return full_summary
 
 
