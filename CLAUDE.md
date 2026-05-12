@@ -29,7 +29,10 @@
 - 文章排序：强相关全部在前，中等相关在后（tier 内各自按日期降序）
 - 目录分两节：`⭐ 推荐阅读（强相关）` / `📄 中等相关`，header 显示各档篇数
 - 章节标题后处理：`### [N]` → `### [⭐ N]`（强相关文章，索引 1 至 n_strong）
-- PDF 无需额外改动，`⭐` 随 Markdown 文本由 reportlab 渲染
+- PDF 渲染：STSong-Light 不支持 emoji，`_colored_symbols()` 在 `export_summary_pdf` 内将符号替换为带色圆点：
+  - `⭐` → 红色 `●`（`#C0392B`，强相关）
+  - `📄` → 蓝色 `●`（`#2980B9`，中等相关）
+  - `_safe()` 和 `_with_links()` 均调用此函数，覆盖所有文本路径
 
 ### core_gcc 过滤规则
 - `core_gcc` 智库自动赋分 99，`demote_words` 降权（-2）对其无效（97 >> 阈值 3）
@@ -42,6 +45,10 @@
 | `hard_filter_words` | 第三层，直接丢弃 | 标题 + URL |
 | `demote_words` | 第二层，score -2 | 标题 + 摘要 |
 | `title_only_demote_words` | 第二层，score -2 | **仅标题** |
+
+### 去重机制
+- **跨智库 in-memory 去重**：`run_scraper` 在 AI 筛选前按 URL 去重，防止同一文章被多个来源重复收录，`--no-dedup` 时同样生效
+- **SQLite 增量去重**：`data/gcc_dedup.db`，过滤近 N 天已处理文章（本地无此目录，须加 `--no-dedup`）
 
 ### 本地运行注意
 - 本地无 `data/` 目录，必须加 `--no-dedup`
