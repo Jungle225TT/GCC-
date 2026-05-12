@@ -923,6 +923,17 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
             except Exception as e:
                 log.error(f"❌ 抓取 {tk['name']} 失败: {e}")
 
+    # ── 跨智库 URL 去重（防同一文章被多个来源重复收录，与 SQLite 去重互补）──
+    _seen_in_run: set = set()
+    _unique_in_run = []
+    for _a in all_articles:
+        if _a.url not in _seen_in_run:
+            _seen_in_run.add(_a.url)
+            _unique_in_run.append(_a)
+    if len(_unique_in_run) < len(all_articles):
+        log.info(f"🔁 跨来源去重: 去除 {len(all_articles) - len(_unique_in_run)} 篇重复文章")
+    all_articles = _unique_in_run
+
     # ── AI 辅助筛选 ──
     if enable_ai:
         all_articles = ai_classify_batch(all_articles, api_key)
@@ -1452,9 +1463,16 @@ def export_summary_pdf(summary_text: str, filepath: str) -> str:
         """仅转义 & < >，不动其他内容（用于已知安全片段）"""
         return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
+    def _colored_symbols(text: str) -> str:
+        """将 emoji 符号替换为带颜色的实心圆（STSong-Light 不支持 emoji）。"""
+        text = text.replace('⭐', '<font color="#C0392B">●</font>')   # 红色圆 = 强相关
+        text = text.replace('📄', '<font color="#2980B9">●</font>')   # 蓝色圆 = 中等相关
+        return text
+
     def _safe(text: str) -> str:
         """转义 XML 特殊字符，**粗体** → <b>，*斜体* → <i>"""
         text = _esc(text)
+        text = _colored_symbols(text)
         text = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', text)
         text = re.sub(r'\*([^*]+?)\*',  r'<i>\1</i>', text)
         return text
@@ -1467,8 +1485,8 @@ def export_summary_pdf(summary_text: str, filepath: str) -> str:
         parts = []
         last = 0
         for m in re.finditer(r'\[([^\]]+)\]\(\s*([^)]+?)\s*\)', text):
-            before = _esc(text[last:m.start()])
-            label  = _esc(m.group(1))
+            before = _colored_symbols(_esc(text[last:m.start()]))
+            label  = _colored_symbols(_esc(m.group(1)))
             # URL 里 & 必须转为 &amp;，否则 XML 非法 → reportlab 中途崩溃 → 文件损坏
             href   = (m.group(2).strip()
                       .replace("&", "&amp;")
@@ -1478,7 +1496,7 @@ def export_summary_pdf(summary_text: str, filepath: str) -> str:
             parts.append(f'<a href="{href}" color="{C_LINK.hexval()}">'
                          f'<u>{label}</u></a>')
             last = m.end()
-        parts.append(_esc(text[last:]))
+        parts.append(_colored_symbols(_esc(text[last:])))
         result = ''.join(parts)
         result = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', result)
         result = re.sub(r'\*([^*\n]+?)\*',  r'<i>\1</i>', result)
