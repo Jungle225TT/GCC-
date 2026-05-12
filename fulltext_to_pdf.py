@@ -835,6 +835,289 @@ def scrape_site_to_pdf(
     return result.get("pdf", "")
 
 
+# ── 全量合并模式 ──────────────────────────────────────────────────────────────
+
+def _scrape_all_combined(
+    max_per_site: int = 30,
+    use_playwright: bool = False,
+    output_dir: str = "./output_fulltext",
+) -> None:
+    """抓取全部站点，将所有文章合并为一个 PDF + 一个 HTML。"""
+    print("\n" + "=" * 65)
+    print(f"  模式: 全量合并（{len(SITES)} 个站点，每站最多 {max_per_site} 篇）")
+    print("=" * 65 + "\n")
+
+    all_articles: list[dict] = []
+
+    for site_key, site_cfg in SITES.items():
+        print(f"\n>>> [{site_key}] {site_cfg['name']} ({site_cfg['country']})")
+        base_url = site_cfg["base_url"]
+        seen_urls: set = set()
+        article_list: list[dict] = []
+
+        # Step 1: 发现 URL
+        for feed_url in site_cfg.get("rss_feeds", []):
+            for item in get_article_urls_from_rss(feed_url):
+                if item["url"] not in seen_urls:
+                    seen_urls.add(item["url"])
+                    article_list.append(item)
+
+        if len(article_list) < 5:
+            for page_path in site_cfg.get("listing_pages", []):
+                page_url = base_url.rstrip("/") + page_path
+                html = fetch_html(page_url, use_playwright=use_playwright)
+                if not html:
+                    continue
+                for item in get_article_urls_from_html(html, base_url, site_cfg["selectors"]):
+                    if item["url"] not in seen_urls:
+                        seen_urls.add(item["url"])
+                        article_list.append(item)
+                time.sleep(1)
+
+        article_list = article_list[:max_per_site]
+        log.info(f"  发现 {len(article_list)} 篇文章，开始逐篇抓取全文...")
+
+        # Step 2: 抓取全文，附加来源标注
+        content_selectors = site_cfg.get("content_selectors", [])
+        success = 0
+        for i, art in enumerate(article_list, 1):
+            log.info(f"  [{i:2d}/{len(article_list)}] {art['title'][:65]}")
+            page_html = fetch_html(art["url"], use_playwright=use_playwright)
+            if page_html:
+                text = extract_fulltext(page_html, art["url"], content_selectors)
+                art["fulltext"] = text
+                if len(text) > 200:
+                    success += 1
+            else:
+                art["fulltext"] = ""
+            # 附加来源信息（用于合并 PDF/HTML 标注）
+            art["source_name"] = site_cfg["name"]
+            art["source_country"] = site_cfg["country"]
+            time.sleep(1.2)
+
+        log.info(f"  成功提取正文: {success}/{len(article_list)} 篇")
+        all_articles.extend(article_list)
+
+    print(f"\n>>> 全部站点抓取完成，共 {len(all_articles)} 篇文章")
+
+    if not all_articles:
+        log.error("未抓到任何文章，退出")
+        return
+
+    # Step 3: 合并输出
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+    combined_name = "GCC_Fulltext_Combined"
+    pdf_path = str(Path(output_dir) / f"{combined_name}_{timestamp}.pdf")
+    html_path = str(Path(output_dir) / f"{combined_name}_{timestamp}.html")
+
+    _build_combined_pdf(all_articles, pdf_path)
+    _build_combined_html(all_articles, html_path)
+
+    print("\n" + "=" * 65)
+    print(f"  ✅ 全量合并完成！")
+    print(f"  📄 PDF:  {pdf_path}")
+    print(f"  🌐 HTML: {html_path}")
+    print(f"  📊 总文章数: {len(all_articles)} 篇")
+    print("=" * 65)
+
+
+def _build_combined_pdf(articles: list[dict], output_path: str) -> None:
+    """合并版 PDF：封面 + 来源索引 + 全文，每篇标注来源智库。"""
+    if not HAS_REPORTLAB:
+        txt_path = output_path.replace(".pdf", ".txt")
+        with open(txt_path, "w", encoding="utf-8") as f:
+            f.write(f"GCC Think Tank Full-text Combined Collection\n")
+            f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')} | Articles: {len(articles)}\n")
+            f.write("=" * 80 + "\n\n")
+            for i, art in enumerate(articles, 1):
+                f.write(f"[{i}] {art['title']}\n")
+                f.write(f"Source: {art.get('source_name','')}\n")
+                f.write(f"URL: {art['url']}\n")
+                f.write("-" * 60 + "\n")
+                f.write(art.get("fulltext", "(no fulltext)") + "\n\n")
+        log.info(f"📄 纯文本已保存: {txt_path}")
+        return
+
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+    try:
+        pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
+        cn_font = 'STSong-Light'
+    except Exception:
+        cn_font = 'Helvetica'
+
+    doc = SimpleDocTemplate(
+        output_path, pagesize=A4,
+        leftMargin=2.5*cm, rightMargin=2.5*cm,
+        topMargin=2.5*cm, bottomMargin=2.5*cm,
+        title="GCC Think Tank Full-text Combined",
+        author="成都创新金融研究院",
+    )
+
+    C_DARK   = colors.HexColor("#1a1a2e")
+    C_GREY   = colors.HexColor("#555555")
+    C_LIGHT  = colors.HexColor("#aaaaaa")
+    C_RULE   = colors.HexColor("#cccccc")
+    C_SOURCE = colors.HexColor("#2a6dd9")
+
+    def _sty(name, size, leading, *, before=4, after=6, color=C_DARK, indent=0):
+        return ParagraphStyle(
+            name, fontName=cn_font, fontSize=size, leading=leading,
+            spaceBefore=before, spaceAfter=after,
+            leftIndent=indent, textColor=color,
+        )
+
+    s_cover_title = _sty("CT", 20, 28, before=0, after=10)
+    s_cover_sub   = _sty("CS", 11, 16, before=2, after=4, color=C_GREY)
+    s_toc         = _sty("TC", 9,  13, before=1, after=2, indent=6, color=C_DARK)
+    s_art_title   = _sty("AT", 13, 19, before=10, after=4)
+    s_source_tag  = _sty("SRC", 8, 12, before=0, after=6, color=C_SOURCE)
+    s_body        = _sty("BD", 10, 15, before=2, after=3, color=C_DARK)
+    s_empty       = _sty("EM", 9,  13, before=2, after=4, color=C_LIGHT)
+
+    story = []
+
+    # 封面
+    story.append(Spacer(1, 3*cm))
+    story.append(Paragraph("GCC Think Tank Full-text Collection", s_cover_title))
+    story.append(Spacer(1, 0.4*cm))
+    story.append(Paragraph("AI Training Data — Combined from All Sources", s_cover_sub))
+    story.append(Paragraph(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}  |  Total Articles: {len(articles)}", s_cover_sub))
+    story.append(Paragraph("成都创新金融研究院", s_cover_sub))
+    story.append(PageBreak())
+
+    # 目录
+    story.append(Paragraph("Table of Contents", s_art_title))
+    story.append(Spacer(1, 0.3*cm))
+    for i, art in enumerate(articles, 1):
+        src = art.get("source_country", "")
+        label = f"{i}. [{src}] {_safe_text(art['title'][:100])}"
+        story.append(Paragraph(label, s_toc))
+    story.append(PageBreak())
+
+    # 正文
+    for i, art in enumerate(articles, 1):
+        story.append(Paragraph(f"{i}. {_safe_text(art['title'])}", s_art_title))
+        src_line = f"{art.get('source_name','')}  |  {art.get('source_country','')}  |  {_safe_text(art.get('url',''))}"
+        story.append(Paragraph(src_line, s_source_tag))
+        story.append(HRFlowable(width="100%", thickness=0.5, color=C_RULE, spaceAfter=6))
+
+        fulltext = art.get("fulltext", "").strip()
+        if fulltext:
+            for para in re.split(r"\n{2,}", fulltext):
+                para = para.strip()
+                if para:
+                    story.append(Paragraph(_safe_text(para), s_body))
+        else:
+            story.append(Paragraph("[Full text not available]", s_empty))
+
+        story.append(Spacer(1, 0.6*cm))
+        if i < len(articles):
+            story.append(HRFlowable(width="100%", thickness=1, color=C_RULE, spaceAfter=6))
+            if i % 5 == 0:
+                story.append(PageBreak())
+
+    doc.build(story)
+    log.info(f"📄 合并 PDF 已保存: {output_path}")
+
+
+def _build_combined_html(articles: list[dict], output_path: str) -> None:
+    """合并版 HTML：带来源标注，适合浏览器阅读和文本提取。"""
+    now = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+    toc_items = "".join(
+        f'<li><a href="#article-{i}"><span class="src">[{_html_esc(art.get("source_country",""))}]</span> '
+        f'{_html_esc(art["title"])}</a></li>\n'
+        for i, art in enumerate(articles, 1)
+    )
+
+    article_blocks = []
+    for i, art in enumerate(articles, 1):
+        title    = _html_esc(art["title"])
+        url      = _html_esc(art.get("url", ""))
+        src_name = _html_esc(art.get("source_name", ""))
+        src_ctry = _html_esc(art.get("source_country", ""))
+        fulltext = art.get("fulltext", "").strip()
+
+        if fulltext:
+            paras = [p.strip() for p in re.split(r"\n{2,}", fulltext) if p.strip()]
+            if not paras:
+                paras = [p.strip() for p in fulltext.split("\n") if p.strip()]
+            body_html = "\n".join(f"<p>{_html_esc(p)}</p>" for p in paras)
+        else:
+            body_html = '<p class="no-content">[Full text not available]</p>'
+
+        article_blocks.append(f"""
+    <article id="article-{i}">
+      <h2><span class="num">{i}.</span> {title}</h2>
+      <div class="source-tag">{src_name} &nbsp;·&nbsp; {src_ctry}</div>
+      <div class="meta"><a href="{url}" target="_blank" rel="noopener">{url}</a></div>
+      <div class="body">{body_html}</div>
+    </article>""")
+
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GCC Think Tank Full-text Combined Collection</title>
+  <style>
+    *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+    body {{
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 16px; line-height: 1.7; color: #1a1a2e;
+      background: #fafaf8; max-width: 900px;
+      margin: 0 auto; padding: 40px 24px 80px;
+    }}
+    header {{ border-bottom: 3px solid #1a1a2e; padding-bottom: 24px; margin-bottom: 36px; }}
+    header h1 {{ font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }}
+    header .meta-info {{ font-size: 0.82rem; color: #666; font-family: monospace; }}
+    nav {{
+      background: #f0f0ec; border-left: 4px solid #1a1a2e;
+      padding: 20px 24px; margin-bottom: 48px; border-radius: 0 4px 4px 0;
+    }}
+    nav h2 {{ font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; color: #444; }}
+    nav ol {{ padding-left: 1.4em; }}
+    nav li {{ font-size: 0.84rem; margin-bottom: 4px; line-height: 1.4; }}
+    nav a {{ color: #1a1a2e; text-decoration: none; }}
+    nav a:hover {{ text-decoration: underline; }}
+    nav .src {{ color: #2a6dd9; font-family: monospace; font-size: 0.78rem; }}
+    article {{ border-top: 2px solid #ddd; padding-top: 36px; margin-top: 36px; }}
+    article h2 {{ font-size: 1.2rem; font-weight: 700; line-height: 1.4; margin-bottom: 6px; }}
+    article h2 .num {{ color: #888; font-weight: 400; font-size: 0.95rem; margin-right: 4px; }}
+    .source-tag {{ font-size: 0.8rem; font-family: monospace; color: #2a6dd9; margin-bottom: 4px; }}
+    .meta {{ font-size: 0.75rem; font-family: monospace; color: #999; margin-bottom: 18px; word-break: break-all; }}
+    .meta a {{ color: #2a6dd9; text-decoration: none; }}
+    .meta a:hover {{ text-decoration: underline; }}
+    .body p {{ margin-bottom: 1em; }}
+    .no-content {{ color: #aaa; font-style: italic; }}
+    footer {{ margin-top: 60px; border-top: 1px solid #ddd; padding-top: 16px; font-size: 0.75rem; color: #999; text-align: center; }}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>GCC Think Tank Full-text Combined Collection</h1>
+    <div class="meta-info">
+      AI Training Data &nbsp;|&nbsp; Generated: {now} &nbsp;|&nbsp;
+      Total Articles: {len(articles)} &nbsp;|&nbsp; 成都创新金融研究院
+    </div>
+  </header>
+  <nav>
+    <h2>Table of Contents ({len(articles)} articles)</h2>
+    <ol>
+{toc_items}    </ol>
+  </nav>
+  {"".join(article_blocks)}
+  <footer>AI Training Data Collection — 成都创新金融研究院 — {now}</footer>
+</body>
+</html>"""
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(html)
+    log.info(f"🌐 合并 HTML 已保存: {output_path}")
+
+
 # ── CLI ────────────────────────────────────────────────────────────────────────
 
 def main():
@@ -858,11 +1141,17 @@ def main():
         help=f"目标站点（默认: kapsarc）",
     )
     parser.add_argument(
+        "--all",
+        action="store_true",
+        dest="all_sites",
+        help="抓取全部站点，合并输出为一个 PDF + 一个 HTML",
+    )
+    parser.add_argument(
         "--max",
         type=int,
         default=20,
         dest="max_articles",
-        help="最多抓取文章数（默认: 20）",
+        help="每个站点最多抓取文章数（默认: 20）",
     )
     parser.add_argument(
         "--playwright",
@@ -903,12 +1192,19 @@ def main():
         print("   pip install reportlab\n")
         print("（也可先运行，会降级输出 .txt 文件）\n")
 
-    _scrape_and_export(
-        site_key=args.site,
-        max_articles=args.max_articles,
-        use_playwright=args.playwright,
-        output_dir=args.output_dir,
-    )
+    if args.all_sites:
+        _scrape_all_combined(
+            max_per_site=args.max_articles,
+            use_playwright=args.playwright,
+            output_dir=args.output_dir,
+        )
+    else:
+        _scrape_and_export(
+            site_key=args.site,
+            max_articles=args.max_articles,
+            use_playwright=args.playwright,
+            output_dir=args.output_dir,
+        )
 
 
 if __name__ == "__main__":
