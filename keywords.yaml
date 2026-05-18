@@ -20,8 +20,8 @@
 #            （43 篇英文原标题样本：🟢绿 16 / 🟡黄 17 / 🔴红 4）
 # =============================================================================
 
-version: "1.3"
-last_updated: "2026-05-09"
+version: "1.4"
+last_updated: "2026-05-15"
 based_on: "gcc_summary_20260429_1901 标注版（43篇英文原标题：绿16 / 黄17 / 红4）+ dry-run 新发现"
 
 # -----------------------------------------------------------------------------
@@ -61,10 +61,13 @@ hard_filter_words:
   event_announcement:
     - roundtable discussion
     - roundtable meeting
+    - AJCS to Participate
     - organizes a lecture
     - hosts a lecture
     - holds a lecture
     - a lecture titled
+    - Derasat Center participates in
+    - participates in the Joint Regional Initiative
     - hosts the ambassador
     - hosts ambassador
     - signing ceremony
@@ -94,11 +97,21 @@ hard_filter_words:
   periodic_monitoring:
     - IRAN IN A WEEK
     - Iran in a Week
+    - Iran Case File
+    - iran case file
     - Monthly Iran Case File
     - monthly iran case file
+    - is now available
     # 中文兼容
     - 伊朗一周
     - 月度伊朗档案
+
+  # 类别 1d：历史性组织沿革/人物化叙事（与当期 GCC 政策关联弱）
+  # 来源样本（dry-run 发现）：
+  #   "How Did the IRGC Seize Power in Iran?"
+  # 风险说明：只锁定完整短语，避免误杀当前伊朗安全/核问题分析。
+  historical_profile:
+    - seize power in iran
 
   # 类别 2：纯人物履历 / 任命公告
   # 来源样本：[7] Dr. Shaikh Mohamed Bin Hamad Al Khalifa（红删）
@@ -132,6 +145,8 @@ hard_filter_words:
     - West African piracy
     - Latin America
     - Caribbean
+    - Washington–Vatican
+    - Washington-Vatican
     - Sub-Saharan Africa   # 慎用:GCC 在撒哈拉以南确有投资,但纯撒哈拉以南安全分析偏题
     # 中文兼容
     - 几内亚湾
@@ -381,3 +396,10 @@ changelog:
               v1.3：NATO 从 demote_words 移至 title_only_demote_words.transatlantic；
               新增代码层 title_only_demote_set 机制，仅检查标题避免霍尔木兹安全
               分析摘要引用 NATO 时误触发降权。"
+  - date: "2026-05-15"
+    author: "Codex"
+    summary: "v1.4：基于 output_test 最新 dry-run，补充 core_gcc 自动 99 分下仍需硬过滤的
+              Iran Case File 上新通知、IRGC 历史沿革、Washington–Vatican 偏题、
+              AJCS/Derasat 活动参与公告；同时将代码层 career 裸词过滤收窄为
+              career workshop/fair/opportunity/careers 等招聘活动语境，避免误杀
+              UAE 就业政策研究。"

@@ -20,6 +20,7 @@ from datetime import datetime, timedelta
 from dataclasses import dataclass, field, asdict
 from typing import Optional
 from pathlib import Path
+from urllib.parse import urlparse
 import requests
 from bs4 import BeautifulSoup
 import ai_client
@@ -135,20 +136,20 @@ THINK_TANKS = [
     {"name":"Kuwait Institute for Scientific Research (KISR)","country":"Kuwait","tier":"core_gcc","region":"gcc","org_type":"official","topics":["energy","technology","economy"],"base_url":"https://www.kisr.edu.kw","pages":["/en/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
     {"name":"Bahrain Center for Strategic, International and Energy Studies (Derasat)","country":"Bahrain","tier":"core_gcc","region":"gcc","org_type":"official","topics":["security","energy","economy"],"base_url":"https://www.derasat.org.bh","pages":["/en/home_en/","/knowledge-center/publications-page/","/en/research/"],"rss_feeds":["https://www.derasat.org.bh/en/feed/","https://www.derasat.org.bh/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
     {"name":"Tawasul","country":"Oman","tier":"core_gcc","region":"gcc","org_type":"independent","topics":["politics","economy"],"base_url":"https://tawasul.co.om","pages":["/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
-    {"name":"Arab Gulf States Institute in Washington (AGSIW)","country":"USA","tier":"core_gcc","region":"western","org_type":"independent","topics":["politics","economy","security"],"base_url":"https://agsiw.org","pages":["/topic/politics-and-governance/","/topic/economics-and-energy/","/topic/security-and-defense/","/topic/society/"],"rss_feeds":["https://agsiw.org/feed/"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
+    {"name":"Arab Gulf States Institute in Washington (AGSIW)","country":"USA","tier":"core_gcc","region":"western","org_type":"independent","topics":["politics","economy","security"],"base_url":"https://agsiw.org","pages":["/topic/politics-and-governance/","/topic/society/"],"rss_feeds":["https://agsiw.org/feed/"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
     # ── 泛MENA智库（4个）──────────────────────────────────────────────────────────
     {"name":"Carnegie Middle East Center","country":"Lebanon","tier":"pan_mena","region":"mena","org_type":"independent","topics":["politics","security"],"base_url":"https://carnegieendowment.org","pages":["/regions/gulf","/regions/saudi-arabia","/regions/united-arab-emirates","/regions/qatar","/regions/kuwait","/regions/bahrain","/regions/oman","/middle-east/regions/saudi-arabia","/middle-east/regions/united-arab-emirates","/middle-east/regions/qatar","/middle-east/regions/kuwait","/middle-east/regions/bahrain","/middle-east/regions/oman","/sada/region/692?lang=en"],"rss_feeds":["https://carnegie-mec.org/feed","https://carnegieendowment.org/feeds/middle-east"],"use_playwright":True,"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post'], a[href*='/research/'], a[href*='/diwan/'], a[href*='/emissary/'], a[href*='/sada/']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
     {"name":"Al-Ahram Center for Political and Strategic Studies","country":"Egypt","tier":"pan_mena","region":"mena","org_type":"official","topics":["politics","security"],"base_url":"https://acpss.ahram.org.eg","pages":["/"],"selectors":{"article":"article, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
     {"name":"Al Sharq Forum","country":"Turkey","tier":"pan_mena","region":"mena","org_type":"independent","topics":["politics","society"],"base_url":"https://research.sharqforum.org","pages":["/region/middle-east/ksa/","/region/middle-east/uae/","/region/middle-east/qatar/","/region/middle-east/kuwait/","/region/middle-east/bahrain/","/region/middle-east/oman/","/tag/gcc/"],"rss_feeds":["https://research.sharqforum.org/feed/"],"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
     {"name":"Arab Reform Initiative","country":"France","tier":"pan_mena","region":"mena","org_type":"independent","topics":["politics","society"],"base_url":"https://www.arab-reform.net","pages":["/tag/saudi-arabia/","/tag/united-arab-emirates/","/tag/qatar/","/tag/kuwait/","/tag/bahrain/","/tag/oman/","/tag/gulf/","/tag/gcc/"],"rss_feeds":["https://www.arab-reform.net/feed/"],"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
     # ── 域外英美智库（8个，关注GCC/能源/安全议题）──────────────────────────────────
-    {"name":"Middle East Institute (MEI)","country":"USA","tier":"pan_mena","region":"western","org_type":"independent","topics":["politics","security","economy"],"base_url":"https://www.mei.edu","pages":["/regions/gulf-states"],"rss_feeds":["https://www.mei.edu/rss.xml"],"deep_topic":True,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Center for Strategic and International Studies (CSIS)","country":"USA","tier":"pan_mena","region":"western","org_type":"independent","topics":["energy","security","economy"],"base_url":"https://www.csis.org","pages":["/programs/middle-east-program","/analysis"],"rss_feeds":["https://www.csis.org/analysis/feed"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='analysis']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Middle East Institute (MEI)","country":"USA","tier":"pan_mena","region":"western","org_type":"independent","topics":["politics","security","economy"],"base_url":"https://mei.edu","pages":["/regions/gulf/","/regions/"],"rss_feeds":["https://mei.edu/rss.xml"],"use_playwright":True,"deep_topic":True,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Center for Strategic and International Studies (CSIS)","country":"USA","tier":"pan_mena","region":"western","org_type":"independent","topics":["energy","security","economy"],"base_url":"https://www.csis.org","pages":["/regions/middle-east/gulf","/programs/middle-east-program"],"rss_feeds":["https://www.csis.org/analysis/feed"],"deep_topic":True,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='analysis']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
     {"name":"Atlantic Council — Middle East Programs","country":"USA","tier":"pan_mena","region":"western","org_type":"independent","topics":["security","politics","economy"],"base_url":"https://www.atlanticcouncil.org","pages":["/programs/middle-east-programs/","/topic/middle-east/gulf/"],"rss_feeds":["https://www.atlanticcouncil.org/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='article']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Chatham House — Gulf States","country":"UK","tier":"pan_mena","region":"western","org_type":"independent","topics":["politics","security","economy"],"base_url":"https://www.chathamhouse.org","pages":["/regions/middle-east-north-africa/gulf-states","/topics/middle-east-north-africa"],"rss_feeds":["https://www.chathamhouse.org/rss.xml"],"deep_topic":True,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Oxford Institute for Energy Studies (OIES)","country":"UK","tier":"pan_mena","region":"western","org_type":"university","topics":["energy"],"base_url":"https://www.oxfordenergy.org","pages":["/research/natural-gas/","/research/oil-opec-and-energy-transition/","/research/"],"rss_feeds":["https://www.oxfordenergy.org/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Baker Institute for Public Policy (Rice University)","country":"USA","tier":"pan_mena","region":"western","org_type":"university","topics":["energy","economy"],"base_url":"https://www.bakerinstitute.org","pages":["/centers/center-for-energy-studies/","/research/"],"rss_feeds":["https://www.bakerinstitute.org/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Wilson Center — Middle East Program","country":"USA","tier":"pan_mena","region":"western","org_type":"official","topics":["politics","economy"],"base_url":"https://www.wilsoncenter.org","pages":["/program/middle-east-program/publications","/program/middle-east-program"],"rss_feeds":["https://www.wilsoncenter.org/rss.xml"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Chatham House — Gulf States","country":"UK","tier":"pan_mena","region":"western","org_type":"independent","topics":["politics","security","economy"],"base_url":"https://www.chathamhouse.org","pages":["/regions/middle-east-and-north-africa/gulf-states","/regions/middle-east-and-north-africa"],"rss_feeds":["https://www.chathamhouse.org/rss.xml"],"use_playwright":True,"deep_topic":True,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Oxford Institute for Energy Studies (OIES)","country":"UK","tier":"pan_mena","region":"western","org_type":"university","topics":["energy"],"base_url":"https://www.oxfordenergy.org","pages":["/publications/","/research/"],"rss_feeds":["https://www.oxfordenergy.org/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Baker Institute for Public Policy (Rice University)","country":"USA","tier":"pan_mena","region":"western","org_type":"university","topics":["energy","economy"],"base_url":"https://www.bakerinstitute.org","pages":["/center-for-energy-studies","/ces"],"rss_feeds":["https://www.bakerinstitute.org/feed"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
+    {"name":"Wilson Center — Middle East Program","country":"USA","tier":"pan_mena","region":"western","org_type":"official","topics":["politics","economy"],"base_url":"https://www.wilsoncenter.org","pages":["/collection/middle-east-program-research","/publication-series/MEP-policy-briefs","/collection/mena360","/program/middle-east-program"],"rss_feeds":["https://www.wilsoncenter.org/rss.xml"],"deep_topic":True,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
     {"name":"International Institute for Strategic Studies (IISS)","country":"UK","tier":"pan_mena","region":"western","org_type":"independent","topics":["security","politics"],"base_url":"https://www.iiss.org","pages":["/topics/middle-east-and-north-africa","/research/"],"rss_feeds":["https://www.iiss.org/en/rss"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
 ]
 
@@ -199,6 +200,42 @@ def reload_keywords():
     global _KW
     _KW = _load_keywords_config()
 
+# ── 合规规则（从 compliance_rules.yaml 加载）────────────────────
+
+_COMPLIANCE_RULES_PATH = _Path(__file__).parent / "compliance_rules.yaml"
+
+def _load_compliance_rules():
+    try:
+        import yaml as _yaml
+    except ImportError:
+        return {"defaults": {"allow_scrape": True, "crawl_delay_seconds": 1.0}, "domains": {}}
+    try:
+        with open(_COMPLIANCE_RULES_PATH, encoding="utf-8") as f:
+            data = _yaml.safe_load(f) or {}
+        return {
+            "defaults": data.get("defaults") or {"allow_scrape": True, "crawl_delay_seconds": 1.0},
+            "domains": data.get("domains") or {},
+        }
+    except FileNotFoundError:
+        return {"defaults": {"allow_scrape": True, "crawl_delay_seconds": 1.0}, "domains": {}}
+    except Exception as e:
+        log.warning(f"⚠️  compliance_rules.yaml 加载失败（{e}），使用默认合规策略")
+        return {"defaults": {"allow_scrape": True, "crawl_delay_seconds": 1.0}, "domains": {}}
+
+_COMPLIANCE = _load_compliance_rules()
+
+def _hostname(url):
+    return (urlparse(url).hostname or "").lower().removeprefix("www.")
+
+def get_compliance_rule(url):
+    host = _hostname(url)
+    domains = _COMPLIANCE.get("domains", {})
+    for domain, rule in domains.items():
+        d = str(domain).lower().removeprefix("www.")
+        if host == d or host.endswith("." + d):
+            return rule
+    return _COMPLIANCE.get("defaults", {})
+
 # v2.4.1：补充关键救回词（必须）+ 高价值锚点词（建议），详见 keywords.yaml strong_signal_supplement
 STRONG_KEYWORDS=[
     "gcc","gulf cooperation council","海合会","مجلس التعاون الخليجي",
@@ -208,6 +245,9 @@ STRONG_KEYWORDS=[
     "regional security",             # 救 #6  第二保险
     # 高价值议题锚点
     "opec","hormuz","strait of hormuz",
+    "gulf states","arab gulf","iran-gulf","u.s.-gulf","us-gulf",
+    "regional bloc","axis of resistance","regional integration",
+    "energy security","hormuz crisis","hormuz disruption","chokepoint",
 ]
 COUNTRY_KEYWORDS=["saudi arabia","saudi","kingdom of saudi arabia","ksa","uae","united arab emirates","emirates","qatar","qatari","kuwait","kuwaiti","bahrain","bahraini","oman","omani","السعودية","الإمارات","قطر","الكويت","البحرين","عمان","riyadh","jeddah","dubai","abu dhabi","doha","muscat","manama"]
 WEAK_KEYWORDS=["gulf","middle east","mena","arabian peninsula","الخليج","الشرق الأوسط"]
@@ -243,7 +283,7 @@ def compute_keyword_score(title, snippet=""):
     _check_keywords(WEAK_KEYWORDS, SCORE_WEAK)
     return total, matched
 
-EXCLUDE_PATTERNS=[r'\bregister\s+for\b',r'\bjoin\s+us\b',r'\bcall\s+for\s+papers\b',r'\bvacancy\b',r'\bjob\s+posting\b',r'\bjob\s+opening\b',r'\bapply\s+now\b',r'\bcareer\b',r'\brecruitment\b',r'\bsign\s+up\b',r'\benroll\b']
+EXCLUDE_PATTERNS=[r'\bregister\s+for\b',r'\bjoin\s+us\b',r'\bcall\s+for\s+papers\b',r'\bvacancy\b',r'\bjob\s+posting\b',r'\bjob\s+opening\b',r'\bapply\s+now\b',r'\bcareer\s+paths?\s+workshop\b',r'\bcareer\s+fair\b',r'\bcareer\s+opportunit(?:y|ies)\b',r'\bcareers\b',r'\brecruitment\b',r'\bsign\s+up\b',r'\benroll\b']
 HIGH_VALUE_PATTERNS=[r'\breport\b',r'\bpolicy\s+brief\b',r'\bresearch\s+paper\b',r'\banalysis\b',r'\bcommentary\b',r'\bworking\s+paper\b',r'\bwhite\s+paper\b',r'\bstudy\b',r'\bin-depth\b',r'\bstrategic\s+assessment\b',r'\bforecast\b']
 MEDIUM_VALUE_PATTERNS=[r'\bblog\b',r'\bopinion\b',r'\beditorial\b',r'\bnews\s+update\b',r'\binterview\b',r'\bperspective\b',r'\binsight\b',r'\bbriefing\b']
 LOW_VALUE_PATTERNS=[r'\bpress\s+release\b',r'\bmedia\s+coverage\b',r'\bnewsletter\b',r'\bannouncement\b',r'\bdigest\b']
@@ -254,6 +294,18 @@ def classify_content_type(title, url):
     返回 (content_type, priority)。
     """
     combined = f"{title} {url}".lower()
+    title_clean = title.strip()
+    if re.match(r'^[A-Za-z][A-Za-z &,\-/]+?\(\d+\)$', title_clean):
+        return "excluded", "excluded"
+
+    # 外置硬过滤词必须优先于 high/medium/low 判断。
+    # 例如 "internship program announcement" 同时命中 announcement(low)，
+    # 若低价值判断先返回，会绕过硬过滤。
+    title_lower = title.lower()
+    text_for_filter = title_lower if _KW["filter_title_only"] else f"{title_lower} {url.lower()}"
+    for w in _KW["filter_set"]:
+        if w in text_for_filter:
+            return "excluded", "excluded"
 
     for pattern in EXCLUDE_PATTERNS:
         if re.search(pattern, combined):
@@ -270,13 +322,6 @@ def classify_content_type(title, url):
     for pattern in LOW_VALUE_PATTERNS:
         if re.search(pattern, combined):
             return "low", "low"
-
-    # === v2.4.1 新增：外置硬过滤词剔除（仅检查标题，filter_title_only=True）===
-    title_lower = title.lower()
-    text_for_filter = title_lower if _KW["filter_title_only"] else f"{title_lower} {url.lower()}"
-    for w in _KW["filter_set"]:
-        if w in text_for_filter:
-            return "excluded", "excluded"
 
     return "unknown", "normal"
 
@@ -315,6 +360,7 @@ def _stars(score: float) -> str:
     return "★" * full + ("½" if half else "") + "☆" * empty
 
 
+
 def _relevance_tier(score: float) -> str:
     """将相关性评分映射到两档分流标签：强相关 / 中等相关。"""
     if score >= 4.0:
@@ -341,7 +387,7 @@ def fetch_html_playwright(url, timeout=20000, browser=None):
         if browser is not None:
             ctx = browser.new_context(user_agent=HEADERS["User-Agent"], locale="en-US")
             pg = ctx.new_page()
-            pg.goto(url, timeout=timeout, wait_until="networkidle")
+            pg.goto(url, timeout=timeout, wait_until="domcontentloaded")
             pg.wait_for_timeout(2000)
             html = pg.content()
             ctx.close()
@@ -351,7 +397,7 @@ def fetch_html_playwright(url, timeout=20000, browser=None):
                 b = p.chromium.launch(headless=True)
                 c = b.new_context(user_agent=HEADERS["User-Agent"], locale="en-US")
                 pg = c.new_page()
-                pg.goto(url, timeout=timeout, wait_until="networkidle")
+                pg.goto(url, timeout=timeout, wait_until="domcontentloaded")
                 pg.wait_for_timeout(2000)
                 html = pg.content()
                 b.close()
@@ -367,6 +413,26 @@ def fetch_html(url, use_playwright=False, req_timeout=10, pw_timeout=20000, brow
         if pw and len(pw) > len(html or ""):
             html = pw
     return html
+
+def _clean_article_title(title):
+    """清理卡片标题中粘连的栏目、日期和标签元数据。"""
+    if not title:
+        return title
+    t = re.sub(r'\s+', ' ', title.replace("\xa0", " ").replace("&nbsp;", " ").replace("&nbsp", " ")).strip()
+    t = re.sub(r'#\S.*$', '', t).strip()
+    t = re.sub(
+        r'\b(?:Commentary|Analysis|Research|Report|Book|Event|Podcast|Opinion|Interview|Brief|Expert comment|Explainer)\s*'
+        r'\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4}.*$',
+        '',
+        t,
+        flags=re.IGNORECASE,
+    ).strip()
+    t = re.sub(r'\s*[—-]\s*$', '', t).strip()
+    t = re.sub(r'\s*[—-]\s*(?:[A-Z][A-Za-z.\'’ -]{2,80})?\s*\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4}.*$', '', t).strip()
+    t = re.sub(r'\s*[—-]\s*[A-Z][A-Za-z.\'’ -]{2,80}\s*/\s*$', '', t).strip()
+    t = re.sub(r'\b\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4}.*$', '', t).strip()
+    t = re.sub(r'\s*[—-]\s*$', '', t).strip()
+    return t or title.strip()
 
 def extract_articles_from_page(html,base_url,page_url,selectors,tank_name):
     soup=BeautifulSoup(html,"html.parser");articles=[];seen=set()
@@ -386,6 +452,8 @@ def extract_articles_from_page(html,base_url,page_url,selectors,tank_name):
                 if not te:continue
                 t=te.get_text(strip=True);h=te.get("href","")
         if not t or len(t)<5:continue
+        ds_from_title=normalize_date(t)
+        t=_clean_article_title(t)
         if h.startswith("/"):h=base_url.rstrip("/")+h
         elif not h.startswith("http"):h=base_url.rstrip("/")+"/"+h
         if h in seen:continue
@@ -395,6 +463,8 @@ def extract_articles_from_page(html,base_url,page_url,selectors,tank_name):
         se=c.select_one(selectors.get("snippet","p"));sn=se.get_text(strip=True) if se else ""
         de=c.select_one(selectors.get("date","time"));ds=None
         if de:ds=normalize_date(de.get("datetime") or de.get_text(strip=True))
+        if not ds and ds_from_title:
+            ds=ds_from_title
         # 日期选择器未命中时，扫描卡片内所有小元素寻找日期文本
         if not ds or len(ds) < 7:
             for el in c.find_all(["span","time","em","small","p","div"],limit=20):
@@ -404,19 +474,27 @@ def extract_articles_from_page(html,base_url,page_url,selectors,tank_name):
                     if cand and len(cand) >= 7:
                         ds=cand;break
         articles.append({"title":t,"url":h,"snippet":sn[:500],"date":ds})
-    if not articles:
-        for lk in soup.find_all("a",href=True):
-            t=lk.get_text(strip=True);h=lk["href"]
-            if len(t)<10 or len(t)>300:continue
-            if any(s in t.lower() for s in ["home","about","contact","menu","login","search","privacy","cookie","terms","©","copyright","facebook","twitter","linkedin","instagram"]):continue
-            if any(s in h.lower() for s in ["#","javascript:","mailto:","tel:","facebook.com","twitter.com","linkedin.com"]):continue
-            if h.startswith("/"):h=base_url.rstrip("/")+h
-            elif not h.startswith("http"):h=base_url.rstrip("/")+"/"+h
-            if h in seen:continue
-            seen.add(h)
-            pa=lk.parent;sn=""
-            if pa:pt=pa.find_next_sibling("p") or pa.find("p");sn=pt.get_text(strip=True)[:500] if pt else ""
-            articles.append({"title":t,"url":h,"snippet":sn,"date":None})
+    for lk in soup.find_all("a",href=True):
+        t=lk.get_text(strip=True);h=lk["href"]
+        if len(t)<10 or len(t)>300:continue
+        if any(s in t.lower() for s in ["home","about","contact","menu","login","search","privacy","cookie","terms","©","copyright","facebook","twitter","linkedin","instagram"]):continue
+        if any(s in h.lower() for s in ["#","javascript:","mailto:","tel:","facebook.com","twitter.com","linkedin.com"]):continue
+        if h.startswith("/"):h=base_url.rstrip("/")+h
+        elif not h.startswith("http"):h=base_url.rstrip("/")+"/"+h
+        if h in seen:continue
+        if not _is_likely_article(t,h):continue
+        seen.add(h)
+        pa=lk.parent;sn="";ds=normalize_date(t)
+        if pa:
+            pt=pa.find_next_sibling("p") or pa.find("p")
+            sn=pt.get_text(strip=True)[:500] if pt else ""
+            if not ds:
+                for el in pa.find_all(["span","time","em","small","p","div"],limit=20):
+                    cand=normalize_date(el.get_text(strip=True))
+                    if cand and len(cand) >= 7:
+                        ds=cand;break
+        t=_clean_article_title(t)
+        articles.append({"title":t,"url":h,"snippet":sn,"date":ds})
     # 最终过滤（主要针对兜底扫描的结果）
     articles=[a for a in articles if _is_likely_article(a["title"],a["url"])]
     return articles
@@ -538,6 +616,8 @@ def _is_likely_article(title,url):
     ul=url.lower()
     # 0. 标题是电话号码或纯数字
     if re.match(r'^[\d\s\-\+\(\)]+$',tl):return False
+    # 0a. 分类/专题页标题常带计数，如 "Economic Security(2085)"
+    if re.match(r'^[A-Za-z][A-Za-z &,\-/]+?\(\d+\)$',title.strip()):return False
     # 0b. 标题是物理地址（含 building/road/street/block/P.O. 等）
     if re.search(r'\b(building|road|street|block|floor|p\.?\s*o\.?\s*box|awali|manama|riyadh|doha)\b',tl) and re.search(r'\d',tl):return False
     # 1. URL含分类/索引/作者路径 → 不是文章
@@ -593,7 +673,12 @@ def normalize_date(date_str):
     """
     if not date_str:
         return None
-    d = date_str.strip()
+    d = re.sub(
+        r'\b(Commentary|Analysis|Research|Report|Book|Event|Podcast|Opinion|Interview|Brief|Explainer)(?=\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4})',
+        r'\1 ',
+        date_str.strip(),
+        flags=re.IGNORECASE,
+    )
     # 已是标准格式
     if re.match(r'^\d{4}-\d{2}-\d{2}$', d):
         return d
@@ -681,12 +766,14 @@ CARNEGIE_GCC_REGIONS = {
     "kuwait", "bahrain", "oman", "gulf",
 }
 
-def verify_carnegie_metadata(article_url, req_timeout=10):
+def verify_carnegie_metadata(article_url, req_timeout=10, browser=None, pw_timeout=20000):
     """
     拉取 Carnegie 文章详情页，提取嵌入的 JSON metadata 中的 regions 字段，
     判断是否与 GCC 六国相关。返回 True/False/None（None = 拉取失败，保守保留）。
     """
     html = fetch_html_requests(article_url, timeout=req_timeout)
+    if not html and browser is not None:
+        html = fetch_html_playwright(article_url, timeout=pw_timeout, browser=browser)
     if not html:
         return None
     m = re.search(r'"regions"\s*:\s*\[([^\]]*)\]', html)
@@ -695,8 +782,13 @@ def verify_carnegie_metadata(article_url, req_timeout=10):
     regions_raw = m.group(1).lower()
     return any(r in regions_raw for r in CARNEGIE_GCC_REGIONS)
 
-def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None, dry_run=False):
+def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None, dry_run=False, include_high_risk=False):
     nm, co, ti, bu = tank["name"], tank["country"], tank["tier"], tank["base_url"]
+    compliance = get_compliance_rule(bu)
+    if not compliance.get("allow_scrape", True) and not include_high_risk:
+        log.warning(f"⛔ {nm}: 合规规则禁止自动抓取（risk={compliance.get('risk_level','unknown')}），已跳过；如需人工覆盖使用 --include-high-risk")
+        return [], []
+    crawl_delay = float(compliance.get("crawl_delay_seconds", 1.0) or 1.0)
     # 站点级 Playwright 开关：Carnegie 这类 SPA 站点强制启用
     use_playwright = use_playwright or tank.get("use_playwright", False)
     log.info(f"📚 {nm} ({co}) [{ti}]")
@@ -733,7 +825,7 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None,
                 except Exception as e:
                     log.warning(f"  ⚠️ 单页抓取失败 {url}: {e}")
                     continue
-                time.sleep(1)
+                time.sleep(crawl_delay)
     else:
         # ── 无RSS，直接HTML ──
         for pp in tank["pages"]:
@@ -752,7 +844,7 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None,
             except Exception as e:
                 log.warning(f"  ⚠️ 单页抓取失败 {url}: {e}")
                 continue
-            time.sleep(1)
+            time.sleep(crawl_delay)
 
     # ── 去重 ──
     seen = set(); unique = []
@@ -776,8 +868,12 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None,
         if ti == "core_gcc":
             ks, mk = 99.0, ["core_gcc_auto_pass"]
         elif tank.get("deep_topic"):
-            # 深层专题页抓来的内容，来源本身就是 GCC 主题，直接保底通过
-            ks, mk = 5.0, ["deep_topic_auto_pass"]
+            # 深层专题页来源本身是 GCC 主题，但不能遮蔽标题真实强信号。
+            actual_ks, actual_mk = compute_keyword_score(t, sn)
+            if actual_ks >= 5.0:
+                ks, mk = actual_ks, actual_mk + ["deep_topic_auto_pass"]
+            else:
+                ks, mk = 5.0, (actual_mk or []) + ["deep_topic_auto_pass"]
         else:
             ks, mk = compute_keyword_score(t, sn)
             if ks < RELEVANCE_THRESHOLD: log.debug(f"    ⏭️ 评分不足({ks}): {t[:60]}"); continue
@@ -788,6 +884,8 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None,
             date=normalize_date(it.get("date")), snippet=sn, keyword_score=ks, content_type=ct,
             priority=pr, topic_relevance_score=compute_topic_relevance_score(ks, ct),
             matched_keywords=mk, fetch_method=it.get("fetch_method", "html"))
+        if tank.get("deep_topic") and any("(标题,+" in m and kw.lower() in m.lower() for kw in STRONG_KEYWORDS for m in mk):
+            article.topic_relevance_score = max(article.topic_relevance_score, 4.0)
         # === v2.4.1 新增：检测降权词命中，写入 _funnel_debug（供试运行模式输出）===
         # demote_set：标题+摘要均检查（demote_check_summary=True 时）
         # title_only_demote_set：仅检查标题（避免摘要引用误触发，如 NATO）
@@ -808,12 +906,12 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None,
     if "Carnegie" in nm and tank.get("deep_topic"):
         verified = []
         for a in results:
-            v = verify_carnegie_metadata(a.url)
+            v = verify_carnegie_metadata(a.url, browser=browser, pw_timeout=pw_to)
             if v is False:
                 log.debug(f"    🚫 Carnegie metadata 排除: {a.title[:60]}")
                 continue
             verified.append(a)
-            time.sleep(0.3)  # 礼貌延迟
+            time.sleep(max(0.3, min(crawl_delay, 2.0)))  # 礼貌延迟
         log.info(f"  🔍 Carnegie metadata 验证: {len(results)} → {len(verified)}")
         results = verified
 
@@ -857,7 +955,8 @@ def _date_gte(date_str: str, cutoff: str) -> bool:
 def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
                 countries=None, regions=None, org_types=None, topics=None,
                 max_per_tank=50, dedup_db=DEDUP_DB_PATH, dedup_days=1,
-                filter_undated=True, max_age_days=30, dry_run=False):
+                filter_undated=True, max_age_days=30, dry_run=False,
+                include_high_risk=False):
     if tanks is None:
         tanks = THINK_TANKS
     if countries:
@@ -880,7 +979,8 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
     for t in tanks:
         _r.setdefault(t.get("region","?"), 0); _r[t.get("region","?")] += 1
     print(f"  地区分布: " + " | ".join(f"{k}×{v}" for k,v in sorted(_r.items())))
-    print(f"JS渲染: {'✅ Playwright' if use_playwright and HAS_PLAYWRIGHT else '❌ 仅requests'}")
+    needs_playwright = use_playwright or any(t.get("use_playwright") for t in tanks)
+    print(f"JS渲染: {'✅ Playwright' if needs_playwright and HAS_PLAYWRIGHT else '❌ 仅requests'}")
     print(f"AI筛选: {'✅ 已启用 (' + ai_client.provider_info() + ')' if enable_ai and HAS_AI else '❌ 未启用'}")
     print(f"RSS:    {'✅ feedparser' if HAS_FEEDPARSER else '❌ 未安装'}")
     if dedup_db:
@@ -897,7 +997,6 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
     all_filtered_out = []  # v2.4.1: 汇总所有被第三层硬过滤的文章（试运行模式用）
 
     # ── 抓取阶段：如果启用 Playwright 或有站点强制需要，复用一个浏览器实例 ──
-    needs_playwright = use_playwright or any(t.get("use_playwright") for t in tanks)
     if needs_playwright and HAS_PLAYWRIGHT:
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
@@ -905,7 +1004,7 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
                 try:
                     _arts, _fout = scrape_think_tank(
                         tk, use_playwright=use_playwright, max_per_tank=max_per_tank,
-                        browser=browser, dry_run=dry_run
+                        browser=browser, dry_run=dry_run, include_high_risk=include_high_risk
                     )
                     all_articles.extend(_arts)
                     all_filtered_out.extend(_fout)
@@ -916,7 +1015,8 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
         for tk in tanks:
             try:
                 _arts, _fout = scrape_think_tank(
-                    tk, use_playwright=False, max_per_tank=max_per_tank, dry_run=dry_run
+                    tk, use_playwright=False, max_per_tank=max_per_tank, dry_run=dry_run,
+                    include_high_risk=include_high_risk
                 )
                 all_articles.extend(_arts)
                 all_filtered_out.extend(_fout)
@@ -1725,6 +1825,8 @@ if __name__ == "__main__":
                         help="只收录近 N 天内发布的文章（默认30天；常用值：3/10/30；0=不限）")
     parser.add_argument("--keep-undated", action="store_true",
                         help="保留无发布日期的文章（默认过滤，用于调试）")
+    parser.add_argument("--include-high-risk", action="store_true",
+                        help="人工覆盖 compliance_rules.yaml 中 allow_scrape=false 的高风险来源")
     parser.add_argument("--debug", action="store_true", help="调试日志")
     parser.add_argument(
         "--dry-run-keywords",
@@ -1768,6 +1870,7 @@ if __name__ == "__main__":
         filter_undated=not args.keep_undated,
         max_age_days=args.days,
         dry_run=args.dry_run_keywords,
+        include_high_risk=args.include_high_risk,
     )
     scrape_sec = time.time() - t_scrape
 

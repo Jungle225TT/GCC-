@@ -13,10 +13,17 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from gcc_thinktank_scraper_v2 import (
     compute_keyword_score,
     classify_content_type,
+    compute_topic_relevance_score,
     _KW,
     STRONG_KEYWORDS,
     RELEVANCE_THRESHOLD,
     Article,
+    THINK_TANKS,
+    get_compliance_rule,
+    normalize_date,
+    _clean_article_title,
+    _is_likely_article,
+    extract_articles_from_page,
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -225,6 +232,145 @@ def test_green_demoted_still_rescued():
     print(f"  [OK] 被降权的绿色样本均被强信号词救回（{len(rescued)} 篇，阈值={RELEVANCE_THRESHOLD}）")
 
 
+def test_pan_mena_event_announcement_hard_filtered():
+    """本轮 pan_mena 漏网样本：活动/实习公告必须先于 low 判断被硬过滤。"""
+    title = "AL SHARQ STRATEGIC RESEARCH INTERNSHIP PROGRAM ANNOUNCEMENT"
+    art = make_test_article(title, "Apply for the Al Sharq Strategic Research internship program.")
+    ct, priority = classify_content_type(art.title, art.url)
+    assert (ct, priority) == ("excluded", "excluded"), f"公告未被硬过滤: {(ct, priority)}"
+    print("  [OK] pan_mena 实习公告样本被硬过滤")
+
+
+def test_career_center_policy_study_not_hard_filtered():
+    """career 裸词不能误杀 UAE 就业/教育政策研究，只过滤招聘和活动语境。"""
+    title = "Employment Pathways or Empty Promises? Student Perceptions of University and Career Center Support in Facilitating Employment in the UAE"
+    art = make_test_article(title)
+    ct, priority = classify_content_type(art.title, art.url)
+    assert (ct, priority) != ("excluded", "excluded"), f"career center 政策研究被误过滤: {(ct, priority)}"
+    assert _is_likely_article(title, art.url), "career center 政策研究不应被文章有效性规则剔除"
+
+    workshop = make_test_article("KAPSARC holds Career Paths Workshop in Washington DC")
+    assert is_hard_filtered(workshop), "career paths workshop 应被过滤"
+    print("  [OK] career center 政策研究保留，career workshop 过滤")
+
+
+def test_core_gcc_recent_noise_hard_filtered():
+    """core_gcc 自动 99 分下，近期发现的公告/偏题样本必须走硬过滤。"""
+    titles = [
+        "Rasanah’s Iran Case File for April 2026 Is Now Available",
+        "How Did the IRGC Seize Power in Iran?",
+        "The Washington–Vatican Rift: Causes and Implications",
+        "AJCS to Participate in Decolonizing Knowledge Forum in Istanbul",
+        "Derasat Center participates in the Joint Regional Initiative“Bridging Stability: EU-GCC Cooperation in an Era of Fragmentation”",
+    ]
+    failed = []
+    for title in titles:
+        if not is_hard_filtered(make_test_article(title)):
+            failed.append(title)
+    assert not failed, "以下 core_gcc 噪音样本未被硬过滤:\n" + "\n".join(f"  - {t}" for t in failed)
+    print(f"  [OK] {len(titles)} 条 core_gcc 近期噪音样本被硬过滤")
+
+
+def test_count_badge_category_title_filtered():
+    """分类/标签页计数标题如 Economic Security(2085) 不应进入文章池。"""
+    title = "Economic Security(2085)"
+    url = "https://www.csis.org/topics/economic-security"
+    assert classify_content_type(title, url) == ("excluded", "excluded"), "计数标题未被第三层过滤"
+    assert not _is_likely_article(title, url), "计数标题未被文章有效性规则过滤"
+    print("  [OK] 计数型分类页标题被过滤")
+
+
+def test_pan_mena_deep_topic_strong_titles_promoted():
+    """deep_topic 保底不应遮蔽标题强信号，Hormuz/GCC/regional bloc 应进入强相关。"""
+    titles = [
+        "What Does the Strait of Hormuz’s Closure Mean?",
+        "Can the Gulf Cooperation Council Transcend Its Divisions?",
+        "STEP and the Possibility of a New Regional Bloc in the Middle East",
+        "Iraq’s Fatal Dilemma: Axis of Resistance or Regional Integration?",
+    ]
+    failed = []
+    for title in titles:
+        score, matched = compute_keyword_score(title, "")
+        final_score = max(5.0, score)
+        relevance = compute_topic_relevance_score(final_score, "unknown")
+        if any("(标题,+" in m for m in matched):
+            relevance = max(relevance, 4.0)
+        if final_score <= 5.0 or relevance < 4.0:
+            failed.append(f"{title} (keyword={final_score}, relevance={relevance}, matched={matched})")
+    assert not failed, "以下 deep_topic 强信号样本未进入强相关:\n" + "\n".join(f"  - {x}" for x in failed)
+    print(f"  [OK] {len(titles)} 篇 pan_mena deep_topic 强信号样本进入强相关")
+
+
+def test_arab_reform_title_date_cleanup():
+    """Arab Reform 卡片标题中混入日期/标签时，应抽取日期并清理展示标题。"""
+    raw = "Paused, Not Resolved:The Saudi-UAE Rivalry and the War in Sudan—Commentary13 May 2026#Conflicts#Saudi Arabia#United Arab Emirates"
+    assert normalize_date(raw) == "2026-05-13", f"日期抽取失败: {normalize_date(raw)}"
+    cleaned = _clean_article_title(raw)
+    expected = "Paused, Not Resolved:The Saudi-UAE Rivalry and the War in Sudan"
+    assert cleaned == expected, f"标题清理失败: {cleaned!r}"
+
+    raw_author = "Paused, Not Resolved:The Saudi-UAE Rivalry and the War in Sudan—&nbspLeena BadriBawader /"
+    cleaned_author = _clean_article_title(raw_author)
+    assert cleaned_author == expected, f"作者尾巴清理失败: {cleaned_author!r}"
+    print("  [OK] Arab Reform 粘连标题可抽取日期并清理元数据")
+
+
+def test_mei_link_scan_fallback_extracts_articles():
+    """MEI 页面会把文章标题放在普通链接中，非 article/card 容器；全页链接扫描应补足。"""
+    html = """
+    <html><body>
+      <nav><a href="/about">About</a></nav>
+      <a href="/publications/what-does-uaes-departure-mean-opec">What Does the UAE’s Departure Mean for OPEC+?</a>
+      <p>The UAE’s departure represents an undeniable strategic setback for OPEC+.</p>
+      <div>May 8, 2026</div>
+    </body></html>
+    """
+    selectors = {"article": "article, .card", "title": "h2 a, h3 a", "snippet": "p", "date": "time"}
+    articles = extract_articles_from_page(html, "https://mei.edu", "https://mei.edu/regions/gulf/", selectors, "Middle East Institute (MEI)")
+    assert len(articles) == 1, f"MEI fallback 未抽到文章: {articles}"
+    assert articles[0]["title"] == "What Does the UAE’s Departure Mean for OPEC+?"
+    assert articles[0]["date"] == "2026-05-08"
+    print("  [OK] MEI 普通链接结构可由全页扫描抽取为文章")
+
+
+def test_western_source_urls_updated():
+    """本轮 403/404 排查沉淀：已知失效/旧路径不应继续作为主配置。"""
+    by_name = {t["name"]: t for t in THINK_TANKS}
+    assert "/topic/economics-and-energy/" not in by_name["Arab Gulf States Institute in Washington (AGSIW)"]["pages"]
+    assert "/topic/security-and-defense/" not in by_name["Arab Gulf States Institute in Washington (AGSIW)"]["pages"]
+    assert by_name["Middle East Institute (MEI)"]["base_url"] == "https://mei.edu"
+    assert "/regions/gulf/" in by_name["Middle East Institute (MEI)"]["pages"]
+    assert by_name["Middle East Institute (MEI)"].get("use_playwright") is True
+    assert "/regions/middle-east/gulf" in by_name["Center for Strategic and International Studies (CSIS)"]["pages"]
+    assert "/analysis" not in by_name["Center for Strategic and International Studies (CSIS)"]["pages"]
+    assert "/regions/middle-east-and-north-africa/gulf-states" in by_name["Chatham House — Gulf States"]["pages"]
+    assert "/regions/middle-east-north-africa/gulf-states" not in by_name["Chatham House — Gulf States"]["pages"]
+    assert by_name["Chatham House — Gulf States"].get("use_playwright") is True
+    assert "/center-for-energy-studies" in by_name["Baker Institute for Public Policy (Rice University)"]["pages"]
+    assert "/centers/center-for-energy-studies/" not in by_name["Baker Institute for Public Policy (Rice University)"]["pages"]
+    assert "/research" not in by_name["Baker Institute for Public Policy (Rice University)"]["pages"]
+    assert "/collection/middle-east-program-research" in by_name["Wilson Center — Middle East Program"]["pages"]
+    assert "/program/middle-east-program/publications" not in by_name["Wilson Center — Middle East Program"]["pages"]
+    print("  [OK] western 来源 URL 配置已替换本轮发现的失效旧路径")
+
+
+def test_compliance_rules_cover_all_think_tanks():
+    """29 个当前智库源都应命中 compliance_rules.yaml 的域名级规则。"""
+    missing = []
+    blocked = []
+    for tank in THINK_TANKS:
+        rule = get_compliance_rule(tank["base_url"])
+        if rule.get("analysis_source") == "默认策略":
+            missing.append(tank["name"])
+        if rule.get("allow_scrape") is False:
+            blocked.append(tank["name"])
+    assert not missing, "以下来源未命中域名级合规规则:\n" + "\n".join(f"  - {x}" for x in missing)
+    assert {"Brookings Doha Center", "Atlantic Council — Middle East Programs", "International Institute for Strategic Studies (IISS)"}.issubset(set(blocked)), (
+        f"高风险默认禁用来源不完整: {blocked}"
+    )
+    print(f"  [OK] compliance_rules.yaml 覆盖 {len(THINK_TANKS)} 个当前智库源；默认禁用 {len(blocked)} 个高风险来源")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # 主运行入口
 # ─────────────────────────────────────────────────────────────────────────────
@@ -238,6 +384,15 @@ TESTS = [
     test_mad_doctrine_rescued,
     test_1979_revolution_rescued,
     test_green_demoted_still_rescued,
+    test_pan_mena_event_announcement_hard_filtered,
+    test_career_center_policy_study_not_hard_filtered,
+    test_core_gcc_recent_noise_hard_filtered,
+    test_count_badge_category_title_filtered,
+    test_pan_mena_deep_topic_strong_titles_promoted,
+    test_arab_reform_title_date_cleanup,
+    test_mei_link_scan_fallback_extracts_articles,
+    test_western_source_urls_updated,
+    test_compliance_rules_cover_all_think_tanks,
 ]
 
 if __name__ == "__main__":

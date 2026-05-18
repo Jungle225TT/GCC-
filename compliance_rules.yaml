@@ -1,0 +1,298 @@
+# =============================================================================
+# GCC 智库抓取合规规则
+# =============================================================================
+# 来源：
+# - docs/爬虫合规检查说明.docx
+# - docs/期刊信源_合规分析_20260509_0559.csv
+# - 2026-05-14 当前 THINK_TANKS 域名盘点；CSV 未覆盖者标记为 manual_domain_inventory。
+#
+# 使用原则：
+# - ToS 判断优先于 robots.txt。
+# - robots.txt 作为站点意图和抓取频率参考。
+# - 高风险且 scraping 明确禁止的来源默认跳过；如需人工覆盖，使用
+#   --include-high-risk。
+# - 本项目只抓标题、摘要、日期、链接用于内部研究简报；不得用于全文批量下载、
+#   AI 训练语料或商业再分发。
+# =============================================================================
+
+version: "1.1"
+last_updated: "2026-05-14"
+source_files:
+  - "docs/爬虫合规检查说明.docx"
+  - "docs/期刊信源_合规分析_20260509_0559.csv"
+
+defaults:
+  risk_level: "unknown"
+  allow_scrape: true
+  crawl_delay_seconds: 1.0
+  scraping_policy: "未明确"
+  commercial_policy: "未明确"
+  ai_training_policy: "未明确"
+  robots_summary: "未核验"
+  analysis_source: "默认策略"
+  notes: "未在合规 CSV 中命中；按项目默认礼貌抓取策略处理。"
+
+domains:
+  # ── core_gcc：CSV 未覆盖，先做域名级库存与保守限速 ──
+  kapsarc.org:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["King Abdullah Petroleum Studies and Research Centre (KAPSARC)"]
+    notes: "CSV 未覆盖；仅抓公开列表页标题/摘要/日期/链接，后续补 robots/ToS 人工复核。"
+
+  rasanah-iiis.org:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["International Institute for Iranian Studies (Rasanah)"]
+    notes: "CSV 未覆盖；RSS 优先，HTML 作为补充。"
+
+  kfcris.com:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["King Faisal Center for Research and Islamic Studies"]
+    notes: "CSV 未覆盖；公开研究/出版物列表页。"
+
+  epc.ae:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Emirates Policy Center (EPC)"]
+    notes: "CSV 未覆盖；公开出版物列表页。"
+
+  ecssr.ae:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Emirates Center for Strategic Studies and Research (ECSSR)"]
+    notes: "CSV 未覆盖；公开研究/出版物列表页。"
+
+  grc.ae:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Gulf Research Center (GRC)"]
+    notes: "CSV 未覆盖；该站配置较短 timeout，避免长时间阻塞。"
+
+  bhuth.ae:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Dubai Public Policy Research Center (Bhuth)"]
+    notes: "CSV 未覆盖；公开出版物/研究列表页。"
+
+  alqasimifoundation.com:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Sheikh Saud bin Saqr Al Qasimi Foundation"]
+    notes: "CSV 未覆盖；公开出版物/blog 列表页。"
+
+  futureuae.com:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Future Center for Advanced Researches and Studies"]
+    notes: "CSV 未覆盖；公开英文列表页。"
+
+  aljazeera.net:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Al Jazeera Centre for Studies (AJCS)"]
+    notes: "CSV 未覆盖；RSS 优先，HTML 作为补充。"
+
+  brookings.edu:
+    risk_level: "high"
+    allow_scrape: false
+    crawl_delay_seconds: 10.0
+    scraping_policy: "提及但未明确禁止（bot）"
+    commercial_policy: "提及商业使用"
+    ai_training_policy: "提及AI训练"
+    robots_summary: "部分路径禁止（1条）"
+    analysis_source: "ToS分析 / 复用相同ToS"
+    matched_csv_sites: ["Brookings AI Initiative", "Brookings AI专题", "Brookings Global China"]
+    matched_think_tanks: ["Brookings Doha Center"]
+    notes: "CSV 总体高风险；默认禁用自动抓取，人工覆盖需 --include-high-risk。"
+
+  dohainstitute.org:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Arab Center for Research and Policy Studies (Doha Institute)"]
+    notes: "CSV 未覆盖；公开首页/研究入口。"
+
+  arab-api.org:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Arab Planning Institute (API)"]
+    notes: "CSV 未覆盖；公开首页。"
+
+  kisr.edu.kw:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Kuwait Institute for Scientific Research (KISR)"]
+    notes: "CSV 未覆盖；公开英文首页。"
+
+  derasat.org.bh:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Bahrain Center for Strategic, International and Energy Studies (Derasat)"]
+    notes: "CSV 未覆盖；RSS 优先。"
+
+  tawasul.co.om:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Tawasul"]
+    notes: "CSV 未覆盖；公开首页。"
+
+  agsiw.org:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Arab Gulf States Institute in Washington (AGSIW)"]
+    notes: "CSV 未覆盖；GCC 专门来源，RSS 优先。"
+
+  # ── pan_mena / western：CSV 命中 + 本轮补齐 ──
+  carnegieendowment.org:
+    risk_level: "low"
+    allow_scrape: true
+    crawl_delay_seconds: 1.0
+    scraping_policy: "明确禁止（automated）"
+    commercial_policy: "未提及"
+    ai_training_policy: "未提及"
+    robots_summary: "无明确限制"
+    analysis_source: "robots.txt推断（无ToS）"
+    matched_csv_sites: ["Carnegie Technology & International Affairs", "Carnegie AI Collection", "Carnegie Geoeconomics & Strategy"]
+    matched_think_tanks: ["Carnegie Middle East Center"]
+    notes: "CSV 更新风险为低；本项目仍仅抓元数据，Carnegie 详情页 metadata 验证可复用 Playwright。"
+
+  acpss.ahram.org.eg:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Al-Ahram Center for Political and Strategic Studies"]
+    notes: "CSV 未覆盖；公开首页。"
+
+  sharqforum.org:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Al Sharq Forum"]
+    notes: "CSV 未覆盖；deep_topic 标签/地区页，RSS 优先。"
+
+  arab-reform.net:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Arab Reform Initiative"]
+    notes: "CSV 未覆盖；deep_topic 标签页，已增加标题/日期清理避免元数据混入。"
+
+  mei.edu:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Middle East Institute (MEI)"]
+    notes: "CSV 未覆盖；2026-05-14 核验 /regions/gulf/ 为当前 Gulf and Arabian Peninsula 路径。"
+
+  csis.org:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 2.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Center for Strategic and International Studies (CSIS)"]
+    notes: "CSV 未覆盖；2026-05-14 核验 /regions/middle-east/gulf 和 /programs/middle-east-program 可访问。"
+
+  atlanticcouncil.org:
+    risk_level: "high"
+    allow_scrape: false
+    crawl_delay_seconds: 5.0
+    scraping_policy: "明确禁止（automated）"
+    commercial_policy: "限制商业使用"
+    ai_training_policy: "未提及"
+    robots_summary: "部分路径禁止（1条）"
+    analysis_source: "ToS分析"
+    matched_csv_sites: ["Atlantic Council GeoEconomics Center"]
+    matched_think_tanks: ["Atlantic Council — Middle East Programs"]
+    notes: "CSV 高风险且 ToS 明确禁止 automated；默认禁用自动抓取。"
+
+  chathamhouse.org:
+    risk_level: "medium"
+    allow_scrape: true
+    crawl_delay_seconds: 10.0
+    scraping_policy: "未提及 / 复用条目含 bot 风险"
+    commercial_policy: "未明确 / 复用条目限制商业使用"
+    ai_training_policy: "未提及"
+    robots_summary: "部分路径禁止（28条）（爬取间隔≥10s）"
+    analysis_source: "ToS分析 / 复用相同ToS"
+    matched_csv_sites: ["Chatham House", "Chatham House Global Economy & Finance"]
+    matched_think_tanks: ["Chatham House — Gulf States"]
+    notes: "按 robots 提示强制 10s 限速；2026-05-14 修正路径为 /regions/middle-east-and-north-africa/gulf-states。"
+
+  oxfordenergy.org:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 3.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Oxford Institute for Energy Studies (OIES)"]
+    notes: "CSV 未覆盖；旧 research 子路径疑似 404，改用 /publications/ 与 RSS。"
+
+  bakerinstitute.org:
+    risk_level: "unknown"
+    allow_scrape: true
+    crawl_delay_seconds: 3.0
+    analysis_source: "manual_domain_inventory"
+    matched_think_tanks: ["Baker Institute for Public Policy (Rice University)"]
+    notes: "CSV 未覆盖；2026-05-14 核验当前中心页为 /center-for-energy-studies 与 /ces。"
+
+  wilsoncenter.org:
+    risk_level: "low"
+    allow_scrape: true
+    crawl_delay_seconds: 1.0
+    scraping_policy: "未提及"
+    commercial_policy: "限制商业使用"
+    ai_training_policy: "未提及"
+    robots_summary: "无robots.txt（200）"
+    analysis_source: "robots.txt推断（无ToS）"
+    matched_csv_sites: ["Wilson Center"]
+    matched_think_tanks: ["Wilson Center — Middle East Program"]
+    notes: "CSV 更新风险为低；2026-05-14 将失效 publications 路径替换为 collection/publication-series。"
+
+  iiss.org:
+    risk_level: "high"
+    allow_scrape: false
+    crawl_delay_seconds: 10.0
+    scraping_policy: "明确禁止（bot）"
+    commercial_policy: "限制商业使用"
+    ai_training_policy: "未提及"
+    robots_summary: "部分路径禁止（2条）"
+    analysis_source: "ToS分析"
+    matched_csv_sites: ["Survival"]
+    matched_think_tanks: ["International Institute for Strategic Studies (IISS)"]
+    notes: "CSV 高风险且 ToS 明确禁止 bot；默认禁用自动抓取。"
