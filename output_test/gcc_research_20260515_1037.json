@@ -1,0 +1,1577 @@
+{
+  "metadata": {
+    "scraped_at": "2026-05-15T10:37:31.387068",
+    "total_articles": 61,
+    "system": "GCC Think Tank Scraper v2.4"
+  },
+  "articles": [
+    {
+      "title": "Cross-National Study of Electric Vehicle Discontinuance in the United States, China, and Germany",
+      "url": "https://www.kapsarc.org/our-offerings/publications/cross-national-study-of-electric-vehicle-discontinuance-in-the-united-states-china-and-germany/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-03",
+      "snippet": "03 May 2026",
+      "title_cn": "美中德电动汽车停用跨国研究",
+      "keyword_score": 99.0,
+      "content_type": "high",
+      "priority": "priority_read",
+      "topic_relevance_score": 5.0,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Public Spending and Inclusive Growth: A Cross-Country Empirical Analysis",
+      "url": "https://doi.org/10.1016/j.jimonfin.2026.103528",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-04-30",
+      "snippet": "30 April 2026",
+      "title_cn": "公共支出与包容性增长：跨国实证分析",
+      "keyword_score": 99.0,
+      "content_type": "high",
+      "priority": "priority_read",
+      "topic_relevance_score": 5.0,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Gulf States Adjust to a New Normal",
+      "url": "https://agsi.org/analysis/gulf-states-adjust-to-a-new-normal/",
+      "source": "Arab Gulf States Institute in Washington (AGSIW)",
+      "source_country": "USA",
+      "source_tier": "core_gcc",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "economy",
+        "security"
+      ],
+      "date": "2026-05-14",
+      "snippet": "May 14, 2026",
+      "title_cn": "海湾国家适应新常态",
+      "keyword_score": 99.0,
+      "content_type": "high",
+      "priority": "priority_read",
+      "topic_relevance_score": 5.0,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "A New Mediator: Can Pakistan Help the U.S. and Iran Cut a Deal?",
+      "url": "https://agsi.org/analysis/a-new-mediator-can-pakistan-help-the-u-s-and-iran-cut-a-deal/",
+      "source": "Arab Gulf States Institute in Washington (AGSIW)",
+      "source_country": "USA",
+      "source_tier": "core_gcc",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "economy",
+        "security"
+      ],
+      "date": "2026-05-13",
+      "snippet": "May 13, 2026",
+      "title_cn": "新调解者：巴基斯坦能否促成美伊协议？",
+      "keyword_score": 99.0,
+      "content_type": "high",
+      "priority": "priority_read",
+      "topic_relevance_score": 5.0,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "India Faces New Limits in a Divided Middle East",
+      "url": "https://agsi.org/analysis/india-faces-new-limits-in-a-divided-middle-east/",
+      "source": "Arab Gulf States Institute in Washington (AGSIW)",
+      "source_country": "USA",
+      "source_tier": "core_gcc",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "economy",
+        "security"
+      ],
+      "date": "2026-05-12",
+      "snippet": "May 12, 2026",
+      "title_cn": "印度在分裂的中东面临新限制",
+      "keyword_score": 99.0,
+      "content_type": "high",
+      "priority": "priority_read",
+      "topic_relevance_score": 5.0,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Resilient by Design: Infrastructure and the Future of UAE Urbanism",
+      "url": "https://agsi.org/analysis/resilient-by-design-infrastructure-and-the-future-of-uae-urbanism/",
+      "source": "Arab Gulf States Institute in Washington (AGSIW)",
+      "source_country": "USA",
+      "source_tier": "core_gcc",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "economy",
+        "security"
+      ],
+      "date": "2026-05-07",
+      "snippet": "May 7, 2026",
+      "title_cn": "韧性设计：基础设施与阿联酋城市化未来",
+      "keyword_score": 99.0,
+      "content_type": "high",
+      "priority": "priority_read",
+      "topic_relevance_score": 5.0,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "The Second Phase of the UAE Space Economy",
+      "url": "https://agsi.org/analysis/the-second-phase-of-the-uae-space-economy/",
+      "source": "Arab Gulf States Institute in Washington (AGSIW)",
+      "source_country": "USA",
+      "source_tier": "core_gcc",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "economy",
+        "security"
+      ],
+      "date": "2026-05-05",
+      "snippet": "May 5, 2026",
+      "title_cn": "阿联酋太空经济第二阶段",
+      "keyword_score": 99.0,
+      "content_type": "high",
+      "priority": "priority_read",
+      "topic_relevance_score": 5.0,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "China’s Mediation Ceiling in the Iran War",
+      "url": "https://agsi.org/analysis/chinas-mediation-ceiling-in-the-iran-war/",
+      "source": "Arab Gulf States Institute in Washington (AGSIW)",
+      "source_country": "USA",
+      "source_tier": "core_gcc",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "economy",
+        "security"
+      ],
+      "date": "2026-05-01",
+      "snippet": "May 1, 2026",
+      "title_cn": "中国在伊朗战争中的调解上限",
+      "keyword_score": 99.0,
+      "content_type": "high",
+      "priority": "priority_read",
+      "topic_relevance_score": 5.0,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "How Did the IRGC Seize Power in Iran?",
+      "url": "https://agsi.org/analysis/how-did-the-irgc-seize-power-in-iran/",
+      "source": "Arab Gulf States Institute in Washington (AGSIW)",
+      "source_country": "USA",
+      "source_tier": "core_gcc",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "economy",
+        "security"
+      ],
+      "date": "2026-04-28",
+      "snippet": "Apr 28, 2026",
+      "title_cn": "伊朗伊斯兰革命卫队如何夺权？",
+      "keyword_score": 99.0,
+      "content_type": "high",
+      "priority": "priority_read",
+      "topic_relevance_score": 5.0,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Economic Security(2085)",
+      "url": "https://www.csis.org/analysis?f%5B0%5D=topics%3A823",
+      "source": "Center for Strategic and International Studies (CSIS)",
+      "source_country": "USA",
+      "source_tier": "pan_mena",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "energy",
+        "security",
+        "economy"
+      ],
+      "date": "2085",
+      "snippet": "",
+      "title_cn": "经济安全(2085)",
+      "keyword_score": 5.0,
+      "content_type": "high",
+      "priority": "priority_read",
+      "topic_relevance_score": 4.0,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Spectral Insights into Oil Futures Market",
+      "url": "https://www.kapsarc.org/our-offerings/publications/spectral-insights-into-oil-futures-market/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-14",
+      "snippet": "14 May 2026",
+      "title_cn": "石油期货市场的光谱洞察",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Desalination As a Power Reliability Service: An Economic Framework for the Energy–Water Nexus",
+      "url": "https://doi.org/10.1016/j.nexus.2026.100717",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-10",
+      "snippet": "10 May 2026",
+      "title_cn": "海水淡化作为电力可靠性服务：能源-水关系经济框架",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "How City Design Affects Travel Distance and Fuel Use in Saudi Arabia",
+      "url": "https://www.kapsarc.org/our-offerings/publications/how-city-design-affects-travel-distance-and-fuel-use-in-saudi-arabia/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-07",
+      "snippet": "07 May 2026",
+      "title_cn": "城市设计如何影响沙特出行距离与燃料消耗",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Quantifying the Use of Oil to Enable the Global Energy Transition",
+      "url": "https://www.kapsarc.org/our-offerings/publications/quantifying-the-use-of-oil-to-enable-the-global-energy-transition/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-07",
+      "snippet": "07 May 2026",
+      "title_cn": "量化石油在全球能源转型中的作用",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Implications of the EU Methane Regulation and the Corporate Sustainability Due Diligence Directive for Oil Exporters",
+      "url": "https://www.kapsarc.org/our-offerings/publications/implications-of-the-eu-methane-regulation-and-the-corporate-sustainability-due-diligence-directive-for-oil-exporters/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-05",
+      "snippet": "05 May 2026",
+      "title_cn": "欧盟甲烷法规及企业可持续发展尽职调查指令对石油出口国的影响",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "U.S.-Iran Conflict: The Billion-Barrel Hole",
+      "url": "https://www.kapsarc.org/newsroom/news/us-iran-conflict-the-billion-barrel-hole/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-05",
+      "snippet": "",
+      "title_cn": "美伊冲突：十亿桶缺口",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Carbon Market Effectiveness in Emerging Economies: Compliance Design Choices, Offsetting, and Harmonization",
+      "url": "https://www.kapsarc.org/our-offerings/publications/carbon-market-effectiveness-in-emerging-economies-compliance-design-choices-offsetting-and-harmonization/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-04",
+      "snippet": "04 May 2026",
+      "title_cn": "新兴经济体碳市场有效性：合规设计选择、抵消与协调",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Legal Transparency, Financial Governance, and Conciliary Risk Measures for Scalable Geothermal Deployment",
+      "url": "https://www.kapsarc.org/our-offerings/publications/legal-transparency-financial-governance-and-conciliary-risk-measures-for-scalable-geothermal-deployment/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-03",
+      "snippet": "03 May 2026",
+      "title_cn": "法律透明度、金融治理与地热规模化部署的调解风险措施",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Generative AI for the power sector: Methodology, Safety, Trustworthiness, and Policy",
+      "url": "https://doi.org/10.1016/j.nxener.2026.100636",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-02",
+      "snippet": "02 May 2026",
+      "title_cn": "电力行业生成式AI：方法、安全、可信度与政策",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Evaluation and Role of Industrial Demand Response in Saudi Arabia",
+      "url": "https://www.kapsarc.org/our-offerings/publications/evaluation-and-role-of-industrial-demand-response-in-saudi-arabia/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-04-30",
+      "snippet": "30 April 2026",
+      "title_cn": "沙特工业需求响应的评估与作用",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Governing the Transition: Bridging the Commitment - Implementation Gap",
+      "url": "https://doi.org/10.1007/s10018-026-00468-5",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-04-30",
+      "snippet": "30 April 2026",
+      "title_cn": "治理转型：弥合承诺与执行差距",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "From Carbon Inequality to Minimum Energy Requirements: A Global Welfare Floor for Aligning Climate Policy with Energy Access",
+      "url": "https://doi.org/10.1016/j.inteco.2026.100695",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-04-30",
+      "snippet": "30 April 2026",
+      "title_cn": "从碳不平等到最低能源需求：气候政策与能源获取对齐的全球福利底线",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "From Energy Deprivation to Decarbonization Constraints: A Global Typology of Residential Energy Use",
+      "url": "https://doi.org/10.1016/j.enpol.2026.115140",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-04-30",
+      "snippet": "30 April 2026",
+      "title_cn": "从能源匮乏到脱碳约束：全球居民能源使用类型学",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Power Markets and the Energy Transition: A Review of Market Arrangements for Variable Renewable Energy Technologies in Single-Buyer Models",
+      "url": "https://www.kapsarc.org/our-offerings/publications/power-markets-and-the-energy-transition-a-review-of-market-arrangements-for-variable-renewable-energy-technologies-in-single-buyer-models/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-04-30",
+      "snippet": "30 April 2026",
+      "title_cn": "电力市场与能源转型：单一买家模式下可变可再生能源的市场安排综述",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "The Impact of High Renewable Energy Deployment on Revenue Requirements in Regulated Power Markets",
+      "url": "https://www.kapsarc.org/our-offerings/publications/the-impact-of-high-renewable-energy-deployment-on-revenue-requirements-in-regulated-power-markets/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-04-27",
+      "snippet": "27 April 2026",
+      "title_cn": "高比例可再生能源对监管电力市场收入需求的影响",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "China’s 15th Five-Year Plan: A Deeper Phase of the Energy Transition",
+      "url": "https://www.kapsarc.org/our-offerings/publications/china-s-15th-five-year-plan-a-deeper-phase-of-the-energy-transition/",
+      "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "energy",
+        "economy"
+      ],
+      "date": "2026-04-19",
+      "snippet": "19 April 2026",
+      "title_cn": "中国十五五规划：能源转型深化阶段",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Rasanah’s Iran Case File for April 2026 Is Now Available",
+      "url": "https://rasanah-iiis.org/english/news/rasanahs-iran-case-file-for-april-2026-is-now-available/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "independent",
+      "source_topics": [
+        "security",
+        "politics"
+      ],
+      "date": "2026-05-14",
+      "snippet": "The International Institute for Iranian Studies (Rasanah) has published the Iran Case File (ICF) for April 2026, offering both general readers and researchers a detailed overview and analytical assessment of developments during the period under review. The ICF assesses the Iranian situation and evaluates its evolving dynamics and interactions. It is divided into three main [&#8230;]",
+      "title_cn": "Rasanah伊朗2026年4月档案现已发布",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "What Do Arab and Gulf Countries Expect From the New Iraqi Government?",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/articles/what-do-arab-and-gulf-countries-expect-from-the-new-iraqi-government/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "independent",
+      "source_topics": [
+        "security",
+        "politics"
+      ],
+      "date": "2026-05-05",
+      "snippet": "Roughly five months after the announcement of the Iraqi parliamentary election results, the political forces within the Coordination Framework resolved the question of who would assume the premiership of the new Iraqi government by nominating Ali al-Zaidi for the post. Newly elected President Nizar Amidi subsequently issued a formal mandate appointing him to lead the [&#8230;]",
+      "title_cn": "阿拉伯及海湾国家对新伊拉克政府有何期待？",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Iran’s Nuclear Dust Clouds US Radioactive Diplomacy",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/irans-nuclear-dust-clouds-us-radioactive-diplomacy/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "independent",
+      "source_topics": [
+        "security",
+        "politics"
+      ],
+      "date": "2026-05-03",
+      "snippet": "The Middle East endures a fragile truce.&#160; Over $25 billion and 13 dead soldiers later, the United States is far from clear about the obliteration of Iran’s nuclear capability and the erosion of its destabilizing power. The dual blockade of the Strait of Hormuz has emerged as Iran’s nuclear option before it acquires and unveils [&#8230;]",
+      "title_cn": "伊朗核试验笼罩美国放射性外交",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "The Iran Conflict and the Strategic Implications for Russia",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/the-iran-conflict-and-the-strategic-implications-for-russia/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "independent",
+      "source_topics": [
+        "security",
+        "politics"
+      ],
+      "date": "2026-05-03",
+      "snippet": "The conflict between Iran, Israel and the United States has profoundly altered the geopolitical landscape, creating a set of strategic advantages for the Russian Federation. While Moscow maintains an official stance of diplomatic caution, the material benefits derived from the Middle Eastern theater are substantial. The primary drivers of this advantage are the surge in [&#8230;]",
+      "title_cn": "伊朗冲突对俄罗斯的战略影响",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "China’s Influence Over Iran and the Constraints on Its Leverage",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/chinas-influence-over-iran-and-the-constraints-on-its-leverage/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "independent",
+      "source_topics": [
+        "security",
+        "politics"
+      ],
+      "date": "2026-05-03",
+      "snippet": "The Iran war has exposed the role of extra-regional powers in the Middle East, while highlighting how their responses are redefining contemporary great power politics. Regional instability has significant consequences for critical sea lanes, energy supplies and global trade, which have direct implications for energy-importing countries in Asia. In this context, China’s considerations and role [&#8230;]",
+      "title_cn": "中国对伊朗影响力及其制约",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Europe Confronts Strategic Exposure in the Hormuz Crisis",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/europe-confronts-strategic-exposure-in-the-hormuz-crisis/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "independent",
+      "source_topics": [
+        "security",
+        "politics"
+      ],
+      "date": "2026-05-03",
+      "snippet": "The prolonged crisis in the Strait of Hormuz has emerged as one of the most disruptive geopolitical developments of the 2020s. It stems from escalating tensions between Iran and a US-led coalition within the wider context of military confrontation involving Israel. For Europe, already contending with the aftershocks of the Russia-Ukraine war and the structural [&#8230;]",
+      "title_cn": "欧洲面对霍尔木兹危机战略暴露",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "The Washington–Vatican Rift: Causes and Implications",
+      "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/the-washington-vatican-rift-causes-and-implications/",
+      "source": "International Institute for Iranian Studies (Rasanah)",
+      "source_country": "Saudi Arabia",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "independent",
+      "source_topics": [
+        "security",
+        "politics"
+      ],
+      "date": "2026-04-29",
+      "snippet": "In the wake of the&#160; US-Israel war on Iran, US President Donald Trump’s clash with Pope Leo XIV of the Vatican&#160; recently reached a breaking point. The Pope openly criticized Trump’s rhetoric about destroying Iranian civilization and has repeatedly called for peace while condemning the war. Their dispute is not just a passing spat between [&#8230;]",
+      "title_cn": "华盛顿-梵蒂冈裂痕：原因与影响",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "The Islamabad Opening: How Pakistan Became Washington and Tehran’s Key Mediator",
+      "url": "http://studies.aljazeera.net/en/analyses/islamabad-opening-how-pakistan-became-washington-and-tehran%E2%80%99s-key-mediator",
+      "source": "Al Jazeera Centre for Studies (AJCS)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "politics",
+        "security",
+        "society"
+      ],
+      "date": "2026-05-03",
+      "snippet": "Pakistan has emerged as a key mediator in US–Iran talks in Islamabad, balancing ties with both sides and regional partners. Despite limited leverage, it uses diplomacy to gain relevance, though its role remains that of facilitator amid ongoing regional tensions and economic vulnerabilities.",
+      "title_cn": "伊斯兰堡开放：巴基斯坦成美伊关键调解人",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "AJCS to Participate in Decolonizing Knowledge Forum in Istanbul",
+      "url": "http://studies.aljazeera.net/en/news/ajcs-participate-decolonizing-knowledge-forum-istanbul",
+      "source": "Al Jazeera Centre for Studies (AJCS)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "politics",
+        "security",
+        "society"
+      ],
+      "date": "2026-05-03",
+      "snippet": "Al Jazeera Centre for Studies is set to participate in this year’s Decolonizing Knowledge Production and Circulation Forum, which will be held in Istanbul on 11 and 12 May 2026 with the participation of a wide range of international academics and intellectuals.",
+      "title_cn": "AJCS将参加伊斯坦布尔去殖民化知识论坛",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "The Strategic Multi-Layered Predicament of the Iran War and the Requirements for a Way Out",
+      "url": "http://studies.aljazeera.net/en/analyses/strategic-multi-layered-predicament-iran-war-and-requirements-way-out",
+      "source": "Al Jazeera Centre for Studies (AJCS)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "politics",
+        "security",
+        "society"
+      ],
+      "date": "2026-04-30",
+      "snippet": "In 2026, a US-Israeli campaign against Iran escalated into a multidimensional impasse. Despite heavy strikes, Iran survives, retains leverage over the Strait of Hormuz, and carries out asymmetric responses. Ceasefire, blockade, and talks in Islamabad have failed to yield a victory narrative for either side.",
+      "title_cn": "伊朗战争多层战略困境与出路要求",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Stalemate: A Fragile Balance in the Iran War",
+      "url": "http://studies.aljazeera.net/en/policy-briefs/stalemate-fragile-balance-iran-war",
+      "source": "Al Jazeera Centre for Studies (AJCS)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "politics",
+        "security",
+        "society"
+      ],
+      "date": "2026-04-29",
+      "snippet": "US efforts to impose demands on Iran by force have failed, while Iran’s attempt to enforce its own terms through selective closure of the Strait of Hormuz has also fallen short. The result is a tense stalemate that could still shift toward renewed escalation or a negotiated settlement.",
+      "title_cn": "僵局：伊朗战争的脆弱平衡",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "The Ceasefire Pause: Likely Outcomes of the Islamabad Negotiations",
+      "url": "https://www.dohainstitute.org/en/PoliticalStudies/Pages/the-ceasefire-pause-likely-outcomes-of-the-islamabad-negotiations.aspx",
+      "source": "Arab Center for Research and Policy Studies (Doha Institute)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "university",
+      "source_topics": [
+        "politics",
+        "society",
+        "security"
+      ],
+      "date": "2026-05-13",
+      "snippet": "",
+      "title_cn": "停火暂停：伊斯兰堡谈判可能结果",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Renewable energy: From environmental and economic motives to strategic security",
+      "url": "https://www.dohainstitute.org/en/economic-studies/Pages/renewable-energy-from-economic-and-environmental-motives-to-strategic-security.aspx",
+      "source": "Arab Center for Research and Policy Studies (Doha Institute)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "university",
+      "source_topics": [
+        "politics",
+        "society",
+        "security"
+      ],
+      "date": "2026-05-12",
+      "snippet": "",
+      "title_cn": "可再生能源：从环境经济动机到战略安全",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Iran’s “Friend of Hard Times” and China’s Plan B",
+      "url": "https://www.dohainstitute.org/en/PoliticalStudies/Pages/irans-friend-of-hard-times-and-chinas-plan-b.aspx",
+      "source": "Arab Center for Research and Policy Studies (Doha Institute)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "university",
+      "source_topics": [
+        "politics",
+        "society",
+        "security"
+      ],
+      "date": "2026-05-10",
+      "snippet": "",
+      "title_cn": "伊朗“患难之交”与中国的B计划",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Negotiations Under Fire: Lebanon–Israel Talks at a Crossroads",
+      "url": "https://www.dohainstitute.org/en/PoliticalStudies/Pages/israel-lebanon-negotiations-negotiations-without-guarantees.aspx",
+      "source": "Arab Center for Research and Policy Studies (Doha Institute)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "university",
+      "source_topics": [
+        "politics",
+        "society",
+        "security"
+      ],
+      "date": "2026-05-10",
+      "snippet": "",
+      "title_cn": "炮火谈判：黎巴嫩-以色列对话十字路口",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Hyperwar and the Defence of the Gulf Cities",
+      "url": "https://www.dohainstitute.org/en/PoliticalStudies/Pages/hyperwar-and-the-defence-of-the-gulf-cities.aspx",
+      "source": "Arab Center for Research and Policy Studies (Doha Institute)",
+      "source_country": "Qatar",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "university",
+      "source_topics": [
+        "politics",
+        "society",
+        "security"
+      ],
+      "date": "2026-05-06",
+      "snippet": "",
+      "title_cn": "超战争与海湾城市防御",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "The Kingdom of Bahrain: A Hub for International Efforts to Ensure Maritime Security in the Arabian Gulf",
+      "url": "https://www.derasat.org.bh/en/the-kingdom-of-bahrain-a-hub-for-international-efforts-to-ensure-maritime-security-in-the-arabian-gulf/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "security",
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-12",
+      "snippet": "When we talk about maritime security in the Arabian Gulf, our minds immediately turn to the Strait of Hormuz and the Strait of Bab el-Mandeb, As for the Strait of Hormuz, Gulf countries rely on it for their trade with the rest of the world, particularly three countries that have no alternative outlets: the Kingdom [&#8230;]\n&lt;p&gt;The post The Kingdom of Bahrain: A Hub for International Efforts to Ensure Maritime Security in the Arabian Gulf first appeared on Derasat.&lt;/p&gt;",
+      "title_cn": "巴林王国：阿拉伯湾海上安全国际枢纽",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Derasat Center participates in the Joint Regional Initiative“Bridging Stability: EU-GCC Cooperation in an Era of Fragmentation”",
+      "url": "https://www.derasat.org.bh/en/derasat-center-participates-in-the-joint-regional-initiativebridging-stability-eu-gcc-cooperation-in-an-era-of-fragmentation-2/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "security",
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-11",
+      "snippet": "Mr. Abdulla Mohamed Alahmed, CEO of the Bahrain Center for Strategic, International and Energy Studies (Derasat), participated in the joint regional initiative titled “Bridging Stability: EU-GCC Cooperation in an Era of Fragmentation,” organized by the International Policy Research Center from the State of Qatar, in cooperation with the Italian Institute for International Political Studies (ISPI), [&#8230;]\n&lt;p&gt;The post Derasat Center participates in the Joint Regional Initiative“Bridging S",
+      "title_cn": "Derasat中心参与“弥合稳定：碎片化时代的欧盟-海湾合作”联合倡议",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Derasat Center participates in the Joint Regional Initiative“Bridging Stability: EU-GCC Cooperation in an Era of Fragmentation”",
+      "url": "https://www.derasat.org.bh/en/derasat-center-participates-in-the-joint-regional-initiativebridging-stability-eu-gcc-cooperation-in-an-era-of-fragmentation/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "security",
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-10",
+      "snippet": "Mr. Abdulla Mohamed Alahmed, CEO of the Bahrain Center for Strategic, International and Energy Studies (Derasat), participated in the joint regional initiative titled “Bridging Stability: EU-GCC Cooperation in an Era of Fragmentation,” organized by the International Policy Research Center from the State of Qatar, in cooperation with the Italian Institute for International Political Studies (ISPI), [&#8230;]\n&lt;p&gt;The post Derasat Center participates in the Joint Regional Initiative“Bridging S",
+      "title_cn": "Derasat中心参与“弥合稳定：碎片化时代的欧盟-海湾合作”联合倡议",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "The Jeddah Consultative Summit: Toward a Comprehensive Gulf Doctrine of Deterrence and Strategic Integration",
+      "url": "https://www.derasat.org.bh/en/the-jeddah-consultative-summit-toward-a-comprehensive-gulf-doctrine-of-deterrence-and-strategic-integration/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "security",
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-07",
+      "snippet": "The Jeddah Consultative Summit of the leaders and heads of delegations of the Gulf Cooperation Council (GCC) states—which recently convened for its 19th session, chaired by His Royal Highness Prince Mohammed bin Salman bin Abdulaziz Al Saud, Crown Prince and Prime Minister — the consolidation of a more profound Gulf approach that transcends traditional frameworks [&#8230;]\n&lt;p&gt;The post The Jeddah Consultative Summit: Toward a Comprehensive Gulf Doctrine of Deterrence and Strategic Integrati",
+      "title_cn": "吉达协商峰会：海湾威慑与战略整合新方针",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "When Your Data Is Under Siege: Cybersecurity and Artificial Intelligence in Times of Crisis",
+      "url": "https://www.derasat.org.bh/en/when-your-data-is-under-siege-cybersecurity-and-artificial-intelligence-in-times-of-crisis/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "security",
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-07",
+      "snippet": "The battlefield is no longer confined to geographical borders; it has extended deep into digital networks and our personal devices. Amid regional tensions, citizens find themselves on the front lines—not with a weapon in hand, but with a phone in their pocket and an online bank account. This shift reflects a qualitative change in the [&#8230;]\n&lt;p&gt;The post When Your Data Is Under Siege: Cybersecurity and Artificial Intelligence in Times of Crisis first appeared on Derasat.&lt;/p&gt;",
+      "title_cn": "数据围城：危机中的网络安全与人工智能",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Beyond the Oil Shield: Strategic Resilience and the Next Generation’s Ability to Confront Regional Crises",
+      "url": "https://www.derasat.org.bh/en/beyond-the-oil-shield-strategic-resilience-and-the-next-generations-ability-to-confront-regional-crises/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "security",
+        "energy",
+        "economy"
+      ],
+      "date": "2026-05-06",
+      "snippet": "Crisis management in the Gulf Cooperation Council (GCC) states has long been associated with the “oil shield,” utilizing vast financial reserves to mitigate the effects of regional instability. However, in light of the Iranian attack on the Arabian Gulf states during the recent war, the traditional model for managing these crises has proven to require [&#8230;]\n&lt;p&gt;The post Beyond the Oil Shield: Strategic Resilience and the Next Generation’s Ability to Confront Regional Crises first appear",
+      "title_cn": "超越石油盾牌：战略韧性及新生代应对区域危机的能力",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Iranian Policies on Arabian Gulf andRegional Securityfrom the 1979 Revolution to the 2026 War",
+      "url": "https://www.derasat.org.bh/en/iranian-policies-on-arabian-gulf-andregional-securityfrom-the-1979-revolution-to-the-2026-war/",
+      "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+      "source_country": "Bahrain",
+      "source_tier": "core_gcc",
+      "source_region": "gcc",
+      "source_org_type": "official",
+      "source_topics": [
+        "security",
+        "energy",
+        "economy"
+      ],
+      "date": "2026-04-28",
+      "snippet": "The Bahrain Center for Strategic, International and Energy Studies (Derasat) recently published a research paper titled “Iranian Policies Toward the Security of the Arabian Gulf and Regional Security from the 1979 Iranian Revolution to the 2026 War,” prepared by Dr. Ashraf Mohammed Keshk, Director of the International and Strategic Studies Program at the Center. The [&#8230;]\n&lt;p&gt;The post Iranian Policies on Arabian Gulf andRegional Securityfrom the 1979 Revolution to the 2026 War first app",
+      "title_cn": "伊朗政策与阿拉伯海及区域安全：从1979革命到2026战争",
+      "keyword_score": 99.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "core_gcc_auto_pass"
+      ],
+      "fetch_method": "rss"
+    },
+    {
+      "title": "Paused, Not Resolved:The Saudi-UAE Rivalry and the War in Sudan—&nbspLeena BadriBawader /",
+      "url": "https://www.arab-reform.net/publication/paused-not-resolved-the-saudi-uae-rivalry-and-the-war-in-sudan/",
+      "source": "Arab Reform Initiative",
+      "source_country": "France",
+      "source_tier": "pan_mena",
+      "source_region": "mena",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "society"
+      ],
+      "date": "2026-05-13",
+      "snippet": "",
+      "title_cn": "暂停而非解决：沙特-阿联酋 rivalry 与苏丹战争",
+      "keyword_score": 8.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 3.0,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "saudi(标题,+4)",
+        "uae(标题,+4)",
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "The Trump–Xi summit: can progress be made on Iran?",
+      "url": "https://www.chathamhouse.org/2026/05/trump-xi-summit-can-progress-be-made-iran",
+      "source": "Chatham House — Gulf States",
+      "source_country": "UK",
+      "source_tier": "pan_mena",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "security",
+        "economy"
+      ],
+      "date": "2026-05-11",
+      "snippet": "Expert comment",
+      "title_cn": "特习峰会：能否在伊朗问题上取得进展？",
+      "keyword_score": 5.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 2.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Killing of development leader exposes insecurity in government-controlled Yemen",
+      "url": "https://www.chathamhouse.org/2026/05/killing-development-leader-exposes-insecurity-government-controlled-yemen",
+      "source": "Chatham House — Gulf States",
+      "source_country": "UK",
+      "source_tier": "pan_mena",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "security",
+        "economy"
+      ],
+      "date": "2026-05-08",
+      "snippet": "Expert comment",
+      "title_cn": "发展领袖遇害凸显政府控制下也门的安全危机",
+      "keyword_score": 5.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 2.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "The Iran war has left Gaza neglected",
+      "url": "https://www.chathamhouse.org/2026/05/iran-war-has-left-gaza-neglected",
+      "source": "Chatham House — Gulf States",
+      "source_country": "UK",
+      "source_tier": "pan_mena",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "security",
+        "economy"
+      ],
+      "date": "2026-05-08",
+      "snippet": "Expert comment",
+      "title_cn": "伊朗战争致使加沙被忽视",
+      "keyword_score": 5.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 2.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Do Trump’s ‘maximum pressure’ sanctions inevitably lead to military action?",
+      "url": "https://www.chathamhouse.org/2026/05/do-trumps-maximum-pressure-sanctions-inevitably-lead-military-action",
+      "source": "Chatham House — Gulf States",
+      "source_country": "UK",
+      "source_tier": "pan_mena",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "security",
+        "economy"
+      ],
+      "date": "2026-05-08",
+      "snippet": "Expert comment",
+      "title_cn": "特朗普的‘极限施压’制裁必然导致军事行动吗？",
+      "keyword_score": 5.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 2.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "China will benefit from the Iran war, regardless of any deal between Trump and Tehran",
+      "url": "https://www.chathamhouse.org/2026/05/china-will-benefit-iran-war-regardless-any-deal-between-trump-and-tehran",
+      "source": "Chatham House — Gulf States",
+      "source_country": "UK",
+      "source_tier": "pan_mena",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "security",
+        "economy"
+      ],
+      "date": "2026-05-06",
+      "snippet": "Expert comment",
+      "title_cn": "无论特朗普与德黑兰达成何种协议，中国都将从伊朗战争中获益",
+      "keyword_score": 5.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 2.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "How the Iran war is reshaping Saudi strategy: From Hormuz and Houthis to the UAE’s OPEC exit",
+      "url": "https://www.chathamhouse.org/2026/05/how-iran-war-reshaping-saudi-strategy-hormuz-and-houthis-uaes-opec-exit",
+      "source": "Chatham House — Gulf States",
+      "source_country": "UK",
+      "source_tier": "pan_mena",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "security",
+        "economy"
+      ],
+      "date": "2026-05-01",
+      "snippet": "Expert comment",
+      "title_cn": "伊朗战争如何重塑沙特战略：从霍尔木兹与胡塞武装到阿联酋退出OPEC",
+      "keyword_score": 20.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 4.0,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "opec(标题,+6)",
+        "hormuz(标题,+6)",
+        "saudi(标题,+4)",
+        "uae(标题,+4)",
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "A naval coalition in the Strait of Hormuz should learn these lessons",
+      "url": "https://www.chathamhouse.org/2026/05/naval-coalition-strait-hormuz-should-learn-these-lessons",
+      "source": "Chatham House — Gulf States",
+      "source_country": "UK",
+      "source_tier": "pan_mena",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "security",
+        "economy"
+      ],
+      "date": "2026-05-01",
+      "snippet": "Expert comment",
+      "title_cn": "霍尔木兹海峡海军联盟应汲取的教训",
+      "keyword_score": 12.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 4.0,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "hormuz(标题,+6)",
+        "strait of hormuz(标题,+6)",
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Political deadlock has left Iraq’s Kurdistan Region dangerously exposed amid Iran war",
+      "url": "https://www.chathamhouse.org/2026/04/political-deadlock-has-left-iraqs-kurdistan-region-dangerously-exposed-amid-iran-war",
+      "source": "Chatham House — Gulf States",
+      "source_country": "UK",
+      "source_tier": "pan_mena",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "security",
+        "economy"
+      ],
+      "date": "2026-04-29",
+      "snippet": "Expert comment",
+      "title_cn": "政治僵局使伊拉克库区在伊朗战争中暴露于危险",
+      "keyword_score": 5.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 2.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Israel’s perpetual mobilization: The limits of Netanyahu’s ‘Super-Sparta’ model",
+      "url": "https://www.chathamhouse.org/2026/04/israels-perpetual-mobilization-limits-netanyahus-super-sparta-model",
+      "source": "Chatham House — Gulf States",
+      "source_country": "UK",
+      "source_tier": "pan_mena",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "security",
+        "economy"
+      ],
+      "date": "2026-04-22",
+      "snippet": "Expert comment",
+      "title_cn": "以色列的永续动员：内塔尼亚胡‘超级斯巴达’模式的局限",
+      "keyword_score": 5.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 2.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "What does Pakistan gain from its Iran–US diplomacy?",
+      "url": "https://www.chathamhouse.org/2026/04/what-does-pakistan-gain-its-iran-us-diplomacy",
+      "source": "Chatham House — Gulf States",
+      "source_country": "UK",
+      "source_tier": "pan_mena",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "security",
+        "economy"
+      ],
+      "date": "2026-04-21",
+      "snippet": "Expert comment",
+      "title_cn": "巴基斯坦从美伊外交中获得什么？",
+      "keyword_score": 5.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 2.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "html"
+    },
+    {
+      "title": "Dollar dominance is surviving the Iran war – just about",
+      "url": "https://www.chathamhouse.org/2026/04/dollar-dominance-surviving-iran-war-just-about",
+      "source": "Chatham House — Gulf States",
+      "source_country": "UK",
+      "source_tier": "pan_mena",
+      "source_region": "western",
+      "source_org_type": "independent",
+      "source_topics": [
+        "politics",
+        "security",
+        "economy"
+      ],
+      "date": "2026-04-17",
+      "snippet": "Expert comment",
+      "title_cn": "美元霸权挺过伊朗战争——勉强维持",
+      "keyword_score": 5.0,
+      "content_type": "unknown",
+      "priority": "normal",
+      "topic_relevance_score": 2.5,
+      "ai_verdict": null,
+      "matched_keywords": [
+        "deep_topic_auto_pass"
+      ],
+      "fetch_method": "html"
+    }
+  ]
+}

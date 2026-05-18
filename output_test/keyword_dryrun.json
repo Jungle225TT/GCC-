@@ -1,7 +1,232 @@
 [
   {
-    "title": "Derasat Center Hosts the Ambassador of the Federal Republic of Germany for a Roundtable Discussion",
-    "url": "https://www.derasat.org.bh/en/derasat-center-hosts-the-ambassador-of-the-federal-republic-of-germany-for-a-roundtable-discussion-2/",
+    "title": "Gulf States Adjust to a New Normal",
+    "url": "https://agsi.org/analysis/gulf-states-adjust-to-a-new-normal/",
+    "source": "Arab Gulf States Institute in Washington (AGSIW)",
+    "source_region": "western",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "A New Mediator: Can Pakistan Help the U.S. and Iran Cut a Deal?",
+    "url": "https://agsi.org/analysis/a-new-mediator-can-pakistan-help-the-u-s-and-iran-cut-a-deal/",
+    "source": "Arab Gulf States Institute in Washington (AGSIW)",
+    "source_region": "western",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "India Faces New Limits in a Divided Middle East",
+    "url": "https://agsi.org/analysis/india-faces-new-limits-in-a-divided-middle-east/",
+    "source": "Arab Gulf States Institute in Washington (AGSIW)",
+    "source_region": "western",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Resilient by Design: Infrastructure and the Future of UAE Urbanism",
+    "url": "https://agsi.org/analysis/resilient-by-design-infrastructure-and-the-future-of-uae-urbanism/",
+    "source": "Arab Gulf States Institute in Washington (AGSIW)",
+    "source_region": "western",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "The Second Phase of the UAE Space Economy",
+    "url": "https://agsi.org/analysis/the-second-phase-of-the-uae-space-economy/",
+    "source": "Arab Gulf States Institute in Washington (AGSIW)",
+    "source_region": "western",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "China’s Mediation Ceiling in the Iran War",
+    "url": "https://agsi.org/analysis/chinas-mediation-ceiling-in-the-iran-war/",
+    "source": "Arab Gulf States Institute in Washington (AGSIW)",
+    "source_region": "western",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "The Impact of Tariffs on the AI Data Center Buildout: Balancing Supply Chain Security and AI Infrastructure Leadership",
+    "url": "https://www.csis.org/analysis/impact-tariffs-ai-data-center-buildout-balancing-supply-chain-security-and-ai",
+    "source": "Center for Strategic and International Studies (CSIS)",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "The Iran Conflict Illuminates Taiwan’s Unique Energy Security Challenge",
+    "url": "https://www.csis.org/analysis/iran-conflict-illuminates-taiwans-unique-energy-security-challenge",
+    "source": "Center for Strategic and International Studies (CSIS)",
+    "source_region": "western",
+    "final_score": 6.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Overturning the Endangerment Finding Threatens Americans’ Health, Wealth, and Security",
+    "url": "https://www.csis.org/analysis/overturning-endangerment-finding-threatens-americans-health-wealth-and-security",
+    "source": "Center for Strategic and International Studies (CSIS)",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "How Are Perceptions of the U.S.-Mexico Relationship Changing?",
+    "url": "https://www.csis.org/analysis/how-are-perceptions-us-mexico-relationship-changing",
+    "source": "Center for Strategic and International Studies (CSIS)",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Lebanon and Israel Talks: Empowering Diplomacy Over Open-Ended Conflict",
+    "url": "https://www.csis.org/analysis/lebanon-and-israel-talks-empowering-diplomacy-over-open-ended-conflict",
+    "source": "Center for Strategic and International Studies (CSIS)",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Pac Tech Pulse: May 2026",
+    "url": "https://www.csis.org/analysis/pac-tech-pulse-may-2026",
+    "source": "Center for Strategic and International Studies (CSIS)",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "How Might the Trump-Xi Summit Impact U.S. Farmers?",
+    "url": "https://www.csis.org/analysis/how-might-trump-xi-summit-impact-us-farmers",
+    "source": "Center for Strategic and International Studies (CSIS)",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "A U.S. Campaign to Exploit Beijing’s Weaknesses",
+    "url": "https://www.csis.org/analysis/us-campaign-exploit-beijings-weaknesses",
+    "source": "Center for Strategic and International Studies (CSIS)",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "States Weekly: May 13, 2026",
+    "url": "https://www.csis.org/analysis/states-weekly-may-13-2026",
+    "source": "Center for Strategic and International Studies (CSIS)",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Spectral Insights into Oil Futures Market",
+    "url": "https://www.kapsarc.org/our-offerings/publications/spectral-insights-into-oil-futures-market/",
+    "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Desalination As a Power Reliability Service: An Economic Framework for the Energy–Water Nexus",
+    "url": "https://doi.org/10.1016/j.nexus.2026.100717",
+    "source": "King Abdullah Petroleum Studies and Research Centre (KAPSARC)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "What Do Arab and Gulf Countries Expect From the New Iraqi Government?",
+    "url": "https://rasanah-iiis.org/english/monitoring-and-translation/articles/what-do-arab-and-gulf-countries-expect-from-the-new-iraqi-government/",
+    "source": "International Institute for Iranian Studies (Rasanah)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Iran’s Nuclear Dust Clouds US Radioactive Diplomacy",
+    "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/irans-nuclear-dust-clouds-us-radioactive-diplomacy/",
+    "source": "International Institute for Iranian Studies (Rasanah)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "The Iran Conflict and the Strategic Implications for Russia",
+    "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/the-iran-conflict-and-the-strategic-implications-for-russia/",
+    "source": "International Institute for Iranian Studies (Rasanah)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "China’s Influence Over Iran and the Constraints on Its Leverage",
+    "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/chinas-influence-over-iran-and-the-constraints-on-its-leverage/",
+    "source": "International Institute for Iranian Studies (Rasanah)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Europe Confronts Strategic Exposure in the Hormuz Crisis",
+    "url": "https://rasanah-iiis.org/english/monitoring-and-translation/reports/europe-confronts-strategic-exposure-in-the-hormuz-crisis/",
+    "source": "International Institute for Iranian Studies (Rasanah)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "The Islamabad Opening: How Pakistan Became Washington and Tehran’s Key Mediator",
+    "url": "http://studies.aljazeera.net/en/analyses/islamabad-opening-how-pakistan-became-washington-and-tehran%E2%80%99s-key-mediator",
+    "source": "Al Jazeera Centre for Studies (AJCS)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "The Strategic Multi-Layered Predicament of the Iran War and the Requirements for a Way Out",
+    "url": "http://studies.aljazeera.net/en/analyses/strategic-multi-layered-predicament-iran-war-and-requirements-way-out",
+    "source": "Al Jazeera Centre for Studies (AJCS)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Stalemate: A Fragile Balance in the Iran War",
+    "url": "http://studies.aljazeera.net/en/policy-briefs/stalemate-fragile-balance-iran-war",
+    "source": "Al Jazeera Centre for Studies (AJCS)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "The Kingdom of Bahrain: A Hub for International Efforts to Ensure Maritime Security in the Arabian Gulf",
+    "url": "https://www.derasat.org.bh/en/the-kingdom-of-bahrain-a-hub-for-international-efforts-to-ensure-maritime-security-in-the-arabian-gulf/",
     "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
     "source_region": "gcc",
     "final_score": 99.0,
@@ -9,8 +234,8 @@
     "demote_penalty": 0
   },
   {
-    "title": "Derasat Center organizes a lecture titled “The Regional Landscape on the Day After”",
-    "url": "https://www.derasat.org.bh/en/derasat-center-organizes-a-lecture-titled-the-regional-landscape-on-the-day-after/",
+    "title": "The Jeddah Consultative Summit: Toward a Comprehensive Gulf Doctrine of Deterrence and Strategic Integration",
+    "url": "https://www.derasat.org.bh/en/the-jeddah-consultative-summit-toward-a-comprehensive-gulf-doctrine-of-deterrence-and-strategic-integration/",
     "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
     "source_region": "gcc",
     "final_score": 99.0,
@@ -18,8 +243,17 @@
     "demote_penalty": 0
   },
   {
-    "title": "Derasat Center hosts the Ambassador of the Federal Republic of Germany for a Roundtable Discussion",
-    "url": "https://www.derasat.org.bh/en/derasat-center-hosts-the-ambassador-of-the-federal-republic-of-germany-for-a-roundtable-discussion/",
+    "title": "When Your Data Is Under Siege: Cybersecurity and Artificial Intelligence in Times of Crisis",
+    "url": "https://www.derasat.org.bh/en/when-your-data-is-under-siege-cybersecurity-and-artificial-intelligence-in-times-of-crisis/",
+    "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+    "source_region": "gcc",
+    "final_score": 99.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Beyond the Oil Shield: Strategic Resilience and the Next Generation’s Ability to Confront Regional Crises",
+    "url": "https://www.derasat.org.bh/en/beyond-the-oil-shield-strategic-resilience-and-the-next-generations-ability-to-confront-regional-crises/",
     "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
     "source_region": "gcc",
     "final_score": 99.0,
@@ -38,14 +272,120 @@
     "demote_penalty": -2
   },
   {
-    "title": "Europe’s Role in Ensuring Maritime Security in the Strait of Hormuz",
-    "url": "https://www.derasat.org.bh/en/europes-role-in-ensuring-maritime-security-in-the-strait-of-hormuz/",
-    "source": "Bahrain Center for Strategic, International and Energy Studies (Derasat)",
-    "source_region": "gcc",
-    "final_score": 99.0,
-    "demote_hits": [
-      "nato"
-    ],
-    "demote_penalty": -2
+    "title": "Paused, Not Resolved:The Saudi-UAE Rivalry and the War in Sudan—&nbspLeena BadriBawader /",
+    "url": "https://www.arab-reform.net/publication/paused-not-resolved-the-saudi-uae-rivalry-and-the-war-in-sudan/",
+    "source": "Arab Reform Initiative",
+    "source_region": "mena",
+    "final_score": 8.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "America Has Lost Its Leverage Over China",
+    "url": "https://www.foreignaffairs.com/united-states/america-has-lost-its-leverage-over-china",
+    "source": "Center for Strategic and International Studies (CSIS)",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "The Trump–Xi summit: can progress be made on Iran?",
+    "url": "https://www.chathamhouse.org/2026/05/trump-xi-summit-can-progress-be-made-iran",
+    "source": "Chatham House — Gulf States",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Do Trump’s ‘maximum pressure’ sanctions inevitably lead to military action?",
+    "url": "https://www.chathamhouse.org/2026/05/do-trumps-maximum-pressure-sanctions-inevitably-lead-military-action",
+    "source": "Chatham House — Gulf States",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Killing of development leader exposes insecurity in government-controlled Yemen",
+    "url": "https://www.chathamhouse.org/2026/05/killing-development-leader-exposes-insecurity-government-controlled-yemen",
+    "source": "Chatham House — Gulf States",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "The Iran war has left Gaza neglected",
+    "url": "https://www.chathamhouse.org/2026/05/iran-war-has-left-gaza-neglected",
+    "source": "Chatham House — Gulf States",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "China will benefit from the Iran war, regardless of any deal between Trump and Tehran",
+    "url": "https://www.chathamhouse.org/2026/05/china-will-benefit-iran-war-regardless-any-deal-between-trump-and-tehran",
+    "source": "Chatham House — Gulf States",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "How the Iran war is reshaping Saudi strategy: From Hormuz and Houthis to the UAE’s OPEC exit",
+    "url": "https://www.chathamhouse.org/2026/05/how-iran-war-reshaping-saudi-strategy-hormuz-and-houthis-uaes-opec-exit",
+    "source": "Chatham House — Gulf States",
+    "source_region": "western",
+    "final_score": 20.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "A naval coalition in the Strait of Hormuz should learn these lessons",
+    "url": "https://www.chathamhouse.org/2026/05/naval-coalition-strait-hormuz-should-learn-these-lessons",
+    "source": "Chatham House — Gulf States",
+    "source_region": "western",
+    "final_score": 12.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Political deadlock has left Iraq’s Kurdistan Region dangerously exposed amid Iran war",
+    "url": "https://www.chathamhouse.org/2026/04/political-deadlock-has-left-iraqs-kurdistan-region-dangerously-exposed-amid-iran-war",
+    "source": "Chatham House — Gulf States",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Israel’s perpetual mobilization: The limits of Netanyahu’s ‘Super-Sparta’ model",
+    "url": "https://www.chathamhouse.org/2026/04/israels-perpetual-mobilization-limits-netanyahus-super-sparta-model",
+    "source": "Chatham House — Gulf States",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "What does Pakistan gain from its Iran–US diplomacy?",
+    "url": "https://www.chathamhouse.org/2026/04/what-does-pakistan-gain-its-iran-us-diplomacy",
+    "source": "Chatham House — Gulf States",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
+  },
+  {
+    "title": "Dollar dominance is surviving the Iran war – just about",
+    "url": "https://www.chathamhouse.org/2026/04/dollar-dominance-surviving-iran-war-just-about",
+    "source": "Chatham House — Gulf States",
+    "source_region": "western",
+    "final_score": 5.0,
+    "demote_hits": [],
+    "demote_penalty": 0
   }
 ]
