@@ -14,12 +14,15 @@ from gcc_thinktank_scraper_v2 import (
     compute_keyword_score,
     classify_content_type,
     compute_topic_relevance_score,
+    apply_source_relevance_adjustments,
     _KW,
     STRONG_KEYWORDS,
     RELEVANCE_THRESHOLD,
     Article,
     THINK_TANKS,
     get_compliance_rule,
+    high_risk_sources_records,
+    filtered_out_notice,
     normalize_date,
     _clean_article_title,
     _is_likely_article,
@@ -271,6 +274,24 @@ def test_core_gcc_recent_noise_hard_filtered():
     print(f"  [OK] {len(titles)} 条 core_gcc 近期噪音样本被硬过滤")
 
 
+def test_core_gcc_auto_pass_does_not_force_strong_relevance():
+    """core_gcc 自动通过只负责保留文章，强相关仍需真实议题信号。"""
+    broad_title = "Syria Escapes Iran War, Can It Benefit From It?"
+    broad_score, _ = compute_keyword_score(broad_title, "")
+    broad_relevance = compute_topic_relevance_score(
+        99.0, "high", source_tier="core_gcc", actual_keyword_score=broad_score,
+    )
+    assert broad_relevance < 4.0, f"泛中东题目不应自动进强相关: {broad_relevance}"
+
+    focused_title = "Gulf States Adjust to a New Normal"
+    focused_score, _ = compute_keyword_score(focused_title, "")
+    focused_relevance = compute_topic_relevance_score(
+        99.0, "high", source_tier="core_gcc", actual_keyword_score=focused_score,
+    )
+    assert focused_relevance >= 4.0, f"含 Gulf States 强信号的题目应保持强相关: {focused_relevance}"
+    print("  [OK] core_gcc 自动通过不再把泛议题直接推入强相关")
+
+
 def test_count_badge_category_title_filtered():
     """分类/标签页计数标题如 Economic Security(2085) 不应进入文章池。"""
     title = "Economic Security(2085)"
@@ -299,6 +320,20 @@ def test_pan_mena_deep_topic_strong_titles_promoted():
             failed.append(f"{title} (keyword={final_score}, relevance={relevance}, matched={matched})")
     assert not failed, "以下 deep_topic 强信号样本未进入强相关:\n" + "\n".join(f"  - {x}" for x in failed)
     print(f"  [OK] {len(titles)} 篇 pan_mena deep_topic 强信号样本进入强相关")
+
+
+def test_deep_topic_auto_pass_does_not_force_strong_relevance():
+    """deep_topic 保底只负责收录，标题无真实GCC信号时不应强推。"""
+    tank = {"deep_topic": True}
+    title = "Lebanon and Israel Talks: Empowering Diplomacy Over Open-Ended Conflict"
+    actual_score, actual_matches = compute_keyword_score(title, "")
+    article = make_test_article(title)
+    article.keyword_score = 5.0
+    article.content_type = "high"
+    article.topic_relevance_score = compute_topic_relevance_score(5.0, "high")
+    apply_source_relevance_adjustments(article, tank, actual_score, actual_matches)
+    assert article.topic_relevance_score < 4.0, f"deep_topic 泛议题不应进强相关: {article.topic_relevance_score}"
+    print("  [OK] deep_topic 保底不再把泛议题直接推入强相关")
 
 
 def test_arab_reform_title_date_cleanup():
@@ -371,6 +406,79 @@ def test_compliance_rules_cover_all_think_tanks():
     print(f"  [OK] compliance_rules.yaml 覆盖 {len(THINK_TANKS)} 个当前智库源；默认禁用 {len(blocked)} 个高风险来源")
 
 
+def test_high_risk_sources_records_for_dry_run_export():
+    """dry-run 附带的 blocked_sources.csv 应覆盖默认跳过来源。"""
+    rows = high_risk_sources_records()
+    names = {row["source"] for row in rows}
+    expected = {"Brookings Doha Center", "Atlantic Council — Middle East Programs", "International Institute for Strategic Studies (IISS)"}
+    assert expected.issubset(names), f"默认跳过来源表不完整: {names}"
+    for row in rows:
+        links = row.get("manual_links") or []
+        assert links and links[0]["label"] == "官网", f"缺少人工浏览官网入口: {row}"
+        assert all(link.get("url", "").startswith("https://") for link in links), f"人工浏览入口必须是 HTTPS: {links}"
+        assert row.get("metadata_allowed_path"), f"缺少合规替代发现路径: {row}"
+        assert row.get("fulltext_allowed_path"), f"缺少合规全文路径: {row}"
+    assert high_risk_sources_records(include_high_risk=True) == [], "--include-high-risk 时不应列为未抓取"
+    print(f"  [OK] blocked_sources.csv 数据源覆盖 {len(rows)} 个默认跳过来源")
+
+
+def test_tos_report_blocked_domains_have_alternative_paths():
+    """docs/GCC_不可爬取网站及替代访问路径报告.md 中的禁止/需审批域名应落入合规规则。"""
+    report_urls = {
+        "https://www.cambridge.org/core/journals/international-organization": "International Organization",
+        "https://www.tandfonline.com/journals/rrip20": "Taylor & Francis",
+        "https://direct.mit.edu/isec": "MIT Press",
+        "https://www.aeaweb.org/journals/aer": "AEA",
+        "https://onlinelibrary.wiley.com/journal/10970266": "Wiley",
+        "https://www.jstor.org/journal/admisciequar": "JSTOR",
+        "https://www.piie.com/": "PIIE",
+        "https://www.journals.uchicago.edu/journals/jpe": "UChicago Press",
+        "https://www.atlanticcouncil.org/programs/geoeconomics-center/": "Atlantic Council",
+        "https://www.brookings.edu/artificial-intelligence/": "Brookings",
+    }
+    failed = []
+    for url, label in report_urls.items():
+        rule = get_compliance_rule(url)
+        if rule.get("allow_scrape") is not False:
+            failed.append(f"{label}: allow_scrape={rule.get('allow_scrape')}")
+            continue
+        if rule.get("fulltext_scraping_allowed") is not False:
+            failed.append(f"{label}: fulltext_scraping_allowed={rule.get('fulltext_scraping_allowed')}")
+        if not rule.get("metadata_allowed_path"):
+            failed.append(f"{label}: 缺 metadata_allowed_path")
+        if not rule.get("fulltext_allowed_path"):
+            failed.append(f"{label}: 缺 fulltext_allowed_path")
+        if not rule.get("requires_permission"):
+            failed.append(f"{label}: requires_permission 未标记")
+    assert not failed, "ToS 报告域名规则不完整:\n" + "\n".join(f"  - {x}" for x in failed)
+
+    all_blocked = high_risk_sources_records(active_only=False)
+    all_sources = {row["source"] for row in all_blocked}
+    assert "International Organization (Cambridge)" in all_sources, "全量合规台账缺 Cambridge"
+    assert "JPE (Journal of Political Economy / UChicago Press)" in all_sources, "全量合规台账缺 JPE"
+    active_sources = {row["source"] for row in high_risk_sources_records()}
+    assert "International Organization (Cambridge)" not in active_sources, "默认运行清单不应混入非当前 THINK_TANKS 来源"
+    print(f"  [OK] ToS 报告禁止/需审批域名已落入合规规则（全量 {len(all_blocked)} 条，默认仅当前源）")
+
+
+def test_filtered_out_notice_for_ai_summary():
+    """filtered_out.csv 对应记录应能进入 AI 简报末尾复核清单。"""
+    rows = [
+        {
+            "title": "OIES Podcast – China after the Iran crisis: change or continuity?",
+            "url": "https://www.oxfordenergy.org/publications/china-after-the-iran-crisis-change-or-continuity/",
+            "source": "Oxford Institute for Energy Studies (OIES)",
+            "filter_hit": "podcast",
+        }
+    ]
+    notice = filtered_out_notice(rows, section_no=4)
+    assert "## 四、关键词硬过滤复核清单" in notice
+    assert "OIES Podcast" in notice
+    assert "podcast" in notice
+    assert "[查看](https://www.oxfordenergy.org/publications/china-after-the-iran-crisis-change-or-continuity/)" in notice
+    print("  [OK] filtered_out.csv 可写入 AI 简报复核清单")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # 主运行入口
 # ─────────────────────────────────────────────────────────────────────────────
@@ -387,12 +495,17 @@ TESTS = [
     test_pan_mena_event_announcement_hard_filtered,
     test_career_center_policy_study_not_hard_filtered,
     test_core_gcc_recent_noise_hard_filtered,
+    test_core_gcc_auto_pass_does_not_force_strong_relevance,
     test_count_badge_category_title_filtered,
     test_pan_mena_deep_topic_strong_titles_promoted,
+    test_deep_topic_auto_pass_does_not_force_strong_relevance,
     test_arab_reform_title_date_cleanup,
     test_mei_link_scan_fallback_extracts_articles,
     test_western_source_urls_updated,
     test_compliance_rules_cover_all_think_tanks,
+    test_high_risk_sources_records_for_dry_run_export,
+    test_tos_report_blocked_domains_have_alternative_paths,
+    test_filtered_out_notice_for_ai_summary,
 ]
 
 if __name__ == "__main__":

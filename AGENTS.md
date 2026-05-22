@@ -7,7 +7,8 @@
 ## 项目概览
 
 - **全名**：GCC智库研究抓取系统 v2.4.1
-- **主入口**：`gcc_thinktank_scraper_v2.py`（单文件，所有逻辑均在此）
+- **主入口**：`gcc_thinktank_scraper_v2.py`（核心逻辑在此）
+- **智库信源配置**：`think_tanks.yaml`（29 个智库的 URL、RSS、栏目页和选择器）
 - **关键词配置**：`keywords.yaml`（根目录，与主文件同级）
 - **智库数量**：29 个（core_gcc 17 + pan_mena 12）
 

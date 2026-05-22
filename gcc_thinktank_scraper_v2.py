@@ -16,6 +16,7 @@ AI Provider 切换（默认 DeepSeek）：
 """
 
 import json, re, os, time, logging, sqlite3
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field, asdict
 from typing import Optional
@@ -118,45 +119,73 @@ class Article:
     def to_dict(self):
         return asdict(self)
 
-THINK_TANKS = [
-    # ── GCC 核心智库（17个）────────────────────────────────────────────────────────
-    {"name":"King Abdullah Petroleum Studies and Research Centre (KAPSARC)","country":"Saudi Arabia","tier":"core_gcc","region":"gcc","org_type":"official","topics":["energy","economy"],"base_url":"https://www.kapsarc.org","pages":["/our-offerings/publications/","/newsroom/news/"],"rss_feeds":["https://www.kapsarc.org/feed/"],"selectors":{"article":"article, .publication-item, .research-item, .card, [class*='post'], [class*='article'], [class*='publication']","title":"h4 a, h3 a, h2 a, .title a, [class*='title'] a","link":"a[href]","snippet":"p, .excerpt, .summary, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date'], [datetime]"}},
-    {"name":"International Institute for Iranian Studies (Rasanah)","country":"Saudi Arabia","tier":"core_gcc","region":"gcc","org_type":"independent","topics":["security","politics"],"base_url":"https://rasanah-iiis.org/english","pages":["/","/category/publications/","/category/publications/monthly-reports/","/category/the-journal/"],"rss_feeds":["https://rasanah-iiis.org/english/feed/"],"selectors":{"article":"article, .post, .entry, [class*='post'], [class*='article']","title":"h2 a, h3 a, .entry-title a, [class*='title'] a","link":"a[href]","snippet":".entry-content p, .excerpt, [class*='excerpt']","date":"time, .date, [class*='date']"}},
-    {"name":"King Faisal Center for Research and Islamic Studies","country":"Saudi Arabia","tier":"core_gcc","region":"gcc","org_type":"official","topics":["politics","society","security"],"base_url":"https://www.kfcris.com/en","pages":["/research","/publications","/research/dirasat"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Emirates Policy Center (EPC)","country":"UAE","tier":"core_gcc","region":"gcc","org_type":"official","topics":["politics","economy","security"],"base_url":"https://www.epc.ae","pages":["/en/publications","/en/details/featured/gcc"],"selectors":{"article":".MuiCard-root, article, .card, [class*='publication'], [class*='item'], [class*='post']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Emirates Center for Strategic Studies and Research (ECSSR)","country":"UAE","tier":"core_gcc","region":"gcc","org_type":"official","topics":["security","politics"],"base_url":"https://www.ecssr.ae","pages":["/en/research-programs","/en/publications"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Gulf Research Center (GRC)","country":"UAE","tier":"core_gcc","region":"gcc","org_type":"independent","topics":["politics","economy","security"],"base_url":"https://www.grc.ae","pages":["/research","/publications"],"requests_timeout":5,"playwright_timeout":8000,"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Dubai Public Policy Research Center (Bhuth)","country":"UAE","tier":"core_gcc","region":"gcc","org_type":"official","topics":["politics","economy"],"base_url":"https://bhuth.ae","pages":["/en/publications","/en/research"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item'], [class*='post']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Sheikh Saud bin Saqr Al Qasimi Foundation","country":"UAE","tier":"core_gcc","region":"gcc","org_type":"official","topics":["society","economy"],"base_url":"https://publications.alqasimifoundation.com","pages":["/en","/blog"],"selectors":{"article":"article, .card, [class*='publication'], [class*='research'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Future Center for Advanced Researches and Studies","country":"UAE","tier":"core_gcc","region":"gcc","org_type":"official","topics":["politics","security","economy"],"base_url":"https://futureuae.com","pages":["/en-US","/en-US/Release/Index/2/publications"],"requests_timeout":5,"playwright_timeout":8000,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Al Jazeera Centre for Studies (AJCS)","country":"Qatar","tier":"core_gcc","region":"gcc","org_type":"official","topics":["politics","security","society"],"base_url":"https://studies.aljazeera.net","pages":["/en/","/en/reports"],"rss_feeds":["https://studies.aljazeera.net/en/rss.xml"],"selectors":{"article":"article, .card, [class*='post'], [class*='item'], [class*='article']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Brookings Doha Center","country":"Qatar","tier":"core_gcc","region":"gcc","org_type":"university","topics":["politics","economy","security"],"base_url":"https://www.brookings.edu","pages":["/center/brookings-doha-center/"],"rss_feeds":["https://www.brookings.edu/feed/?center=brookings-doha-center"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Arab Center for Research and Policy Studies (Doha Institute)","country":"Qatar","tier":"core_gcc","region":"gcc","org_type":"university","topics":["politics","society","security"],"base_url":"https://www.dohainstitute.org","pages":["/en/Pages/index.aspx"],"selectors":{"article":"article, .card, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Arab Planning Institute (API)","country":"Kuwait","tier":"core_gcc","region":"gcc","org_type":"official","topics":["economy"],"base_url":"https://www.arab-api.org","pages":["/default.aspx"],"selectors":{"article":"article, .card, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
-    {"name":"Kuwait Institute for Scientific Research (KISR)","country":"Kuwait","tier":"core_gcc","region":"gcc","org_type":"official","topics":["energy","technology","economy"],"base_url":"https://www.kisr.edu.kw","pages":["/en/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Bahrain Center for Strategic, International and Energy Studies (Derasat)","country":"Bahrain","tier":"core_gcc","region":"gcc","org_type":"official","topics":["security","energy","economy"],"base_url":"https://www.derasat.org.bh","pages":["/en/home_en/","/knowledge-center/publications-page/","/en/research/"],"rss_feeds":["https://www.derasat.org.bh/en/feed/","https://www.derasat.org.bh/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Tawasul","country":"Oman","tier":"core_gcc","region":"gcc","org_type":"independent","topics":["politics","economy"],"base_url":"https://tawasul.co.om","pages":["/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
-    {"name":"Arab Gulf States Institute in Washington (AGSIW)","country":"USA","tier":"core_gcc","region":"western","org_type":"independent","topics":["politics","economy","security"],"base_url":"https://agsiw.org","pages":["/topic/politics-and-governance/","/topic/society/"],"rss_feeds":["https://agsiw.org/feed/"],"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    # ── 泛MENA智库（4个）──────────────────────────────────────────────────────────
-    {"name":"Carnegie Middle East Center","country":"Lebanon","tier":"pan_mena","region":"mena","org_type":"independent","topics":["politics","security"],"base_url":"https://carnegieendowment.org","pages":["/regions/gulf","/regions/saudi-arabia","/regions/united-arab-emirates","/regions/qatar","/regions/kuwait","/regions/bahrain","/regions/oman","/middle-east/regions/saudi-arabia","/middle-east/regions/united-arab-emirates","/middle-east/regions/qatar","/middle-east/regions/kuwait","/middle-east/regions/bahrain","/middle-east/regions/oman","/sada/region/692?lang=en"],"rss_feeds":["https://carnegie-mec.org/feed","https://carnegieendowment.org/feeds/middle-east"],"use_playwright":True,"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post'], a[href*='/research/'], a[href*='/diwan/'], a[href*='/emissary/'], a[href*='/sada/']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Al-Ahram Center for Political and Strategic Studies","country":"Egypt","tier":"pan_mena","region":"mena","org_type":"official","topics":["politics","security"],"base_url":"https://acpss.ahram.org.eg","pages":["/"],"selectors":{"article":"article, [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt']","date":"time, .date, [class*='date']"}},
-    {"name":"Al Sharq Forum","country":"Turkey","tier":"pan_mena","region":"mena","org_type":"independent","topics":["politics","society"],"base_url":"https://research.sharqforum.org","pages":["/region/middle-east/ksa/","/region/middle-east/uae/","/region/middle-east/qatar/","/region/middle-east/kuwait/","/region/middle-east/bahrain/","/region/middle-east/oman/","/tag/gcc/"],"rss_feeds":["https://research.sharqforum.org/feed/"],"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    {"name":"Arab Reform Initiative","country":"France","tier":"pan_mena","region":"mena","org_type":"independent","topics":["politics","society"],"base_url":"https://www.arab-reform.net","pages":["/tag/saudi-arabia/","/tag/united-arab-emirates/","/tag/qatar/","/tag/kuwait/","/tag/bahrain/","/tag/oman/","/tag/gulf/","/tag/gcc/"],"rss_feeds":["https://www.arab-reform.net/feed/"],"deep_topic":True,"selectors":{"article":"article, [class*='card'], [class*='item'], [class*='post']","title":"h2 a, h3 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary']","date":"time, .date, [class*='date']"}},
-    # ── 域外英美智库（8个，关注GCC/能源/安全议题）──────────────────────────────────
-    {"name":"Middle East Institute (MEI)","country":"USA","tier":"pan_mena","region":"western","org_type":"independent","topics":["politics","security","economy"],"base_url":"https://mei.edu","pages":["/regions/gulf/","/regions/"],"rss_feeds":["https://mei.edu/rss.xml"],"use_playwright":True,"deep_topic":True,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Center for Strategic and International Studies (CSIS)","country":"USA","tier":"pan_mena","region":"western","org_type":"independent","topics":["energy","security","economy"],"base_url":"https://www.csis.org","pages":["/regions/middle-east/gulf","/programs/middle-east-program"],"rss_feeds":["https://www.csis.org/analysis/feed"],"deep_topic":True,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='analysis']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Atlantic Council — Middle East Programs","country":"USA","tier":"pan_mena","region":"western","org_type":"independent","topics":["security","politics","economy"],"base_url":"https://www.atlanticcouncil.org","pages":["/programs/middle-east-programs/","/topic/middle-east/gulf/"],"rss_feeds":["https://www.atlanticcouncil.org/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='article']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Chatham House — Gulf States","country":"UK","tier":"pan_mena","region":"western","org_type":"independent","topics":["politics","security","economy"],"base_url":"https://www.chathamhouse.org","pages":["/regions/middle-east-and-north-africa/gulf-states","/regions/middle-east-and-north-africa"],"rss_feeds":["https://www.chathamhouse.org/rss.xml"],"use_playwright":True,"deep_topic":True,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Oxford Institute for Energy Studies (OIES)","country":"UK","tier":"pan_mena","region":"western","org_type":"university","topics":["energy"],"base_url":"https://www.oxfordenergy.org","pages":["/publications/","/research/"],"rss_feeds":["https://www.oxfordenergy.org/feed/"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Baker Institute for Public Policy (Rice University)","country":"USA","tier":"pan_mena","region":"western","org_type":"university","topics":["energy","economy"],"base_url":"https://www.bakerinstitute.org","pages":["/center-for-energy-studies","/ces"],"rss_feeds":["https://www.bakerinstitute.org/feed"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='research']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"Wilson Center — Middle East Program","country":"USA","tier":"pan_mena","region":"western","org_type":"official","topics":["politics","economy"],"base_url":"https://www.wilsoncenter.org","pages":["/collection/middle-east-program-research","/publication-series/MEP-policy-briefs","/collection/mena360","/program/middle-east-program"],"rss_feeds":["https://www.wilsoncenter.org/rss.xml"],"deep_topic":True,"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-    {"name":"International Institute for Strategic Studies (IISS)","country":"UK","tier":"pan_mena","region":"western","org_type":"independent","topics":["security","politics"],"base_url":"https://www.iiss.org","pages":["/topics/middle-east-and-north-africa","/research/"],"rss_feeds":["https://www.iiss.org/en/rss"],"selectors":{"article":"article, .card, [class*='item'], [class*='post'], [class*='publication']","title":"h2 a, h3 a, h4 a, [class*='title'] a","link":"a[href]","snippet":"p, [class*='excerpt'], [class*='summary'], [class*='description']","date":"time, .date, [class*='date']"}},
-]
+_THINK_TANKS_YAML_PATH = Path(__file__).parent / "think_tanks.yaml"
+_REQUIRED_TANK_FIELDS = {
+    "name", "country", "tier", "region", "org_type",
+    "topics", "base_url", "pages", "selectors",
+}
+_REQUIRED_SELECTOR_FIELDS = {"article", "title", "link"}
+
+
+def _load_think_tanks(path: Path = _THINK_TANKS_YAML_PATH):
+    """从 think_tanks.yaml 加载智库信源配置。"""
+    try:
+        import yaml as _yaml
+    except ImportError as e:
+        raise RuntimeError("缺少 PyYAML，无法加载 think_tanks.yaml；请先安装 requirements.txt") from e
+
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = _yaml.safe_load(f) or []
+    except FileNotFoundError as e:
+        raise RuntimeError(f"缺少智库信源配置文件: {path}") from e
+
+    if not isinstance(data, list):
+        raise RuntimeError("think_tanks.yaml 顶层必须是列表，每个元素是一条智库配置")
+
+    loaded = []
+    names = set()
+    for idx, raw in enumerate(data, start=1):
+        if not isinstance(raw, dict):
+            raise RuntimeError(f"think_tanks.yaml 第 {idx} 条不是对象/dict")
+        missing = sorted(_REQUIRED_TANK_FIELDS - set(raw))
+        if missing:
+            label = raw.get("name", f"第 {idx} 条")
+            raise RuntimeError(f"智库配置 {label} 缺少字段: {', '.join(missing)}")
+
+        tank = dict(raw)
+        name = str(tank["name"]).strip()
+        if not name:
+            raise RuntimeError(f"think_tanks.yaml 第 {idx} 条 name 为空")
+        if name in names:
+            raise RuntimeError(f"think_tanks.yaml 中存在重复智库名称: {name}")
+        names.add(name)
+        tank["name"] = name
+
+        for field in ("topics", "pages"):
+            if not isinstance(tank.get(field), list):
+                raise RuntimeError(f"智库配置 {name} 的 {field} 必须是列表")
+        if "rss_feeds" in tank and tank["rss_feeds"] is None:
+            tank["rss_feeds"] = []
+        if "rss_feeds" in tank and not isinstance(tank.get("rss_feeds"), list):
+            raise RuntimeError(f"智库配置 {name} 的 rss_feeds 必须是列表")
+
+        selectors = tank.get("selectors")
+        if not isinstance(selectors, dict):
+            raise RuntimeError(f"智库配置 {name} 的 selectors 必须是对象/dict")
+        missing_selectors = sorted(_REQUIRED_SELECTOR_FIELDS - set(selectors))
+        if missing_selectors:
+            raise RuntimeError(f"智库配置 {name} 的 selectors 缺少字段: {', '.join(missing_selectors)}")
+
+        loaded.append(tank)
+
+    return loaded
+
+
+THINK_TANKS = _load_think_tanks()
 
 # === v2.4.1 新增：外置关键词配置加载（对应 5.1 节落地）===
-from pathlib import Path as _Path
-
-_KEYWORDS_YAML_PATH = _Path(__file__).parent / "keywords.yaml"
+_KEYWORDS_YAML_PATH = Path(__file__).parent / "keywords.yaml"
 
 def _load_keywords_config():
     """加载 keywords.yaml，拍平为 set 便于匹配。所有词都先 .lower()。
@@ -202,7 +231,7 @@ def reload_keywords():
 
 # ── 合规规则（从 compliance_rules.yaml 加载）────────────────────
 
-_COMPLIANCE_RULES_PATH = _Path(__file__).parent / "compliance_rules.yaml"
+_COMPLIANCE_RULES_PATH = Path(__file__).parent / "compliance_rules.yaml"
 
 def _load_compliance_rules():
     try:
@@ -227,14 +256,199 @@ _COMPLIANCE = _load_compliance_rules()
 def _hostname(url):
     return (urlparse(url).hostname or "").lower().removeprefix("www.")
 
+def _with_compliance_defaults(rule: dict) -> dict:
+    """域名规则自动继承 defaults，避免旧规则缺少新增合规字段。"""
+    merged = dict(_COMPLIANCE.get("defaults", {}) or {})
+    merged.update(rule or {})
+    return merged
+
 def get_compliance_rule(url):
     host = _hostname(url)
     domains = _COMPLIANCE.get("domains", {})
     for domain, rule in domains.items():
         d = str(domain).lower().removeprefix("www.")
         if host == d or host.endswith("." + d):
-            return rule
-    return _COMPLIANCE.get("defaults", {})
+            return _with_compliance_defaults(rule)
+    return _with_compliance_defaults({})
+
+def _join_url(base_url: str, path: str) -> str:
+    """拼接官网栏目路径，保留已给出的完整 URL。"""
+    if not path:
+        return base_url
+    if path.startswith("http://") or path.startswith("https://"):
+        return path
+    return base_url.rstrip("/") + "/" + path.lstrip("/")
+
+def _manual_link_label(path: str) -> str:
+    """给人工浏览入口生成通俗标签。"""
+    p = (path or "").lower()
+    if "program" in p:
+        return "项目页面"
+    if "topic" in p or "region" in p:
+        return "议题页面"
+    if "research" in p:
+        return "研究页面"
+    if "publication" in p or "analysis" in p:
+        return "出版物页面"
+    if "center" in p:
+        return "中心页面"
+    return "栏目入口"
+
+def _manual_reading_links_for_source(domain: str, source_name: str, official_url: str) -> list[dict]:
+    """为合规跳过来源整理人工阅读入口，不抓取页面内容。"""
+    host = str(domain).lower().removeprefix("www.")
+    matched_tank = None
+    for tank in THINK_TANKS:
+        tank_host = _hostname(tank.get("base_url", ""))
+        if tank_host == host or tank.get("name") == source_name:
+            matched_tank = tank
+            break
+
+    links = [{"label": "官网", "url": official_url}]
+    if matched_tank:
+        base_url = matched_tank.get("base_url") or official_url
+        for path in matched_tank.get("pages", [])[:3]:
+            url = _join_url(base_url, path)
+            if any(item["url"] == url for item in links):
+                continue
+            links.append({"label": _manual_link_label(path), "url": url})
+    return links[:4]
+
+def _format_markdown_links(links: list[dict]) -> str:
+    """把人工阅读入口格式化为 Markdown 链接串。"""
+    return "；".join(f"[{item['label']}]({item['url']})" for item in links)
+
+def _active_source_names_for_rule(domain: str, rule: dict) -> list[str]:
+    """返回当前 THINK_TANKS 中受该域名规则影响的来源名。"""
+    host = str(domain).lower().removeprefix("www.")
+    active_names = {tank["name"] for tank in THINK_TANKS}
+    names = [
+        str(name)
+        for name in (rule.get("matched_think_tanks") or [])
+        if str(name) in active_names
+    ]
+    for tank in THINK_TANKS:
+        if _hostname(tank.get("base_url", "")) == host and tank["name"] not in names:
+            names.append(tank["name"])
+    return names
+
+def _cn_section_no(num: int) -> str:
+    """把简报章节序号转成中文数字。"""
+    labels = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"]
+    return labels[num] if 0 <= num < len(labels) else str(num)
+
+def _md_cell(text) -> str:
+    """清理 Markdown 表格单元格，避免标题中的竖线破坏表格。"""
+    return str(text or "").replace("|", "–").replace("\n", " ").strip()
+
+def filtered_out_notice(filtered_out_records: Optional[list] = None, section_no: int = 4) -> str:
+    """生成简报末尾的关键词硬过滤复核清单。"""
+    records = filtered_out_records or []
+    if not records:
+        return ""
+
+    lines = [
+        f"## {_cn_section_no(section_no)}、关键词硬过滤复核清单",
+        "",
+        "以下链接在抓取阶段命中了硬过滤规则，因此未进入正式文章池，也未交给 AI 做逐篇分析。该清单用于人工复核关键词规则是否过严；出现在这里不代表推荐阅读。",
+        "",
+        f"共 {len(records)} 条被硬过滤记录：",
+        "",
+        "| 来源 | 过滤命中 | 标题 | 链接 |",
+        "|------|----------|------|------|",
+    ]
+    seen = set()
+    for rec in records:
+        title = _md_cell(rec.get("title", ""))
+        url = str(rec.get("url", "") or "").strip()
+        source = _md_cell(rec.get("source", ""))
+        filter_hit = _md_cell(rec.get("filter_hit") or rec.get("filter_word") or "exclude_pattern")
+        key = (title, url, source, filter_hit)
+        if key in seen:
+            continue
+        seen.add(key)
+        link = f"[查看]({url})" if url else "-"
+        lines.append(f"| {source} | {filter_hit} | {title} | {link} |")
+    lines.extend([
+        "",
+        "> 注：该清单主要服务关键词调参和人工质检。若后续确认某类内容有研究价值，应优先调整硬过滤词或改为降权，而不是直接人工复制进正式文章池。",
+    ])
+    return "\n".join(lines)
+
+def high_risk_sources_records(include_high_risk=False, active_only=True):
+    """返回因合规规则默认跳过的高风险来源。"""
+    if include_high_risk:
+        return []
+
+    records = []
+    domains = _COMPLIANCE.get("domains", {})
+    for domain, raw_rule in domains.items():
+        rule = _with_compliance_defaults(raw_rule)
+        if rule.get("allow_scrape", True):
+            continue
+        if active_only:
+            names = _active_source_names_for_rule(str(domain), rule)
+            if not names:
+                continue
+        else:
+            names = rule.get("matched_think_tanks") or rule.get("matched_csv_sites") or [domain]
+        base_url = f"https://{domain}"
+        for tank in THINK_TANKS:
+            if _hostname(tank.get("base_url", "")) == str(domain).lower().removeprefix("www."):
+                base_url = tank.get("base_url") or base_url
+                break
+        for name in names:
+            manual_links = _manual_reading_links_for_source(str(domain), str(name), base_url)
+            records.append({
+                "source": str(name),
+                "domain": str(domain),
+                "official_url": base_url,
+                "manual_links": manual_links,
+                "risk_level": str(rule.get("risk_level", "")),
+                "scraping_policy": str(rule.get("scraping_policy", "")),
+                "robots_summary": str(rule.get("robots_summary", "")),
+                "metadata_allowed_path": str(rule.get("metadata_allowed_path", "")),
+                "fulltext_allowed_path": str(rule.get("fulltext_allowed_path", "")),
+                "fulltext_scraping_allowed": bool(rule.get("fulltext_scraping_allowed", False)),
+                "requires_permission": bool(rule.get("requires_permission", False)),
+                "analysis_source": str(rule.get("analysis_source", "")),
+                "reason": str(rule.get("notes", "")),
+            })
+
+    return sorted(records, key=lambda item: (item["source"], item["domain"]))
+
+def high_risk_sources_notice(include_high_risk=False, section_no: int = 4, active_only=True):
+    """生成简报末尾的高风险来源说明。"""
+    blocked = high_risk_sources_records(include_high_risk=include_high_risk, active_only=active_only)
+
+    if not blocked:
+        return ""
+
+    lines = [
+        f"## {_cn_section_no(section_no)}、合规未自动抓取但建议人工关注的来源",
+        "",
+        "以下来源研究质量较高，但因网站服务条款、robots 或自动化访问政策存在风险，本系统默认不自动抓取，也不收录其文章标题、摘要或正文。为方便人工补充阅读，简报保留官方入口，读者可自行打开官网查看最新文章。",
+        "",
+        "| 来源 | 建议人工浏览入口 | 合规替代路径 | 未自动抓取原因 |",
+        "|------|------------------|----------------|----------------|",
+    ]
+    seen = set()
+    for rec in blocked:
+        name = rec["source"]
+        links = _format_markdown_links(rec.get("manual_links") or [{"label": "官网", "url": rec["official_url"]}])
+        alternative = rec.get("metadata_allowed_path") or "人工阅读 / 官方授权路径"
+        reason = rec.get("scraping_policy") or rec.get("reason") or "合规规则默认跳过"
+        if (name, links) in seen:
+            continue
+        seen.add((name, links))
+        lines.append(
+            f"| {_md_cell(name)} | {links} | {_md_cell(alternative)} | {_md_cell(reason)} |"
+        )
+    lines.extend([
+        "",
+        "> 注：该部分仅提供人工阅读入口，不代表系统已抓取或分析这些来源的具体文章；合规跳过不代表对机构研究质量的负面评价。",
+    ])
+    return "\n".join(lines)
 
 # v2.4.1：补充关键救回词（必须）+ 高价值锚点词（建议），详见 keywords.yaml strong_signal_supplement
 STRONG_KEYWORDS=[
@@ -325,29 +539,43 @@ def classify_content_type(title, url):
 
     return "unknown", "normal"
 
-def compute_topic_relevance_score(keyword_score: float, content_type: str) -> float:
+def compute_topic_relevance_score(
+    keyword_score: float,
+    content_type: str,
+    source_tier: str = "",
+    actual_keyword_score: Optional[float] = None,
+) -> float:
     """
     基于关键词评分与内容类型计算主题相关性综合评分（0–5），
     作为第四维度叠加在三维分类（地区×机构×内容类型）之上。
 
     keyword_score 映射：
-      >= 90 (core_gcc 自动通过) → 基础分 3.5
-      >= 6                       → 基础分 3.0
-      >= 4                       → 基础分 2.5
-      >= RELEVANCE_THRESHOLD(3)  → 基础分 2.0
+      >= 90 (非 core_gcc 特殊保留) → 基础分 3.5
+      >= 6                         → 基础分 3.0
+      >= 4                         → 基础分 2.5
+      >= RELEVANCE_THRESHOLD(3)    → 基础分 2.0
+
+    core_gcc 来源仍自动保留，但强/中分层改看标题/摘要里的真实议题信号，
+    避免来源权重把泛中东/全球议题直接推成强相关。
 
     content_type 加成：
       high    → +1.5   medium  → +0.5
       unknown →  0.0   low     → -0.5
     """
-    if keyword_score >= 90:
+    scoring_score = keyword_score
+    if source_tier == "core_gcc" and actual_keyword_score is not None:
+        scoring_score = actual_keyword_score
+
+    if scoring_score >= 90:
         base = 3.5
-    elif keyword_score >= 6:
+    elif scoring_score >= 6:
         base = 3.0
-    elif keyword_score >= 4:
+    elif scoring_score >= 4:
         base = 2.5
-    else:
+    elif scoring_score >= RELEVANCE_THRESHOLD:
         base = 2.0
+    else:
+        base = 2.0 if source_tier == "core_gcc" else 1.5
     ct_bonus = {"high": 1.5, "medium": 0.5, "unknown": 0.0, "low": -0.5}
     return min(5.0, max(0.0, base + ct_bonus.get(content_type, 0.0)))
 
@@ -367,6 +595,25 @@ def _relevance_tier(score: float) -> str:
         return "强相关"
     else:
         return "中等相关"
+
+def apply_source_relevance_adjustments(article: Article, tank: dict, actual_keyword_score: float, actual_matches: list):
+    """
+    来源保底只负责不漏文章；强相关仍应由标题/摘要里的真实议题信号决定。
+    这样避免 deep_topic/core_gcc 把泛中东或全球议题直接推到强相关。
+    """
+    if not tank.get("deep_topic"):
+        return article
+
+    has_title_strong_signal = any(
+        "(标题,+" in m and kw.lower() in m.lower()
+        for kw in STRONG_KEYWORDS
+        for m in actual_matches
+    )
+    if has_title_strong_signal:
+        article.topic_relevance_score = max(article.topic_relevance_score, 4.0)
+    elif actual_keyword_score < 4.0:
+        article.topic_relevance_score = min(article.topic_relevance_score, 3.5)
+    return article
 
 
 HEADERS={"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36","Accept-Language":"en-US,en;q=0.9,ar;q=0.8"}
@@ -782,11 +1029,16 @@ def verify_carnegie_metadata(article_url, req_timeout=10, browser=None, pw_timeo
     regions_raw = m.group(1).lower()
     return any(r in regions_raw for r in CARNEGIE_GCC_REGIONS)
 
-def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None, dry_run=False, include_high_risk=False):
+def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None, dry_run=False,
+                     include_high_risk=False, filter_undated=True, max_age_days=30):
     nm, co, ti, bu = tank["name"], tank["country"], tank["tier"], tank["base_url"]
     compliance = get_compliance_rule(bu)
     if not compliance.get("allow_scrape", True) and not include_high_risk:
-        log.warning(f"⛔ {nm}: 合规规则禁止自动抓取（risk={compliance.get('risk_level','unknown')}），已跳过；如需人工覆盖使用 --include-high-risk")
+        alt_path = compliance.get("metadata_allowed_path") or "人工阅读 / 官方授权路径"
+        log.warning(
+            f"⛔ {nm}: 合规规则禁止自动抓取（risk={compliance.get('risk_level','unknown')}），已跳过；"
+            f"替代路径：{alt_path}；如需人工覆盖使用 --include-high-risk"
+        )
         return [], []
     crawl_delay = float(compliance.get("crawl_delay_seconds", 1.0) or 1.0)
     # 站点级 Playwright 开关：Carnegie 这类 SPA 站点强制启用
@@ -865,27 +1117,28 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None,
                 filter_hit = next((w for w in _KW["filter_set"] if w in t_lower), "exclude_pattern")
                 filtered_out.append({"title": t, "url": u, "source": nm, "filter_hit": filter_hit})
             continue
+        actual_ks, actual_mk = compute_keyword_score(t, sn)
         if ti == "core_gcc":
-            ks, mk = 99.0, ["core_gcc_auto_pass"]
+            ks, mk = 99.0, ["core_gcc_auto_pass"] + actual_mk
         elif tank.get("deep_topic"):
             # 深层专题页来源本身是 GCC 主题，但不能遮蔽标题真实强信号。
-            actual_ks, actual_mk = compute_keyword_score(t, sn)
             if actual_ks >= 5.0:
                 ks, mk = actual_ks, actual_mk + ["deep_topic_auto_pass"]
             else:
                 ks, mk = 5.0, (actual_mk or []) + ["deep_topic_auto_pass"]
         else:
-            ks, mk = compute_keyword_score(t, sn)
+            ks, mk = actual_ks, actual_mk
             if ks < RELEVANCE_THRESHOLD: log.debug(f"    ⏭️ 评分不足({ks}): {t[:60]}"); continue
         article = Article(title=t, url=u, source=nm, source_country=co, source_tier=ti,
             source_region=tank.get("region",""),
             source_org_type=tank.get("org_type",""),
             source_topics=list(tank.get("topics",[])),
             date=normalize_date(it.get("date")), snippet=sn, keyword_score=ks, content_type=ct,
-            priority=pr, topic_relevance_score=compute_topic_relevance_score(ks, ct),
+            priority=pr, topic_relevance_score=compute_topic_relevance_score(
+                ks, ct, source_tier=ti, actual_keyword_score=actual_ks,
+            ),
             matched_keywords=mk, fetch_method=it.get("fetch_method", "html"))
-        if tank.get("deep_topic") and any("(标题,+" in m and kw.lower() in m.lower() for kw in STRONG_KEYWORDS for m in mk):
-            article.topic_relevance_score = max(article.topic_relevance_score, 4.0)
+        apply_source_relevance_adjustments(article, tank, actual_ks, actual_mk)
         # === v2.4.1 新增：检测降权词命中，写入 _funnel_debug（供试运行模式输出）===
         # demote_set：标题+摘要均检查（demote_check_summary=True 时）
         # title_only_demote_set：仅检查标题（避免摘要引用误触发，如 NATO）
@@ -903,16 +1156,35 @@ def scrape_think_tank(tank, use_playwright=False, max_per_tank=50, browser=None,
         results.append(article)
 
     # ── Carnegie 二次验证：用官方 regions metadata 替代关键词匹配 ──
+    # 仅验证最终时间窗口内可能保留的文章；旧文和无日期文章后续会被全局过滤，
+    # 无需逐篇访问详情页，避免在 30 天日报场景里验证大量历史链接。
     if "Carnegie" in nm and tank.get("deep_topic"):
         verified = []
+        verify_total = 0
+        skipped_final_filter = 0
+        cutoff = None
+        if max_age_days and max_age_days > 0:
+            cutoff = (datetime.now() - timedelta(days=max_age_days)).strftime('%Y-%m-%d')
         for a in results:
+            if filter_undated and not a.date:
+                verified.append(a)
+                skipped_final_filter += 1
+                continue
+            if cutoff and a.date and not _date_gte(a.date, cutoff):
+                verified.append(a)
+                skipped_final_filter += 1
+                continue
+            verify_total += 1
             v = verify_carnegie_metadata(a.url, browser=browser, pw_timeout=pw_to)
             if v is False:
                 log.debug(f"    🚫 Carnegie metadata 排除: {a.title[:60]}")
                 continue
             verified.append(a)
             time.sleep(max(0.3, min(crawl_delay, 2.0)))  # 礼貌延迟
-        log.info(f"  🔍 Carnegie metadata 验证: {len(results)} → {len(verified)}")
+        log.info(
+            f"  🔍 Carnegie metadata 验证: {len(results)} → {len(verified)}"
+            f"（实际访问 {verify_total} 篇，跳过后续必过滤 {skipped_final_filter} 篇）"
+        )
         results = verified
 
     # ── 按日期排序（最新优先），有日期的排前面 ──
@@ -1004,7 +1276,8 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
                 try:
                     _arts, _fout = scrape_think_tank(
                         tk, use_playwright=use_playwright, max_per_tank=max_per_tank,
-                        browser=browser, dry_run=dry_run, include_high_risk=include_high_risk
+                        browser=browser, dry_run=dry_run, include_high_risk=include_high_risk,
+                        filter_undated=filter_undated, max_age_days=max_age_days
                     )
                     all_articles.extend(_arts)
                     all_filtered_out.extend(_fout)
@@ -1016,7 +1289,8 @@ def run_scraper(tanks=None, use_playwright=False, enable_ai=False, api_key=None,
             try:
                 _arts, _fout = scrape_think_tank(
                     tk, use_playwright=False, max_per_tank=max_per_tank, dry_run=dry_run,
-                    include_high_risk=include_high_risk
+                    include_high_risk=include_high_risk,
+                    filter_undated=filter_undated, max_age_days=max_age_days
                 )
                 all_articles.extend(_arts)
                 all_filtered_out.extend(_fout)
@@ -1303,7 +1577,24 @@ def _backfill_dates_from_analysis(all_analyses: list, articles: list):
                     articles[idx].date = normalized
                     log.debug(f"  📅 回填日期 [{idx+1}]: {normalized}")
 
-def generate_ai_summary(articles, api_key=None):
+def _ensure_summary_anchors(summary_text: str, total_articles: int) -> str:
+    """补齐 AI 偶尔漏写的文章锚点，避免 PDF 目录内链渲染失败。"""
+    for idx in range(1, total_articles + 1):
+        anchor = f'<a id="article-{idx}"></a>'
+        if anchor in summary_text:
+            continue
+        heading_re = re.compile(rf'(?m)^### \[(?:⭐\s*)?{idx}\] ')
+        if heading_re.search(summary_text):
+            summary_text = heading_re.sub(anchor + "\n" + r"\g<0>", summary_text, count=1)
+    return summary_text
+
+def generate_ai_summary(
+    articles,
+    api_key=None,
+    summary_workers=2,
+    include_high_risk=False,
+    filtered_out_records: Optional[list] = None,
+):
     """
     分三步生成结构化研究简报：
       1. 分批调用 AI，每批 10 篇完整解析（解决 token 超限问题）
@@ -1320,8 +1611,8 @@ def generate_ai_summary(articles, api_key=None):
 
     n = len(articles)
     now_str = datetime.now().strftime('%Y-%m-%d %H:%M')
-    client = ai_client.create_client(key)
     BATCH_SIZE = 10  # 每批 10 篇，8000 token 足够覆盖全部字段
+    summary_workers = max(1, int(summary_workers or 1))
 
     # ── 预处理：按日期降序排列，有日期的在前，日期未知的在后 ──────────
     def _date_sort_key(a):
@@ -1339,17 +1630,29 @@ def generate_ai_summary(articles, api_key=None):
     articles = _strong + _medium
     n_strong = len(_strong)
 
-    print(f"\n🤖 正在生成结构化研究简报（{n} 篇文章，分 {(n + BATCH_SIZE - 1) // BATCH_SIZE} 批，{ai_client.provider_info()}）...")
+    print(
+        f"\n🤖 正在生成结构化研究简报（{n} 篇文章，分 {(n + BATCH_SIZE - 1) // BATCH_SIZE} 批，"
+        f"并发 {min(summary_workers, (n + BATCH_SIZE - 1) // BATCH_SIZE)}，{ai_client.provider_info()}）..."
+    )
 
     # ── 第一步：分批调用 AI ──────────────────────────────────────────
     all_analyses: list[str] = []
     total_batches = (n + BATCH_SIZE - 1) // BATCH_SIZE
 
-    for batch_idx in range(total_batches):
+    def _placeholder_for_batch(batch_idx, batch, error):
         start = batch_idx * BATCH_SIZE
-        batch = articles[start:start + BATCH_SIZE]
-        print(f"  📖 分析第 {batch_idx + 1}/{total_batches} 批（第 {start+1}–{start+len(batch)} 篇）...")
+        placeholder_lines = []
+        for j, a in enumerate(batch, 1):
+            abs_idx = start + j
+            placeholder_lines.append(
+                f'<a id="article-{abs_idx}"></a>\n'
+                f"### [{abs_idx}] {a.title_cn or a.title}\n\n"
+                f"> ❌ 本批次 AI 解析失败：{error}\n\n---"
+            )
+        return "\n\n".join(placeholder_lines)
 
+    def _build_batch_prompt(batch_idx, batch):
+        start = batch_idx * BATCH_SIZE
         articles_input = ""
         for j, a in enumerate(batch, 1):
             abs_idx = start + j
@@ -1361,7 +1664,7 @@ def generate_ai_summary(articles, api_key=None):
                 articles_input += f"   摘要：{a.snippet[:400]}\n"
             articles_input += "\n"
 
-        prompt = f"""你是GCC地区研究专家，为成都创新金融研究院撰写内部研究简报。
+        return f"""你是GCC地区研究专家，为成都创新金融研究院撰写内部研究简报。
 
 对以下 {len(batch)} 篇文章（全局序号 {start+1} 至 {start+len(batch)}），每篇独立输出完整结构化解析。
 
@@ -1405,22 +1708,44 @@ def generate_ai_summary(articles, api_key=None):
 文章列表：
 {articles_input}"""
 
+    def _analyze_batch(batch_idx):
+        start = batch_idx * BATCH_SIZE
+        batch = articles[start:start + BATCH_SIZE]
         try:
-            result = ai_client.chat(client, prompt, tier="smart", max_tokens=8000)
-            all_analyses.append(result.strip())
+            worker_client = ai_client.create_client(key)
+            result = ai_client.chat(worker_client, _build_batch_prompt(batch_idx, batch), tier="smart", max_tokens=8000)
+            return batch_idx, result.strip(), None
         except Exception as e:
-            log.error(f"  第 {batch_idx+1} 批解析失败: {e}")
-            # 生成占位内容，保证目录锚点仍有对应章节
-            placeholder_lines = []
-            for j, a in enumerate(batch, 1):
-                abs_idx = start + j
-                placeholder_lines.append(
-                    f'<a id="article-{abs_idx}"></a>\n'
-                    f"### [{abs_idx}] {a.title_cn or a.title}\n\n"
-                    f"> ❌ 本批次 AI 解析失败：{e}\n\n---"
-                )
-            all_analyses.append("\n\n".join(placeholder_lines))
-        time.sleep(0.5)
+            return batch_idx, _placeholder_for_batch(batch_idx, batch, e), e
+
+    if summary_workers > 1 and total_batches > 1:
+        batch_outputs = [None] * total_batches
+        max_workers = min(summary_workers, total_batches)
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = {}
+            for batch_idx in range(total_batches):
+                start = batch_idx * BATCH_SIZE
+                batch = articles[start:start + BATCH_SIZE]
+                print(f"  📖 提交第 {batch_idx + 1}/{total_batches} 批（第 {start+1}–{start+len(batch)} 篇）...")
+                futures[executor.submit(_analyze_batch, batch_idx)] = batch_idx
+            for fut in as_completed(futures):
+                batch_idx, text, error = fut.result()
+                batch_outputs[batch_idx] = text
+                if error:
+                    log.error(f"  第 {batch_idx+1} 批解析失败: {error}")
+                else:
+                    log.info(f"  第 {batch_idx+1}/{total_batches} 批解析完成")
+        all_analyses = [text for text in batch_outputs if text is not None]
+    else:
+        for batch_idx in range(total_batches):
+            start = batch_idx * BATCH_SIZE
+            batch = articles[start:start + BATCH_SIZE]
+            print(f"  📖 分析第 {batch_idx + 1}/{total_batches} 批（第 {start+1}–{start+len(batch)} 篇）...")
+            batch_idx, text, error = _analyze_batch(batch_idx)
+            if error:
+                log.error(f"  第 {batch_idx+1} 批解析失败: {error}")
+            all_analyses.append(text)
+            time.sleep(0.5)
 
     # ── 第二步：从 AI 输出回填缺失日期，再生成目录 ───────────────────
     _backfill_dates_from_analysis(all_analyses, articles)
@@ -1471,14 +1796,27 @@ def generate_ai_summary(articles, api_key=None):
 {brief_list}"""
 
     try:
+        client = ai_client.create_client(key)
         trends = ai_client.chat(client, trend_prompt, tier="smart", max_tokens=2000)
     except Exception as e:
         trends = f"## 三、本期趋势信号\n\n> ❌ 趋势信号生成失败：{e}"
 
     full_summary = header + "\n\n".join(all_analyses) + "\n\n---\n\n" + trends.strip()
+    next_section = 4
+    filtered_notice = filtered_out_notice(filtered_out_records, section_no=next_section)
+    if filtered_notice:
+        full_summary += "\n\n---\n\n" + filtered_notice
+        next_section += 1
+    high_risk_notice = high_risk_sources_notice(
+        include_high_risk=include_high_risk,
+        section_no=next_section,
+    )
+    if high_risk_notice:
+        full_summary += "\n\n---\n\n" + high_risk_notice
     # ── 为强相关文章的章节标题注入 ⭐ ──────────────────────────────────
     for idx in range(1, n_strong + 1):
         full_summary = full_summary.replace(f"### [{idx}]", f"### [⭐ {idx}]")
+    full_summary = _ensure_summary_anchors(full_summary, n)
     print(f"✅ AI研究简报生成成功（{n} 篇 / {total_batches} 批，其中强相关 {n_strong} 篇）")
     return full_summary
 
@@ -1813,6 +2151,8 @@ if __name__ == "__main__":
         help="Markdown输出分组方式：region / org_type / topic（默认按优先级分组）")
     parser.add_argument("--playwright", action="store_true", help="启用JS渲染")
     parser.add_argument("--ai", action="store_true", help="启用AI筛选、翻译、汇总")
+    parser.add_argument("--summary-workers", type=int, default=2,
+                        help="AI简报分批生成的并发数（默认2；如遇API限流可设为1）")
     parser.add_argument("--api-key", default=None, help="Anthropic API Key（建议改用 ANTHROPIC_API_KEY 环境变量）")
     parser.add_argument("--output-dir", default="./output", help="输出目录")
     parser.add_argument("--max-per-tank", type=int, default=50, help="每个智库最多保留条数（默认50）")
@@ -1901,6 +2241,29 @@ if __name__ == "__main__":
                 _w.writerow([_rec["title"], _rec["url"], _rec["source"], _rec["filter_hit"]])
         print(f"  🚫 试运行模式：filtered_out.csv 已写入 ({len(_filtered_out)} 篇被硬过滤)")
 
+        blocked_path = os.path.join(str(od), "blocked_sources.csv")
+        blocked_sources = high_risk_sources_records(include_high_risk=args.include_high_risk)
+        with open(blocked_path, "w", encoding="utf-8", newline="") as _f:
+            _w = csv.writer(_f)
+            _w.writerow([
+                "source", "domain", "official_url", "manual_links",
+                "risk_level", "scraping_policy", "robots_summary",
+                "metadata_allowed_path", "fulltext_allowed_path",
+                "requires_permission", "fulltext_scraping_allowed",
+                "analysis_source", "reason",
+            ])
+            for _rec in blocked_sources:
+                _w.writerow([
+                    _rec["source"], _rec["domain"], _rec["official_url"],
+                    _format_markdown_links(_rec.get("manual_links") or []),
+                    _rec["risk_level"],
+                    _rec["scraping_policy"], _rec["robots_summary"],
+                    _rec["metadata_allowed_path"], _rec["fulltext_allowed_path"],
+                    _rec["requires_permission"], _rec["fulltext_scraping_allowed"],
+                    _rec["analysis_source"], _rec["reason"],
+                ])
+        print(f"  🧭 试运行模式：blocked_sources.csv 已写入 ({len(blocked_sources)} 个默认跳过来源)")
+
     if articles:
         ts = datetime.now().strftime('%Y%m%d_%H%M')
 
@@ -1918,7 +2281,13 @@ if __name__ == "__main__":
         t_summary = time.time()
         sp_md = sp_pdf = None
         if args.ai:
-            sm = generate_ai_summary(articles, args.api_key)
+            sm = generate_ai_summary(
+                articles,
+                args.api_key,
+                summary_workers=args.summary_workers,
+                include_high_risk=args.include_high_risk,
+                filtered_out_records=_filtered_out,
+            )
             if sm:
                 sp_md = od / f"gcc_summary_{ts}.md"
                 with open(sp_md, "w", encoding="utf-8") as f:

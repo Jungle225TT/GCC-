@@ -243,7 +243,7 @@ python gcc_thinktank_scraper_v2.py --countries UAE "Saudi Arabia" --playwright -
 python gcc_thinktank_scraper_v2.py --countries Qatar
 ```
 
-`--countries` 支持多个值，用空格分隔，国家名需与 `THINK_TANKS` 配置中的 `country` 字段一致。
+`--countries` 支持多个值，用空格分隔，国家名需与 `think_tanks.yaml` 中的 `country` 字段一致。
 
 ---
 
@@ -1008,26 +1008,30 @@ python gcc_thinktank_scraper_v2.py --keep-undated --debug
 
 ### Q：如何添加新智库？
 
-在 `THINK_TANKS` 列表中新增一项，用浏览器 F12 找到文章卡片的 CSS 选择器：
+在 `think_tanks.yaml` 中新增一项，用浏览器 F12 找到文章卡片的 CSS 选择器。合规规则仍需同步写入 `compliance_rules.yaml`：
 
-```python
-{
-    "name": "智库全名",
-    "country": "Saudi Arabia",          # 需与 --countries 参数保持一致
-    "tier": "core_gcc",                  # core_gcc 或 pan_mena
-    "base_url": "https://example.com",
-    "pages": ["/publications/"],
-    "rss_feeds": ["https://example.com/feed/"],  # 有RSS优先用RSS
-    # 以下两个字段仅用于泛MENA站点的深层专题页（可选）：
-    # "deep_topic": True,               # 从专题页抓取，跳过关键词评分
-    # "use_playwright": True,           # SPA 站点需要 JS 渲染
-    "selectors": {
-        "article": "article, .card",     # 文章卡片容器
-        "title": "h2 a, h3 a",           # 标题链接
-        "snippet": "p, .excerpt",        # 摘要
-        "date": "time, .date",           # 日期
-    },
-},
+```yaml
+- name: 智库全名
+  country: Saudi Arabia              # 需与 --countries 参数保持一致
+  tier: core_gcc                     # core_gcc 或 pan_mena
+  region: gcc                        # gcc / mena / western
+  org_type: official                 # official / university / independent
+  topics:
+  - energy
+  - economy
+  base_url: https://example.com
+  pages:
+  - /publications/
+  rss_feeds:
+  - https://example.com/feed/        # 有 RSS 优先用 RSS
+  deep_topic: true                   # 可选：专题页默认通过来源层
+  use_playwright: true               # 可选：SPA 站点需要 JS 渲染
+  selectors:
+    article: article, .card          # 文章卡片容器
+    title: h2 a, h3 a                # 标题链接
+    link: a[href]
+    snippet: p, .excerpt             # 摘要
+    date: time, .date                # 日期
 ```
 
 然后用单站测试验证：

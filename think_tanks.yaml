@@ -1,0 +1,619 @@
+# GCC 智库信源配置
+#
+# 维护说明：
+# - 新增/删除智库时优先修改本文件，不需要改主脚本。
+# - 每条记录需包含 name/country/tier/region/org_type/topics/base_url/pages/selectors。
+# - 有 RSS 时填写 rss_feeds；需要 JS 渲染时设置 use_playwright: true。
+# - 合规风险仍在 compliance_rules.yaml 中按域名维护。
+
+# ── GCC 核心智库（17 个）────────────────────────────────────────
+- name: King Abdullah Petroleum Studies and Research Centre (KAPSARC)
+  country: Saudi Arabia
+  tier: core_gcc
+  region: gcc
+  org_type: official
+  topics:
+  - energy
+  - economy
+  base_url: https://www.kapsarc.org
+  pages:
+  - /our-offerings/publications/
+  - /newsroom/news/
+  rss_feeds:
+  - https://www.kapsarc.org/feed/
+  selectors:
+    article: article, .publication-item, .research-item, .card, [class*='post'], [class*='article'], [class*='publication']
+    title: h4 a, h3 a, h2 a, .title a, [class*='title'] a
+    link: a[href]
+    snippet: p, .excerpt, .summary, [class*='excerpt'], [class*='summary'], [class*='description']
+    date: time, .date, [class*='date'], [datetime]
+- name: International Institute for Iranian Studies (Rasanah)
+  country: Saudi Arabia
+  tier: core_gcc
+  region: gcc
+  org_type: independent
+  topics:
+  - security
+  - politics
+  base_url: https://rasanah-iiis.org/english
+  pages:
+  - /
+  - /category/publications/
+  - /category/publications/monthly-reports/
+  - /category/the-journal/
+  rss_feeds:
+  - https://rasanah-iiis.org/english/feed/
+  selectors:
+    article: article, .post, .entry, [class*='post'], [class*='article']
+    title: h2 a, h3 a, .entry-title a, [class*='title'] a
+    link: a[href]
+    snippet: .entry-content p, .excerpt, [class*='excerpt']
+    date: time, .date, [class*='date']
+- name: King Faisal Center for Research and Islamic Studies
+  country: Saudi Arabia
+  tier: core_gcc
+  region: gcc
+  org_type: official
+  topics:
+  - politics
+  - society
+  - security
+  base_url: https://www.kfcris.com/en
+  pages:
+  - /research
+  - /publications
+  - /research/dirasat
+  selectors:
+    article: article, .card, [class*='publication'], [class*='research']
+    title: h2 a, h3 a, h4 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary']
+    date: time, .date, [class*='date']
+- name: Emirates Policy Center (EPC)
+  country: UAE
+  tier: core_gcc
+  region: gcc
+  org_type: official
+  topics:
+  - politics
+  - economy
+  - security
+  base_url: https://www.epc.ae
+  pages:
+  - /en/publications
+  - /en/details/featured/gcc
+  selectors:
+    article: .MuiCard-root, article, .card, [class*='publication'], [class*='item'], [class*='post']
+    title: h2 a, h3 a, h4 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary'], [class*='description']
+    date: time, .date, [class*='date']
+- name: Emirates Center for Strategic Studies and Research (ECSSR)
+  country: UAE
+  tier: core_gcc
+  region: gcc
+  org_type: official
+  topics:
+  - security
+  - politics
+  base_url: https://www.ecssr.ae
+  pages:
+  - /en/research-programs
+  - /en/publications
+  selectors:
+    article: article, .card, [class*='publication'], [class*='research'], [class*='item']
+    title: h2 a, h3 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary']
+    date: time, .date, [class*='date']
+- name: Gulf Research Center (GRC)
+  country: UAE
+  tier: core_gcc
+  region: gcc
+  org_type: independent
+  topics:
+  - politics
+  - economy
+  - security
+  base_url: https://www.grc.ae
+  pages:
+  - /research
+  - /publications
+  requests_timeout: 5
+  playwright_timeout: 8000
+  selectors:
+    article: article, .card, [class*='publication'], [class*='research'], [class*='item']
+    title: h2 a, h3 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary']
+    date: time, .date, [class*='date']
+- name: Dubai Public Policy Research Center (Bhuth)
+  country: UAE
+  tier: core_gcc
+  region: gcc
+  org_type: official
+  topics:
+  - politics
+  - economy
+  base_url: https://bhuth.ae
+  pages:
+  - /en/publications
+  - /en/research
+  selectors:
+    article: article, .card, [class*='publication'], [class*='research'], [class*='item'], [class*='post']
+    title: h2 a, h3 a, h4 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary']
+    date: time, .date, [class*='date']
+- name: Sheikh Saud bin Saqr Al Qasimi Foundation
+  country: UAE
+  tier: core_gcc
+  region: gcc
+  org_type: official
+  topics:
+  - society
+  - economy
+  base_url: https://publications.alqasimifoundation.com
+  pages:
+  - /en
+  - /blog
+  selectors:
+    article: article, .card, [class*='publication'], [class*='research'], [class*='item'], [class*='post']
+    title: h2 a, h3 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary']
+    date: time, .date, [class*='date']
+- name: Future Center for Advanced Researches and Studies
+  country: UAE
+  tier: core_gcc
+  region: gcc
+  org_type: official
+  topics:
+  - politics
+  - security
+  - economy
+  base_url: https://futureuae.com
+  pages:
+  - /en-US
+  - /en-US/Release/Index/2/publications
+  requests_timeout: 5
+  playwright_timeout: 8000
+  selectors:
+    article: article, .card, [class*='item'], [class*='post'], [class*='research']
+    title: h2 a, h3 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary']
+    date: time, .date, [class*='date']
+- name: Al Jazeera Centre for Studies (AJCS)
+  country: Qatar
+  tier: core_gcc
+  region: gcc
+  org_type: official
+  topics:
+  - politics
+  - security
+  - society
+  base_url: https://studies.aljazeera.net
+  pages:
+  - /en/
+  - /en/reports
+  rss_feeds:
+  - https://studies.aljazeera.net/en/rss.xml
+  selectors:
+    article: article, .card, [class*='post'], [class*='item'], [class*='article']
+    title: h2 a, h3 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary']
+    date: time, .date, [class*='date']
+- name: Brookings Doha Center
+  country: Qatar
+  tier: core_gcc
+  region: gcc
+  org_type: university
+  topics:
+  - politics
+  - economy
+  - security
+  base_url: https://www.brookings.edu
+  pages:
+  - /center/brookings-doha-center/
+  rss_feeds:
+  - https://www.brookings.edu/feed/?center=brookings-doha-center
+  selectors:
+    article: article, [class*='card'], [class*='item'], [class*='post']
+    title: h2 a, h3 a, h4 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary'], [class*='description']
+    date: time, .date, [class*='date']
+- name: Arab Center for Research and Policy Studies (Doha Institute)
+  country: Qatar
+  tier: core_gcc
+  region: gcc
+  org_type: university
+  topics:
+  - politics
+  - society
+  - security
+  base_url: https://www.dohainstitute.org
+  pages:
+  - /en/Pages/index.aspx
+  selectors:
+    article: article, .card, [class*='item'], [class*='post']
+    title: h2 a, h3 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary']
+    date: time, .date, [class*='date']
+- name: Arab Planning Institute (API)
+  country: Kuwait
+  tier: core_gcc
+  region: gcc
+  org_type: official
+  topics:
+  - economy
+  base_url: https://www.arab-api.org
+  pages:
+  - /default.aspx
+  selectors:
+    article: article, .card, [class*='item'], [class*='post']
+    title: h2 a, h3 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt']
+    date: time, .date, [class*='date']
+- name: Kuwait Institute for Scientific Research (KISR)
+  country: Kuwait
+  tier: core_gcc
+  region: gcc
+  org_type: official
+  topics:
+  - energy
+  - technology
+  - economy
+  base_url: https://www.kisr.edu.kw
+  pages:
+  - /en/
+  selectors:
+    article: article, .card, [class*='item'], [class*='post'], [class*='research']
+    title: h2 a, h3 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary']
+    date: time, .date, [class*='date']
+- name: Bahrain Center for Strategic, International and Energy Studies (Derasat)
+  country: Bahrain
+  tier: core_gcc
+  region: gcc
+  org_type: official
+  topics:
+  - security
+  - energy
+  - economy
+  base_url: https://www.derasat.org.bh
+  pages:
+  - /en/home_en/
+  - /knowledge-center/publications-page/
+  - /en/research/
+  rss_feeds:
+  - https://www.derasat.org.bh/en/feed/
+  - https://www.derasat.org.bh/feed/
+  selectors:
+    article: article, .card, [class*='item'], [class*='post'], [class*='publication']
+    title: h2 a, h3 a, h4 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary']
+    date: time, .date, [class*='date']
+- name: Tawasul
+  country: Oman
+  tier: core_gcc
+  region: gcc
+  org_type: independent
+  topics:
+  - politics
+  - economy
+  base_url: https://tawasul.co.om
+  pages:
+  - /
+  selectors:
+    article: article, .card, [class*='item'], [class*='post']
+    title: h2 a, h3 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt']
+    date: time, .date, [class*='date']
+- name: Arab Gulf States Institute in Washington (AGSIW)
+  country: USA
+  tier: core_gcc
+  region: western
+  org_type: independent
+  topics:
+  - politics
+  - economy
+  - security
+  base_url: https://agsiw.org
+  pages:
+  - /topic/politics-and-governance/
+  - /topic/society/
+  rss_feeds:
+  - https://agsiw.org/feed/
+  selectors:
+    article: article, [class*='card'], [class*='item'], [class*='post']
+    title: h2 a, h3 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary']
+    date: time, .date, [class*='date']
+# ── 泛 MENA 智库（4 个）─────────────────────────────────────────
+- name: Carnegie Middle East Center
+  country: Lebanon
+  tier: pan_mena
+  region: mena
+  org_type: independent
+  topics:
+  - politics
+  - security
+  base_url: https://carnegieendowment.org
+  pages:
+  - /regions/gulf
+  - /regions/saudi-arabia
+  - /regions/united-arab-emirates
+  - /regions/qatar
+  - /regions/kuwait
+  - /regions/bahrain
+  - /regions/oman
+  - /middle-east/regions/saudi-arabia
+  - /middle-east/regions/united-arab-emirates
+  - /middle-east/regions/qatar
+  - /middle-east/regions/kuwait
+  - /middle-east/regions/bahrain
+  - /middle-east/regions/oman
+  - /sada/region/692?lang=en
+  rss_feeds:
+  - https://carnegie-mec.org/feed
+  - https://carnegieendowment.org/feeds/middle-east
+  use_playwright: true
+  deep_topic: true
+  selectors:
+    article: article, [class*='card'], [class*='item'], [class*='post'], a[href*='/research/'], a[href*='/diwan/'], a[href*='/emissary/'],
+      a[href*='/sada/']
+    title: h2 a, h3 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary'], [class*='description']
+    date: time, .date, [class*='date']
+- name: Al-Ahram Center for Political and Strategic Studies
+  country: Egypt
+  tier: pan_mena
+  region: mena
+  org_type: official
+  topics:
+  - politics
+  - security
+  base_url: https://acpss.ahram.org.eg
+  pages:
+  - /
+  selectors:
+    article: article, [class*='item'], [class*='post']
+    title: h2 a, h3 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt']
+    date: time, .date, [class*='date']
+- name: Al Sharq Forum
+  country: Turkey
+  tier: pan_mena
+  region: mena
+  org_type: independent
+  topics:
+  - politics
+  - society
+  base_url: https://research.sharqforum.org
+  pages:
+  - /region/middle-east/ksa/
+  - /region/middle-east/uae/
+  - /region/middle-east/qatar/
+  - /region/middle-east/kuwait/
+  - /region/middle-east/bahrain/
+  - /region/middle-east/oman/
+  - /tag/gcc/
+  rss_feeds:
+  - https://research.sharqforum.org/feed/
+  deep_topic: true
+  selectors:
+    article: article, [class*='card'], [class*='item'], [class*='post']
+    title: h2 a, h3 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary']
+    date: time, .date, [class*='date']
+- name: Arab Reform Initiative
+  country: France
+  tier: pan_mena
+  region: mena
+  org_type: independent
+  topics:
+  - politics
+  - society
+  base_url: https://www.arab-reform.net
+  pages:
+  - /tag/saudi-arabia/
+  - /tag/united-arab-emirates/
+  - /tag/qatar/
+  - /tag/kuwait/
+  - /tag/bahrain/
+  - /tag/oman/
+  - /tag/gulf/
+  - /tag/gcc/
+  rss_feeds:
+  - https://www.arab-reform.net/feed/
+  deep_topic: true
+  selectors:
+    article: article, [class*='card'], [class*='item'], [class*='post']
+    title: h2 a, h3 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary']
+    date: time, .date, [class*='date']
+# ── 域外英美智库（8 个）─────────────────────────────────────────
+- name: Middle East Institute (MEI)
+  country: USA
+  tier: pan_mena
+  region: western
+  org_type: independent
+  topics:
+  - politics
+  - security
+  - economy
+  base_url: https://mei.edu
+  pages:
+  - /regions/gulf/
+  - /regions/
+  rss_feeds:
+  - https://mei.edu/rss.xml
+  use_playwright: true
+  deep_topic: true
+  selectors:
+    article: article, .card, [class*='item'], [class*='post'], [class*='publication']
+    title: h2 a, h3 a, h4 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary'], [class*='description']
+    date: time, .date, [class*='date']
+- name: Center for Strategic and International Studies (CSIS)
+  country: USA
+  tier: pan_mena
+  region: western
+  org_type: independent
+  topics:
+  - energy
+  - security
+  - economy
+  base_url: https://www.csis.org
+  pages:
+  - /regions/middle-east/gulf
+  - /programs/middle-east-program
+  rss_feeds:
+  - https://www.csis.org/analysis/feed
+  deep_topic: true
+  selectors:
+    article: article, .card, [class*='item'], [class*='post'], [class*='analysis']
+    title: h2 a, h3 a, h4 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary'], [class*='description']
+    date: time, .date, [class*='date']
+- name: Atlantic Council — Middle East Programs
+  country: USA
+  tier: pan_mena
+  region: western
+  org_type: independent
+  topics:
+  - security
+  - politics
+  - economy
+  base_url: https://www.atlanticcouncil.org
+  pages:
+  - /programs/middle-east-programs/
+  - /topic/middle-east/gulf/
+  rss_feeds:
+  - https://www.atlanticcouncil.org/feed/
+  selectors:
+    article: article, .card, [class*='item'], [class*='post'], [class*='article']
+    title: h2 a, h3 a, h4 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary'], [class*='description']
+    date: time, .date, [class*='date']
+- name: Chatham House — Gulf States
+  country: UK
+  tier: pan_mena
+  region: western
+  org_type: independent
+  topics:
+  - politics
+  - security
+  - economy
+  base_url: https://www.chathamhouse.org
+  pages:
+  - /regions/middle-east-and-north-africa/gulf-states
+  - /regions/middle-east-and-north-africa
+  rss_feeds:
+  - https://www.chathamhouse.org/rss.xml
+  use_playwright: true
+  deep_topic: true
+  selectors:
+    article: article, .card, [class*='item'], [class*='post'], [class*='publication']
+    title: h2 a, h3 a, h4 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary'], [class*='description']
+    date: time, .date, [class*='date']
+- name: Oxford Institute for Energy Studies (OIES)
+  country: UK
+  tier: pan_mena
+  region: western
+  org_type: university
+  topics:
+  - energy
+  base_url: https://www.oxfordenergy.org
+  pages:
+  - /publications/
+  - /research/
+  rss_feeds:
+  - https://www.oxfordenergy.org/feed/
+  selectors:
+    article: article, .card, [class*='item'], [class*='post'], [class*='publication']
+    title: h2 a, h3 a, h4 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary'], [class*='description']
+    date: time, .date, [class*='date']
+- name: Baker Institute for Public Policy (Rice University)
+  country: USA
+  tier: pan_mena
+  region: western
+  org_type: university
+  topics:
+  - energy
+  - economy
+  base_url: https://www.bakerinstitute.org
+  pages:
+  - /center-for-energy-studies
+  - /ces
+  rss_feeds:
+  - https://www.bakerinstitute.org/feed
+  selectors:
+    article: article, .card, [class*='item'], [class*='post'], [class*='research']
+    title: h2 a, h3 a, h4 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary'], [class*='description']
+    date: time, .date, [class*='date']
+- name: Wilson Center — Middle East Program
+  country: USA
+  tier: pan_mena
+  region: western
+  org_type: official
+  topics:
+  - politics
+  - economy
+  base_url: https://www.wilsoncenter.org
+  pages:
+  - /collection/middle-east-program-research
+  - /publication-series/MEP-policy-briefs
+  - /collection/mena360
+  - /program/middle-east-program
+  rss_feeds:
+  - https://www.wilsoncenter.org/rss.xml
+  deep_topic: true
+  selectors:
+    article: article, .card, [class*='item'], [class*='post'], [class*='publication']
+    title: h2 a, h3 a, h4 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary'], [class*='description']
+    date: time, .date, [class*='date']
+- name: International Institute for Strategic Studies (IISS)
+  country: UK
+  tier: pan_mena
+  region: western
+  org_type: independent
+  topics:
+  - security
+  - politics
+  base_url: https://www.iiss.org
+  pages:
+  - /topics/middle-east-and-north-africa
+  - /research/
+  rss_feeds:
+  - https://www.iiss.org/en/rss
+  selectors:
+    article: article, .card, [class*='item'], [class*='post'], [class*='publication']
+    title: h2 a, h3 a, h4 a, [class*='title'] a
+    link: a[href]
+    snippet: p, [class*='excerpt'], [class*='summary'], [class*='description']
+    date: time, .date, [class*='date']

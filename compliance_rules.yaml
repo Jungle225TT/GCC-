@@ -15,24 +15,158 @@
 #   AI 训练语料或商业再分发。
 # =============================================================================
 
-version: "1.1"
-last_updated: "2026-05-14"
+version: "1.2"
+last_updated: "2026-05-21"
 source_files:
   - "docs/爬虫合规检查说明.docx"
   - "docs/期刊信源_合规分析_20260509_0559.csv"
+  - "docs/GCC_不可爬取网站及替代访问路径报告.md"
 
 defaults:
   risk_level: "unknown"
   allow_scrape: true
+  fulltext_scraping_allowed: false
   crawl_delay_seconds: 1.0
   scraping_policy: "未明确"
   commercial_policy: "未明确"
   ai_training_policy: "未明确"
   robots_summary: "未核验"
+  metadata_allowed_path: "公开列表页 / RSS / Crossref / OpenAlex / Unpaywall 等合规发现源"
+  fulltext_allowed_path: "仅限 OA / 订阅授权 / TDM API / 数据集申请 / 书面许可"
+  requires_permission: false
   analysis_source: "默认策略"
   notes: "未在合规 CSV 中命中；按项目默认礼貌抓取策略处理。"
 
 domains:
+  # ── 2026-05-21 ToS 报告明确不可直接爬取 / 需审批的期刊与机构来源 ──
+  cambridge.org:
+    risk_level: "high"
+    allow_scrape: false
+    fulltext_scraping_allowed: false
+    crawl_delay_seconds: 10.0
+    scraping_policy: "明确禁止爬虫 / scrape / 存储站点内容"
+    commercial_policy: "限制商业使用"
+    ai_training_policy: "部分允许；禁止自动/程序化提取，禁止训练竞争模型"
+    robots_summary: "以 ToS 为准"
+    metadata_allowed_path: "Crossref / OpenAlex / Unpaywall / Cambridge 合法 TDM 授权"
+    fulltext_allowed_path: "OA 正文 / 机构订阅授权 / Cambridge TDM 许可 / openresearch@cambridge.org"
+    requires_permission: true
+    analysis_source: "docs/GCC_不可爬取网站及替代访问路径报告.md"
+    matched_csv_sites: ["International Organization (Cambridge)"]
+    notes: "报告判定为明确禁止爬虫；不可直接抓取官网正文。"
+
+  tandfonline.com:
+    risk_level: "high"
+    allow_scrape: false
+    fulltext_scraping_allowed: false
+    crawl_delay_seconds: 10.0
+    scraping_policy: "明确禁止 data-mining / robots / extraction tools"
+    commercial_policy: "商业 TDM 须先获授权和报价"
+    ai_training_policy: "订阅用户非商业 TDM 有条件允许；商业 TDM 需授权"
+    robots_summary: "以 ToS 为准"
+    metadata_allowed_path: "Crossref / OpenAlex / Unpaywall / Taylor & Francis TDM 支持"
+    fulltext_allowed_path: "OA 正文 / 机构订阅授权 / Taylor & Francis TDM 许可"
+    requires_permission: true
+    analysis_source: "docs/GCC_不可爬取网站及替代访问路径报告.md"
+    matched_csv_sites: ["RIPE (Taylor & Francis / Informa)"]
+    notes: "报告判定为明确禁止爬虫；不可直接抓取官网正文。"
+
+  direct.mit.edu:
+    risk_level: "high"
+    allow_scrape: false
+    fulltext_scraping_allowed: false
+    crawl_delay_seconds: 10.0
+    scraping_policy: "明确禁止通过非官方接口自动化访问或搜索"
+    commercial_policy: "限制商业使用"
+    ai_training_policy: "未明确；自动化访问限制间接约束 AI 数据采集"
+    robots_summary: "以 ToS 为准"
+    metadata_allowed_path: "Crossref / OpenAlex / Unpaywall / MIT Press Direct 人工或订阅访问"
+    fulltext_allowed_path: "OA 正文 / 机构订阅授权 / 书面许可"
+    requires_permission: true
+    analysis_source: "docs/GCC_不可爬取网站及替代访问路径报告.md"
+    matched_csv_sites: ["International Security (MIT Press)"]
+    notes: "报告判定为明确禁止自动化访问。"
+
+  aeaweb.org:
+    risk_level: "high"
+    allow_scrape: false
+    fulltext_scraping_allowed: false
+    crawl_delay_seconds: 10.0
+    scraping_policy: "明确禁止通过 harvesting bots / robots / spiders / scraping programs 自动收集"
+    commercial_policy: "未明确；联系信息商业使用受限"
+    ai_training_policy: "未明确；自动化收集限制间接约束 AI 数据采集"
+    robots_summary: "以 ToS 为准"
+    metadata_allowed_path: "AEA email notifications / RePEc / IDEAS / Crossref / OpenAlex"
+    fulltext_allowed_path: "机构订阅 / OA 或作者工作论文版本 / 书面许可"
+    requires_permission: true
+    analysis_source: "docs/GCC_不可爬取网站及替代访问路径报告.md"
+    matched_csv_sites: ["AER (American Economic Association)"]
+    notes: "报告判定为明确禁止自动化收集。"
+
+  onlinelibrary.wiley.com:
+    risk_level: "high"
+    allow_scrape: false
+    fulltext_scraping_allowed: false
+    crawl_delay_seconds: 10.0
+    scraping_policy: "明确禁止 scraper / crawler / spider / robot 访问或复制"
+    commercial_policy: "商业使用受限"
+    ai_training_policy: "TDM 与抽取权利保留；非商业学术 TDM 须经 Wiley 明示许可并签署协议"
+    robots_summary: "以 ToS 为准"
+    metadata_allowed_path: "Crossref / OpenAlex / Unpaywall / Wiley TDM API token"
+    fulltext_allowed_path: "OA 正文 / 机构订阅授权 / Wiley TDM 协议 / self-archived 版本"
+    requires_permission: true
+    analysis_source: "docs/GCC_不可爬取网站及替代访问路径报告.md"
+    matched_csv_sites: ["SMJ (Strategic Management Journal / Wiley)", "Journal of Finance (Wiley)"]
+    notes: "报告建议 Wiley 相关期刊统一按更严格 terms-and-conditions 处理。"
+
+  jstor.org:
+    risk_level: "high"
+    allow_scrape: false
+    fulltext_scraping_allowed: false
+    crawl_delay_seconds: 10.0
+    scraping_policy: "明确禁止自动下载、web scraping、web harvesting、web data extraction"
+    commercial_policy: "限制商业使用"
+    ai_training_policy: "禁止将 Content 用于训练或增强 LLM / 生成式 AI"
+    robots_summary: "以 ToS 为准"
+    metadata_allowed_path: "JSTOR Text Analysis Support 书目元数据 / Crossref / OpenAlex"
+    fulltext_allowed_path: "JSTOR full-text dataset 申请；仅限许可研究/教学用途"
+    requires_permission: true
+    analysis_source: "docs/GCC_不可爬取网站及替代访问路径报告.md"
+    matched_csv_sites: ["ASQ (via JSTOR)"]
+    notes: "报告判定为明确禁止自动下载、抓取和抽取。"
+
+  piie.com:
+    risk_level: "high"
+    allow_scrape: false
+    fulltext_scraping_allowed: false
+    crawl_delay_seconds: 10.0
+    scraping_policy: "明确禁止 page scrape / robot / spider / automatic device"
+    commercial_policy: "商业使用和再分发受限"
+    ai_training_policy: "未明确；自动化访问限制间接约束 AI 数据采集"
+    robots_summary: "以 ToS 为准"
+    metadata_allowed_path: "PIIE Insider newsletter / 专家页 RSS / 人工浏览 / Crossref 或 OpenAlex（如适用）"
+    fulltext_allowed_path: "个人用途阅读下载 / 书面许可 / 授权复用"
+    requires_permission: true
+    analysis_source: "docs/GCC_不可爬取网站及替代访问路径报告.md"
+    matched_csv_sites: ["PIIE (Peterson Institute for International Economics)"]
+    notes: "报告判定为明确禁止自动化访问；分发、商业使用或程序化访问需单独许可。"
+
+  journals.uchicago.edu:
+    risk_level: "high"
+    allow_scrape: false
+    fulltext_scraping_allowed: false
+    crawl_delay_seconds: 10.0
+    scraping_policy: "未明禁 robots，但自动化软件或批量下载须事先获批"
+    commercial_policy: "明确禁止商业利用"
+    ai_training_policy: "学术 TDM 有条件允许；自动化或大量下载须先获 Press 批准"
+    robots_summary: "以 ToS 为准"
+    metadata_allowed_path: "RePEc / IDEAS / Crossref / OpenAlex"
+    fulltext_allowed_path: "经 UChicago Press 批准的 TDM / 机构订阅 / OA 版本"
+    requires_permission: true
+    analysis_source: "docs/GCC_不可爬取网站及替代访问路径报告.md"
+    matched_csv_sites: ["JPE (Journal of Political Economy / UChicago Press)"]
+    notes: "报告列为需事先审批的网站；未获批前不进入常规自动化抓取。"
+
   # ── core_gcc：CSV 未覆盖，先做域名级库存与保守限速 ──
   kapsarc.org:
     risk_level: "unknown"
@@ -117,15 +251,19 @@ domains:
   brookings.edu:
     risk_level: "high"
     allow_scrape: false
+    fulltext_scraping_allowed: false
     crawl_delay_seconds: 10.0
-    scraping_policy: "提及但未明确禁止（bot）"
-    commercial_policy: "提及商业使用"
+    scraping_policy: "明确禁止 spiders / robots 收集邮箱；站点内容商业使用受限"
+    commercial_policy: "商业使用受限"
     ai_training_policy: "提及AI训练"
     robots_summary: "部分路径禁止（1条）"
-    analysis_source: "ToS分析 / 复用相同ToS"
+    metadata_allowed_path: "官网人工访问 / Brookings Brief / newsletters / 官方入口"
+    fulltext_allowed_path: "人工阅读 / 书面授权 / 授权复用"
+    requires_permission: true
+    analysis_source: "ToS分析 / 复用相同ToS / docs/GCC_不可爬取网站及替代访问路径报告.md"
     matched_csv_sites: ["Brookings AI Initiative", "Brookings AI专题", "Brookings Global China"]
     matched_think_tanks: ["Brookings Doha Center"]
-    notes: "CSV 总体高风险；默认禁用自动抓取，人工覆盖需 --include-high-risk。"
+    notes: "CSV 总体高风险；报告建议不程序化抓正文，默认禁用自动抓取，人工覆盖需 --include-high-risk。"
 
   dohainstitute.org:
     risk_level: "unknown"
@@ -232,15 +370,19 @@ domains:
   atlanticcouncil.org:
     risk_level: "high"
     allow_scrape: false
+    fulltext_scraping_allowed: false
     crawl_delay_seconds: 5.0
     scraping_policy: "明确禁止（automated）"
     commercial_policy: "限制商业使用"
     ai_training_policy: "未提及"
     robots_summary: "部分路径禁止（1条）"
-    analysis_source: "ToS分析"
+    metadata_allowed_path: "newsletters / 官网人工访问 / ACTV / Podcast / 社媒更新"
+    fulltext_allowed_path: "人工阅读 / 书面授权 / 授权复用"
+    requires_permission: true
+    analysis_source: "ToS分析 / docs/GCC_不可爬取网站及替代访问路径报告.md"
     matched_csv_sites: ["Atlantic Council GeoEconomics Center"]
     matched_think_tanks: ["Atlantic Council — Middle East Programs"]
-    notes: "CSV 高风险且 ToS 明确禁止 automated；默认禁用自动抓取。"
+    notes: "CSV 高风险且 ToS 明确禁止 automated；报告建议不程序化抓正文，默认禁用自动抓取。"
 
   chathamhouse.org:
     risk_level: "medium"
