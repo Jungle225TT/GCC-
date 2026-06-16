@@ -290,11 +290,18 @@ python gcc_thinktank_scraper_v2.py --max-per-tank 100
 首次运行会自动创建 `gcc_dedup.db`，此后每次运行自动跳过已处理文章：
 
 ```bash
+# 当前日常近 7 天 AI 简报（本地复盘，跳过 SQLite 去重）
+python gcc_thinktank_scraper_v2.py --ai --days 7 --no-dedup
+
 # 正常运行（默认启用去重，1 天窗口）
 python gcc_thinktank_scraper_v2.py --ai --playwright
 
 # 扩大去重窗口至 7 天（防止一周内重复推送）
 python gcc_thinktank_scraper_v2.py --dedup-days 7
+
+# 生产化运行前先补建 data/，再启用 SQLite 增量去重
+mkdir -p data
+python gcc_thinktank_scraper_v2.py --ai --days 7 --dedup-db data/gcc_dedup.db --dedup-days 14
 
 # 禁用去重（每次全量处理）
 python gcc_thinktank_scraper_v2.py --no-dedup
@@ -913,9 +920,9 @@ gcc_thinktank_scraper_v2.py
 # 编辑 crontab
 crontab -e
 
-# 每天早上 8 点运行全量抓取（近30天）+ 飞书同步
-0 8 * * * cd /path/to/GccScraper && \
-    /usr/bin/python3 gcc_thinktank_scraper_v2.py --playwright --ai --days 30 >> logs/scraper.log 2>&1 && \
+# 每周一早上 8 点运行近 7 天 AI 简报 + 飞书同步
+0 8 * * 1 cd /path/to/GccScraper && \
+    /usr/bin/python3 gcc_thinktank_scraper_v2.py --ai --days 7 --no-dedup --dry-run-keywords >> logs/scraper.log 2>&1 && \
     /usr/bin/python3 feishu_sync.py >> logs/feishu.log 2>&1
 ```
 
@@ -925,15 +932,15 @@ crontab -e
 
 ### GitHub Actions（推荐云端运行）
 
-创建 `.github/workflows/scrape.yml`：
+仓库已提供 `.github/workflows/gcc_weekly_brief.yml`，默认在北京时间每周一 08:00 自动运行。核心配置如下：
 
 ```yaml
-name: GCC Scraper
+name: GCC Weekly AI Brief
 
 on:
   schedule:
-    - cron: '0 0 * * *'   # 每天 UTC 00:00（北京时间 08:00）
-  workflow_dispatch:        # 支持手动触发
+    - cron: "0 0 * * 1"   # UTC 周一 00:00 = 北京时间周一 08:00
+  workflow_dispatch:
 
 jobs:
   scrape:
@@ -943,12 +950,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install requests beautifulsoup4 feedparser playwright openai reportlab python-dotenv
-      - run: playwright install chromium
-      - run: python gcc_thinktank_scraper_v2.py --playwright --ai --days 30
+      - run: python -m pip install -r requirements.txt
+      - run: python -m playwright install --with-deps chromium
+      - run: python gcc_thinktank_scraper_v2.py --ai --days 7 --no-dedup --dry-run-keywords --output-dir output
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-      - run: python feishu_sync.py
+      - run: python feishu_sync.py --auto
         env:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
           FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
@@ -959,6 +966,8 @@ jobs:
           name: gcc-reports
           path: output/
 ```
+
+完整运行手册见 [docs/定时自动运行与简报发布方案.md](docs/定时自动运行与简报发布方案.md)。
 
 ---
 

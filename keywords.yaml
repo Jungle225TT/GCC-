@@ -20,8 +20,8 @@
 #            （43 篇英文原标题样本：🟢绿 16 / 🟡黄 17 / 🔴红 4）
 # =============================================================================
 
-version: "1.4"
-last_updated: "2026-05-15"
+version: "1.7"
+last_updated: "2026-06-12"
 based_on: "gcc_summary_20260429_1901 标注版（43篇英文原标题：绿16 / 黄17 / 红4）+ dry-run 新发现"
 
 # -----------------------------------------------------------------------------
@@ -53,6 +53,8 @@ hard_filter_words:
   # 来源样本（dry-run 发现）：
   #   "Derasat Center Hosts the Ambassador...for a Roundtable Discussion"
   #   "Derasat Center organizes a lecture titled..."
+  #   "Book Signings Held for Four New AJCS Titles"
+  #   "Derasat Center CEO discusses knowledge partnership and research cooperation..."
   # 风险说明：
   #   - "roundtable" 单词过宽（可出现于"Roundtable on Gulf Security"分析）
   #   - "roundtable discussion" / "roundtable meeting" 作为结尾名词短语才是纯活动公告
@@ -78,6 +80,10 @@ hard_filter_words:
     - holds a workshop
     - holds a seminar
     - hosts a seminar
+    - Book Signings Held
+    - book signings held
+    - Center CEO discusses knowledge partnership
+    - discusses knowledge partnership and research cooperation
     # 中文兼容
     - 圆桌讨论
     - 举办讲座
@@ -85,7 +91,23 @@ hard_filter_words:
     - 启动仪式
     - 研讨会公告
 
-  # 类别 1c：周期性监测报告（core_gcc 来源降权无效，须升级为硬过滤）
+  # 类别 1c：专家媒体露出 / 外部媒体引用
+  # 来源样本（2026-05-27 dry-run）：
+  #   "Braw in Future on the risk to seafarers in the Strait of Hormuz"
+  #   "Braw in Sky News on Iran seizing ship in Strait of Hormuz"
+  #   "Braw in Future Center on maritime tolls and global shipping"
+  # 判断：这类条目是专家被媒体/外部平台引用，不是智库原创研究输出；
+  #       即使命中 Hormuz / maritime 等强信号，也不应进入推荐阅读。
+  expert_media_mentions:
+    - Braw in Future on
+    - Braw in Sky News on
+    - Braw in Future Center on
+    - interviewed on NPR on
+    - published in Foreign Policy on
+    - for The National Interest
+    - for The Jerusalem Strategic Tribune
+
+  # 类别 1d：周期性监测报告（core_gcc 来源降权无效，须升级为硬过滤）
   # 来源样本：
   #   [15] IRAN IN A WEEK March April 16-22, 2026（黄→红升级）
   #   [24] IRAN IN A WEEK April 9-15, 2026（黄→红升级）
@@ -106,7 +128,7 @@ hard_filter_words:
     - 伊朗一周
     - 月度伊朗档案
 
-  # 类别 1d：历史性组织沿革/人物化叙事（与当期 GCC 政策关联弱）
+  # 类别 1e：历史性组织沿革/人物化叙事（与当期 GCC 政策关联弱）
   # 来源样本（dry-run 发现）：
   #   "How Did the IRGC Seize Power in Iran?"
   # 风险说明：只锁定完整短语，避免误杀当前伊朗安全/核问题分析。
@@ -147,6 +169,7 @@ hard_filter_words:
     - Caribbean
     - Washington–Vatican
     - Washington-Vatican
+    - new North Sea oil
     - Sub-Saharan Africa   # 慎用:GCC 在撒哈拉以南确有投资,但纯撒哈拉以南安全分析偏题
     # 中文兼容
     - 几内亚湾
@@ -303,6 +326,14 @@ title_only_demote_words:
     - 北约
     - 跨大西洋
 
+  # 能源/汽车技术类案例研究：KAPSARC 等 core_gcc 来源应保留，但技术路线/基准方法类
+  # 文章仅放入中等相关，避免因 "Saudi" + "study" 被推成强相关。
+  vehicle_energy_technology:
+    - vehicle technologies
+    - sustainability benchmarking
+    - normalized sustainability benchmarking
+    - sustainability benchmarking framework
+
 # -----------------------------------------------------------------------------
 # 四、强信号词补充建议（strong_signal_supplement）
 # -----------------------------------------------------------------------------
@@ -403,3 +434,19 @@ changelog:
               AJCS/Derasat 活动参与公告；同时将代码层 career 裸词过滤收窄为
               career workshop/fair/opportunity/careers 等招聘活动语境，避免误杀
               UAE 就业政策研究。"
+  - date: "2026-05-27"
+    author: "Codex"
+    summary: "v1.5：基于 5.27 dry-run，新增 expert_media_mentions 硬过滤词，
+              过滤 Atlantic Council RSS 中专家被外部媒体引用的标题模式，
+              避免 Braw in Future/Sky News/Future Center 等条目因 Hormuz
+              等强信号进入强相关。"
+  - date: "2026-05-28"
+    author: "Codex"
+    summary: "v1.6：基于 5.28 两轮 dry-run 对比，新增 AJCS 图书签售、
+              Derasat 机构合作会见、Chatham 北海油新闻等精确硬过滤词，
+              减少 core_gcc 自动保留和 western 栏目混入的中等相关噪音。"
+  - date: "2026-06-12"
+    author: "Codex"
+    summary: "v1.7：新增 vehicle_energy_technology 仅标题降权词，针对 KAPSARC
+              等核心信源中的车辆技术/可持续性基准方法类能源技术文章，仅下沉至
+              中等相关，不再因 Saudi + study 组合进入强相关。"

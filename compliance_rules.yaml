@@ -257,13 +257,13 @@ domains:
     commercial_policy: "商业使用受限"
     ai_training_policy: "提及AI训练"
     robots_summary: "部分路径禁止（1条）"
-    metadata_allowed_path: "官网人工访问 / Brookings Brief / newsletters / 官方入口"
+    metadata_allowed_path: "官网人工访问 / Brookings Brief / Center for Middle East Policy newsletter / MENA专题页"
     fulltext_allowed_path: "人工阅读 / 书面授权 / 授权复用"
     requires_permission: true
     analysis_source: "ToS分析 / 复用相同ToS / docs/GCC_不可爬取网站及替代访问路径报告.md"
     matched_csv_sites: ["Brookings AI Initiative", "Brookings AI专题", "Brookings Global China"]
     matched_think_tanks: ["Brookings Doha Center"]
-    notes: "CSV 总体高风险；报告建议不程序化抓正文，默认禁用自动抓取，人工覆盖需 --include-high-risk。"
+    notes: "CSV 总体高风险；Brookings Doha旧RSS为空comments feed，不作为发现源；默认禁用自动抓取，保留MENA/CMEP专题页与newsletter人工关注。"
 
   dohainstitute.org:
     risk_level: "unknown"
@@ -370,19 +370,20 @@ domains:
   atlanticcouncil.org:
     risk_level: "high"
     allow_scrape: false
+    rss_discovery_allowed: true
     fulltext_scraping_allowed: false
     crawl_delay_seconds: 5.0
     scraping_policy: "明确禁止（automated）"
     commercial_policy: "限制商业使用"
     ai_training_policy: "未提及"
     robots_summary: "部分路径禁止（1条）"
-    metadata_allowed_path: "newsletters / 官网人工访问 / ACTV / Podcast / 社媒更新"
+    metadata_allowed_path: "低频 Middle East RSS 发现层（title/link/pubDate/categories/description）/ newsletters / 官网人工访问 / ACTV / Podcast / 社媒更新"
     fulltext_allowed_path: "人工阅读 / 书面授权 / 授权复用"
     requires_permission: true
     analysis_source: "ToS分析 / docs/GCC_不可爬取网站及替代访问路径报告.md"
     matched_csv_sites: ["Atlantic Council GeoEconomics Center"]
     matched_think_tanks: ["Atlantic Council — Middle East Programs"]
-    notes: "CSV 高风险且 ToS 明确禁止 automated；报告建议不程序化抓正文，默认禁用自动抓取。"
+    notes: "CSV 高风险且 ToS 明确禁止 automated；默认禁用HTML/正文抓取，仅允许配置为RSS discovery-only时低频读取元数据，不保存content:encoded。"
 
   chathamhouse.org:
     risk_level: "medium"
@@ -434,7 +435,10 @@ domains:
     commercial_policy: "限制商业使用"
     ai_training_policy: "未提及"
     robots_summary: "部分路径禁止（2条）"
-    analysis_source: "ToS分析"
+    metadata_allowed_path: "官网人工访问 / IISS邮件或活动提醒 / Taylor & Francis Survival alerts/RSS / Military Balance+订阅账号"
+    fulltext_allowed_path: "人工阅读 / Taylor & Francis订阅或OA版本 / Military Balance+授权使用 / 书面许可"
+    requires_permission: true
+    analysis_source: "ToS分析 / docs/GCC_不可爬取网站及替代访问路径报告.md"
     matched_csv_sites: ["Survival"]
     matched_think_tanks: ["International Institute for Strategic Studies (IISS)"]
-    notes: "CSV 高风险且 ToS 明确禁止 bot；默认禁用自动抓取。"
+    notes: "CSV 高风险且 ToS 明确禁止 bot；IISS主站RSS实测403/Cloudflare；Survival单独走T&F期刊发现，Military Balance+为订阅数据库，不进入爬虫。"

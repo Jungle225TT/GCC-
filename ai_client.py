@@ -13,7 +13,9 @@ ai_client.py — AI 接口抽象层
   pip install anthropic
 """
 
+import json
 import os
+import subprocess
 
 # ── 当前使用的 Provider ──────────────────────────────────────────
 AI_PROVIDER = os.environ.get("AI_PROVIDER", "deepseek").lower()
@@ -89,10 +91,24 @@ def create_client(api_key: str):
     """创建并返回 AI 客户端实例"""
     if AI_PROVIDER == "deepseek":
         from openai import OpenAI
-        return OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
+        base_url = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
+        timeout = float(os.environ.get("AI_TIMEOUT_SECONDS", "60"))
+        max_retries = int(os.environ.get("AI_MAX_RETRIES", "2"))
+        return OpenAI(
+            api_key=api_key,
+            base_url=base_url,
+            timeout=timeout,
+            max_retries=max_retries,
+        )
     else:
         import anthropic
-        return anthropic.Anthropic(api_key=api_key)
+        timeout = float(os.environ.get("AI_TIMEOUT_SECONDS", "60"))
+        max_retries = int(os.environ.get("AI_MAX_RETRIES", "2"))
+        return anthropic.Anthropic(
+            api_key=api_key,
+            timeout=timeout,
+            max_retries=max_retries,
+        )
 
 
 def chat(client, prompt: str, tier: str = "fast", max_tokens: int = 1000) -> str:
@@ -108,13 +124,20 @@ def chat(client, prompt: str, tier: str = "fast", max_tokens: int = 1000) -> str
     model = MODELS[AI_PROVIDER][tier]
 
     if AI_PROVIDER == "deepseek":
-        response = client.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=max_tokens,
-            stream=False,
-        )
-        return response.choices[0].message.content
+        if os.environ.get("AI_FORCE_CURL", "").lower() in {"1", "true", "yes"}:
+            return _deepseek_chat_via_curl(client.api_key, model, prompt, max_tokens)
+        try:
+            response = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=max_tokens,
+                stream=False,
+            )
+            return response.choices[0].message.content
+        except Exception:
+            if os.environ.get("AI_DISABLE_CURL_FALLBACK", "").lower() in {"1", "true", "yes"}:
+                raise
+            return _deepseek_chat_via_curl(client.api_key, model, prompt, max_tokens)
 
     else:  # anthropic
         response = client.messages.create(
@@ -123,6 +146,40 @@ def chat(client, prompt: str, tier: str = "fast", max_tokens: int = 1000) -> str
             messages=[{"role": "user", "content": prompt}],
         )
         return response.content[0].text
+
+
+def _deepseek_chat_via_curl(api_key: str, model: str, prompt: str, max_tokens: int) -> str:
+    """Fallback for local networks where Python TLS/httpx fails but curl works."""
+    base_url = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com").rstrip("/")
+    timeout = str(int(float(os.environ.get("AI_TIMEOUT_SECONDS", "60"))))
+    payload = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+        "max_tokens": max_tokens,
+        "stream": False,
+    }
+    cmd = [
+        "curl",
+        "-sS",
+        "--fail-with-body",
+        "--connect-timeout",
+        "20",
+        "--max-time",
+        timeout,
+        f"{base_url}/chat/completions",
+        "-H",
+        "Content-Type: application/json",
+        "-H",
+        f"Authorization: Bearer {api_key}",
+        "-d",
+        json.dumps(payload, ensure_ascii=False),
+    ]
+    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=int(timeout) + 5)
+    if proc.returncode != 0:
+        err = (proc.stderr or proc.stdout or "").strip()
+        raise RuntimeError(f"DeepSeek curl fallback failed: {err[:500]}")
+    data = json.loads(proc.stdout)
+    return data["choices"][0]["message"]["content"]
 
 
 def provider_info() -> str:

@@ -216,9 +216,12 @@
   - security
   base_url: https://www.brookings.edu
   pages:
-  - /center/brookings-doha-center/
-  rss_feeds:
-  - https://www.brookings.edu/feed/?center=brookings-doha-center
+  - /regions/middle-east-north-africa/
+  - /centers/center-for-middle-east-policy/
+  - /newsletters/
+  rss_feeds: []
+  manual_monitor: true
+  notes: "合规默认跳过；Brookings Doha 旧 feed 为空 comments feed，仅保留专题页/newsletter 人工关注。"
   selectors:
     article: article, [class*='card'], [class*='item'], [class*='post']
     title: h2 a, h3 a, h4 a, [class*='title'] a
@@ -502,10 +505,14 @@
   - economy
   base_url: https://www.atlanticcouncil.org
   pages:
+  - /region/middle-east/
   - /programs/middle-east-programs/
-  - /topic/middle-east/gulf/
+  - /get-involved/
   rss_feeds:
-  - https://www.atlanticcouncil.org/feed/
+  - https://www.atlanticcouncil.org/region/middle-east/feed/
+  rss_discovery_only: true
+  rss_metadata_only: true
+  notes: "仅低频RSS发现层；不回退HTML，不保存content:encoded全文。"
   selectors:
     article: article, .card, [class*='item'], [class*='post'], [class*='article']
     title: h2 a, h3 a, h4 a, [class*='title'] a
@@ -609,8 +616,21 @@
   pages:
   - /topics/middle-east-and-north-africa
   - /research/
-  rss_feeds:
-  - https://www.iiss.org/en/rss
+  rss_feeds: []
+  manual_monitor: true
+  manual_pages:
+  - /topics/middle-east-and-north-africa
+  - /research/
+  - https://www.tandfonline.com/action/showAxaArticles?journalCode=tsur20
+  - https://milbalplus.iiss.org/
+  subscription_sources:
+  - name: Survival
+    url: https://www.tandfonline.com/action/showAxaArticles?journalCode=tsur20
+    access: Taylor & Francis alerts/RSS for discovery; full text by subscription/OA/license only
+  - name: Military Balance+
+    url: https://milbalplus.iiss.org/
+    access: subscription database; do not scrape
+  notes: "IISS主站RSS实测403/Cloudflare；主站人工关注，Survival走T&F期刊发现，Military Balance+走订阅授权。"
   selectors:
     article: article, .card, [class*='item'], [class*='post'], [class*='publication']
     title: h2 a, h3 a, h4 a, [class*='title'] a

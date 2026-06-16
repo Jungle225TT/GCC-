@@ -15,6 +15,7 @@ from gcc_thinktank_scraper_v2 import (
     classify_content_type,
     compute_topic_relevance_score,
     apply_source_relevance_adjustments,
+    apply_keyword_demotion,
     _KW,
     STRONG_KEYWORDS,
     RELEVANCE_THRESHOLD,
@@ -25,9 +26,14 @@ from gcc_thinktank_scraper_v2 import (
     filtered_out_notice,
     normalize_date,
     _clean_article_title,
+    _classify_candidate,
+    _dedupe_articles_by_title,
     _is_likely_article,
     extract_articles_from_page,
+    _detect_blocking_reason,
+    _classify_fetch_exception,
 )
+import requests
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 测试数据集（英文原标题）
@@ -98,14 +104,8 @@ def score_with_demote(article):
     同步支持 title_only_demote_set（v1.3：NATO 等词仅检查标题）。
     """
     ks, mk = compute_keyword_score(article.title, article.snippet or "")
-    title_lower = article.title.lower()
-    text_demote = title_lower
-    if _KW["demote_check_summary"]:
-        text_demote += " " + (article.snippet or "").lower()
-    hits = [w for w in _KW["demote_set"] if w in text_demote]
-    hits += [w for w in _KW.get("title_only_demote_set", set()) if w in title_lower]
+    ks, hits = apply_keyword_demotion(ks, article.title, article.snippet or "")
     if hits:
-        ks += _KW["max_penalty"]
         if not hasattr(article, "_funnel_debug"):
             article._funnel_debug = {}
         article._funnel_debug["demote_hits"] = hits
@@ -264,7 +264,9 @@ def test_core_gcc_recent_noise_hard_filtered():
         "How Did the IRGC Seize Power in Iran?",
         "The Washington–Vatican Rift: Causes and Implications",
         "AJCS to Participate in Decolonizing Knowledge Forum in Istanbul",
+        "Book Signings Held for Four New AJCS Titles",
         "Derasat Center participates in the Joint Regional Initiative“Bridging Stability: EU-GCC Cooperation in an Era of Fragmentation”",
+        "Derasat Center CEO discusses knowledge partnership and research cooperation with U.S. Ambassador",
     ]
     failed = []
     for title in titles:
@@ -290,6 +292,59 @@ def test_core_gcc_auto_pass_does_not_force_strong_relevance():
     )
     assert focused_relevance >= 4.0, f"含 Gulf States 强信号的题目应保持强相关: {focused_relevance}"
     print("  [OK] core_gcc 自动通过不再把泛议题直接推入强相关")
+
+
+def test_vehicle_technology_case_study_demoted_to_medium():
+    """车辆技术/可持续性基准类能源技术文章应保留，但只进入中等相关。"""
+    title = "Towards a Normalized Sustainability Benchmarking Framework for Vehicle Technologies: A Saudi Case Study"
+    actual_score, actual_matches = compute_keyword_score(title, "")
+    demoted_score, demote_hits = apply_keyword_demotion(actual_score, title, "")
+    article = make_test_article(title)
+    article.source_tier = "core_gcc"
+    article.keyword_score = 99.0
+    article.content_type = "high"
+    article.topic_relevance_score = compute_topic_relevance_score(
+        99.0,
+        "high",
+        source_tier="core_gcc",
+        actual_keyword_score=demoted_score,
+    )
+    apply_source_relevance_adjustments(article, {}, demoted_score, actual_matches)
+
+    assert demote_hits, "车辆技术/可持续性基准样本未命中降权词"
+    assert article.topic_relevance_score < 4.0, (
+        f"车辆技术案例研究不应进入强相关: score={article.topic_relevance_score}, "
+        f"actual={actual_score}, demoted={demoted_score}, hits={demote_hits}"
+    )
+    assert article.topic_relevance_score == 3.5, f"预期下沉为中等相关 3.5 分: {article.topic_relevance_score}"
+    print("  [OK] 车辆技术/可持续性基准案例研究下沉至中等相关")
+
+
+def test_core_gcc_title_strong_signal_promoted_even_when_content_type_unknown():
+    """core_gcc 标题强信号应进强相关，不能因 URL 未标明 analysis/report 被压低。"""
+    cases = [
+        "Brent and WTI Dynamics During the Hormuz Crisis: Positioning and the Expanding Role of Options",
+        "Drone Warfare and Arabian Gulf Security: The Strategic Value of Cooperation with Ukraine",
+        "A New Era In GCC-UK Economic and Trade Relations",
+    ]
+    failed = []
+    for title in cases:
+        actual_score, actual_matches = compute_keyword_score(title, "")
+        article = make_test_article(title)
+        article.source_tier = "core_gcc"
+        article.keyword_score = 99.0
+        article.content_type = "unknown"
+        article.topic_relevance_score = compute_topic_relevance_score(
+            99.0,
+            "unknown",
+            source_tier="core_gcc",
+            actual_keyword_score=actual_score,
+        )
+        apply_source_relevance_adjustments(article, {}, actual_score, actual_matches)
+        if article.topic_relevance_score < 4.0:
+            failed.append(f"{title} (score={article.topic_relevance_score}, matches={actual_matches})")
+    assert not failed, "以下 core_gcc 强信号标题未进入强相关:\n" + "\n".join(f"  - {x}" for x in failed)
+    print("  [OK] core_gcc 标题强信号即使内容类型 unknown 也进入强相关")
 
 
 def test_count_badge_category_title_filtered():
@@ -368,6 +423,97 @@ def test_mei_link_scan_fallback_extracts_articles():
     print("  [OK] MEI 普通链接结构可由全页扫描抽取为文章")
 
 
+def test_rss_candidate_uses_url_exclusion_rules():
+    """RSS 条目也应复用 URL 导航/媒介过滤，避免 podcast 链接漏入文章池。"""
+    title = "The IEA’s Fatih Birol on ‘the greatest energy security threat in history’"
+    url = "https://www.atlanticcouncil.org/commentary/podcast/the-ieas-fatih-birol-on-the-greatest-energy-security-threat-in-history/"
+    ct, priority, filter_hit = _classify_candidate(title, url)
+    assert (ct, priority) == ("excluded", "excluded"), f"RSS podcast URL 未被过滤: {(ct, priority, filter_hit)}"
+    assert filter_hit == "exclude_pattern"
+
+    article_title = "What Gulf states need in a US-Iran deal"
+    article_url = "https://www.atlanticcouncil.org/dispatches/what-gulf-states-need-in-a-us-iran-deal/"
+    ct, priority, filter_hit = _classify_candidate(article_title, article_url)
+    assert ct != "excluded", f"正常 RSS 文章不应被 URL 规则误杀: {(ct, priority, filter_hit)}"
+    print("  [OK] RSS 候选条目已复用 URL 过滤规则且未误杀正常文章")
+
+
+def test_atlantic_expert_media_mentions_hard_filtered():
+    """Atlantic RSS 中专家媒体露出标题不应因 Hormuz 等强信号进入强相关。"""
+    noise_titles = [
+        "Braw in Future on the risk to seafarers in the Strait of Hormuz",
+        "Braw in Sky News on Iran seizing ship in Strait of Hormuz",
+        "Braw in Future Center on maritime tolls and global shipping",
+        "Kroenig interviewed on NPR on Abraham Accords and Iran",
+        "Charai for The National Interest: Iran’s Terror Regime Has Shown Its True Face",
+    ]
+    failed = []
+    for title in noise_titles:
+        ct, priority, filter_hit = _classify_candidate(
+            title,
+            f"https://www.atlanticcouncil.org/commentary/{title[:32].replace(' ', '-').lower()}/",
+        )
+        if (ct, priority) != ("excluded", "excluded"):
+            failed.append(f"{title} -> {(ct, priority, filter_hit)}")
+    assert not failed, "以下专家媒体露出标题未被硬过滤:\n" + "\n".join(f"  - {x}" for x in failed)
+
+    issue_brief = "The new playbook for AI leadership: The case of the United Arab Emirates"
+    ct, priority, filter_hit = _classify_candidate(
+        issue_brief,
+        "https://www.atlanticcouncil.org/in-depth-research-reports/issue-brief/the-new-playbook-for-ai-leadership-the-case-of-the-united-arab-emirates/",
+    )
+    assert ct != "excluded", f"Atlantic 正常 issue brief 不应被误杀: {(ct, priority, filter_hit)}"
+    print("  [OK] Atlantic 专家媒体露出被过滤，正常 issue brief 保留")
+
+
+def test_chatham_north_sea_oil_news_hard_filtered():
+    """Chatham Gulf States 栏目混入的英国北海油新闻不应进入 GCC 简报。"""
+    title = "UK should not invest in new North Sea oil as it is ‘a price taker, not a price maker’ – Dr Fatih Birol, IEA chief"
+    url = "https://www.chathamhouse.org/2026/05/uk-should-not-invest-new-north-sea-oil-it-price-taker-not-price-maker-dr-fatih-birol-iea"
+    ct, priority, filter_hit = _classify_candidate(title, url)
+    assert (ct, priority) == ("excluded", "excluded"), f"Chatham 北海油新闻未被硬过滤: {(ct, priority, filter_hit)}"
+
+    gulf_energy = "What Gulf states need in a changing oil market"
+    ct, priority, filter_hit = _classify_candidate(
+        gulf_energy,
+        "https://www.chathamhouse.org/2026/05/what-gulf-states-need-changing-oil-market",
+    )
+    assert ct != "excluded", f"正常 Gulf energy 题目不应被误杀: {(ct, priority, filter_hit)}"
+    print("  [OK] Chatham 北海油新闻被过滤，正常 Gulf energy 题目保留")
+
+
+def test_same_source_duplicate_titles_keep_latest():
+    """同一来源同标题不同 URL 时，保留排序后第一篇，通常就是最新版本。"""
+    latest = Article(
+        title="Derasat Center CEO discusses knowledge partnership and research cooperation with U.S. Ambassador",
+        url="https://www.derasat.org.bh/en/derasat-center-ceo-discusses-knowledge-partnership-and-research-cooperation-with-u-s-ambassador-2/",
+        source="Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+        source_country="Bahrain",
+        source_tier="core_gcc",
+        date="2026-05-21",
+    )
+    older = Article(
+        title="Derasat Center CEO discusses knowledge partnership and research cooperation with U.S. Ambassador",
+        url="https://www.derasat.org.bh/en/derasat-center-ceo-discusses-knowledge-partnership-and-research-cooperation-with-u-s-ambassador/",
+        source="Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+        source_country="Bahrain",
+        source_tier="core_gcc",
+        date="2026-05-20",
+    )
+    other = Article(
+        title="A New Era In GCC-UK Economic and Trade Relations",
+        url="https://www.derasat.org.bh/en/a-new-era-in-gcc-uk-economic-and-trade-relations/",
+        source="Bahrain Center for Strategic, International and Energy Studies (Derasat)",
+        source_country="Bahrain",
+        source_tier="core_gcc",
+        date="2026-05-24",
+    )
+    deduped, removed = _dedupe_articles_by_title([latest, older, other])
+    assert removed == 1
+    assert [a.url for a in deduped] == [latest.url, other.url]
+    print("  [OK] 同源重复标题去重保留最新版本")
+
+
 def test_western_source_urls_updated():
     """本轮 403/404 排查沉淀：已知失效/旧路径不应继续作为主配置。"""
     by_name = {t["name"]: t for t in THINK_TANKS}
@@ -387,6 +533,36 @@ def test_western_source_urls_updated():
     assert "/collection/middle-east-program-research" in by_name["Wilson Center — Middle East Program"]["pages"]
     assert "/program/middle-east-program/publications" not in by_name["Wilson Center — Middle East Program"]["pages"]
     print("  [OK] western 来源 URL 配置已替换本轮发现的失效旧路径")
+
+
+def test_blocked_sources_manual_and_rss_discovery_config():
+    """默认跳过来源的人工/RSS发现层配置应与合规结论一致。"""
+    by_name = {t["name"]: t for t in THINK_TANKS}
+
+    brookings = by_name["Brookings Doha Center"]
+    assert brookings.get("manual_monitor") is True
+    assert brookings.get("rss_feeds") == [], "Brookings 旧 comments feed 不应继续配置为抓取源"
+    assert "/regions/middle-east-north-africa/" in brookings["pages"]
+    assert "/centers/center-for-middle-east-policy/" in brookings["pages"]
+
+    atlantic = by_name["Atlantic Council — Middle East Programs"]
+    assert atlantic.get("rss_discovery_only") is True
+    assert atlantic.get("rss_metadata_only") is True
+    assert atlantic.get("rss_feeds") == ["https://www.atlanticcouncil.org/region/middle-east/feed/"]
+    assert "https://www.atlanticcouncil.org/feed/" not in atlantic.get("rss_feeds", [])
+    atlantic_rule = get_compliance_rule(atlantic["base_url"])
+    assert atlantic_rule.get("allow_scrape") is False
+    assert atlantic_rule.get("rss_discovery_allowed") is True
+    assert atlantic_rule.get("fulltext_scraping_allowed") is False
+
+    iiss = by_name["International Institute for Strategic Studies (IISS)"]
+    assert iiss.get("manual_monitor") is True
+    assert iiss.get("rss_feeds") == [], "IISS 主站 RSS 403，不应配置为抓取源"
+    assert "https://www.tandfonline.com/action/showAxaArticles?journalCode=tsur20" not in iiss["pages"]
+    assert "https://milbalplus.iiss.org/" not in iiss["pages"]
+    assert "https://www.tandfonline.com/action/showAxaArticles?journalCode=tsur20" in iiss.get("manual_pages", [])
+    assert "https://milbalplus.iiss.org/" in iiss.get("manual_pages", [])
+    print("  [OK] 默认跳过来源已按人工关注/RSS发现/订阅数据库分层配置")
 
 
 def test_compliance_rules_cover_all_think_tanks():
@@ -479,6 +655,17 @@ def test_filtered_out_notice_for_ai_summary():
     print("  [OK] filtered_out.csv 可写入 AI 简报复核清单")
 
 
+def test_fetch_blocking_diagnostics_classify_challenges():
+    """阻断诊断只用于记录原因，不改变合规边界或尝试绕过核验。"""
+    assert _detect_blocking_reason("<title>Just a moment...</title><script>cf-chl</script>") == "cloudflare_challenge"
+    assert _detect_blocking_reason("<div class='cf-turnstile'></div>") == "turnstile_challenge"
+    assert _detect_blocking_reason("<div class='g-recaptcha'></div>") == "captcha_challenge"
+    assert _detect_blocking_reason("<html><body>Normal policy brief</body></html>") is None
+    assert _classify_fetch_exception(requests.exceptions.ConnectTimeout("connect timeout")) == "timeout"
+    assert _classify_fetch_exception(requests.exceptions.HTTPError("403 Client Error: Forbidden")) == "http_403"
+    print("  [OK] 抓取阻断诊断可识别 Cloudflare/Turnstile/CAPTCHA/timeout")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # 主运行入口
 # ─────────────────────────────────────────────────────────────────────────────
@@ -496,16 +683,24 @@ TESTS = [
     test_career_center_policy_study_not_hard_filtered,
     test_core_gcc_recent_noise_hard_filtered,
     test_core_gcc_auto_pass_does_not_force_strong_relevance,
+    test_vehicle_technology_case_study_demoted_to_medium,
+    test_core_gcc_title_strong_signal_promoted_even_when_content_type_unknown,
     test_count_badge_category_title_filtered,
     test_pan_mena_deep_topic_strong_titles_promoted,
     test_deep_topic_auto_pass_does_not_force_strong_relevance,
     test_arab_reform_title_date_cleanup,
     test_mei_link_scan_fallback_extracts_articles,
+    test_rss_candidate_uses_url_exclusion_rules,
+    test_atlantic_expert_media_mentions_hard_filtered,
+    test_chatham_north_sea_oil_news_hard_filtered,
+    test_same_source_duplicate_titles_keep_latest,
     test_western_source_urls_updated,
+    test_blocked_sources_manual_and_rss_discovery_config,
     test_compliance_rules_cover_all_think_tanks,
     test_high_risk_sources_records_for_dry_run_export,
     test_tos_report_blocked_domains_have_alternative_paths,
     test_filtered_out_notice_for_ai_summary,
+    test_fetch_blocking_diagnostics_classify_challenges,
 ]
 
 if __name__ == "__main__":

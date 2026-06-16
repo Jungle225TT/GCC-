@@ -1,0 +1,141 @@
+name: GCC AI Brief
+
+on:
+  schedule:
+    # GitHub cron uses UTC. 00:00 UTC Monday = 08:00 Asia/Shanghai Monday.
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Article lookback window in days"
+        required: false
+        default: "15"
+      max_per_tank:
+        description: "Maximum retained items per think tank"
+        required: false
+        default: "50"
+      dry_run_keywords:
+        description: "Export keyword_dryrun.json, filtered_out.csv, and blocked_sources.csv"
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gcc-ai-brief
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    name: Generate GCC AI brief
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+
+    env:
+      AI_PROVIDER: ${{ vars.AI_PROVIDER || 'deepseek' }}
+      DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      AI_TIMEOUT_SECONDS: "240"
+      AI_MAX_RETRIES: "1"
+      AI_SUMMARY_BATCH_SIZE: "3"
+      AI_SUMMARY_MAX_TOKENS: "5000"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install Python dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Install Playwright Chromium
+        run: python -m playwright install --with-deps chromium
+
+      - name: Validate AI provider secret
+        run: |
+          set -euo pipefail
+          case "${AI_PROVIDER}" in
+            deepseek|"")
+              if [ -z "${DEEPSEEK_API_KEY:-}" ]; then
+                echo "DEEPSEEK_API_KEY secret is required when AI_PROVIDER is deepseek."
+                exit 1
+              fi
+              ;;
+            anthropic)
+              if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
+                echo "ANTHROPIC_API_KEY secret is required when AI_PROVIDER is anthropic."
+                exit 1
+              fi
+              ;;
+            *)
+              echo "Unsupported AI_PROVIDER: ${AI_PROVIDER}"
+              exit 1
+              ;;
+          esac
+
+      - name: Generate AI brief
+        env:
+          BRIEF_DAYS: ${{ github.event_name == 'workflow_dispatch' && inputs.days || '15' }}
+          MAX_PER_TANK: ${{ github.event_name == 'workflow_dispatch' && inputs.max_per_tank || '50' }}
+          DRY_RUN_KEYWORDS: ${{ github.event_name != 'workflow_dispatch' || inputs.dry_run_keywords }}
+        run: |
+          set -euo pipefail
+          mkdir -p output
+
+          args=(
+            --playwright
+            --ai
+            --days "$BRIEF_DAYS"
+            --no-dedup
+            --max-per-tank "$MAX_PER_TANK"
+            --summary-workers 2
+            --output-dir output
+          )
+
+          if [ "$DRY_RUN_KEYWORDS" = "true" ]; then
+            args+=(--dry-run-keywords)
+          fi
+
+          python gcc_thinktank_scraper_v2.py "${args[@]}"
+
+      - name: Write run summary
+        if: always()
+        run: |
+          {
+            echo "## GCC AI Brief"
+            echo
+            echo "- Schedule: Monday 08:00 Asia/Shanghai"
+            echo "- Default lookback window: 15 days"
+            echo "- Output directory: \`output/\`"
+            echo
+            if [ -d output ]; then
+              echo "### Generated files"
+              find output -maxdepth 1 -type f -print | sort | sed 's#^#- #'
+            else
+              echo "No output directory was generated."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload generated brief artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gcc-ai-brief-${{ github.run_number }}
+          path: |
+            output/gcc_research_*.md
+            output/gcc_research_*.json
+            output/gcc_summary_*.md
+            output/gcc_summary_*.pdf
+            output/keyword_dryrun.json
+            output/filtered_out.csv
+            output/blocked_sources.csv
+          if-no-files-found: warn
+          retention-days: 90
