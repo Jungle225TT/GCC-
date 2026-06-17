@@ -44,6 +44,15 @@ jobs:
       AI_MAX_RETRIES: "1"
       AI_SUMMARY_BATCH_SIZE: "3"
       AI_SUMMARY_MAX_TOKENS: "5000"
+      AI_BRIEF_EMAIL_TO: ${{ secrets.AI_BRIEF_EMAIL_TO }}
+      AI_BRIEF_EMAIL_FROM: ${{ secrets.AI_BRIEF_EMAIL_FROM }}
+      AI_BRIEF_EMAIL_FROM_NAME: ${{ vars.AI_BRIEF_EMAIL_FROM_NAME || 'GCC AI简报' }}
+      AI_BRIEF_SMTP_HOST: ${{ secrets.AI_BRIEF_SMTP_HOST }}
+      AI_BRIEF_SMTP_PORT: ${{ secrets.AI_BRIEF_SMTP_PORT }}
+      AI_BRIEF_SMTP_USER: ${{ secrets.AI_BRIEF_SMTP_USER }}
+      AI_BRIEF_SMTP_PASSWORD: ${{ secrets.AI_BRIEF_SMTP_PASSWORD }}
+      AI_BRIEF_SMTP_USE_SSL: ${{ vars.AI_BRIEF_SMTP_USE_SSL || 'false' }}
+      AI_BRIEF_SMTP_STARTTLS: ${{ vars.AI_BRIEF_SMTP_STARTTLS || 'true' }}
 
     steps:
       - name: Check out repository

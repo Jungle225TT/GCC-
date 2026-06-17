@@ -175,6 +175,23 @@ export ANTHROPIC_API_KEY="sk-ant-xxxxx"
 | `AI_PROVIDER` | 设为 `anthropic` 可切换至 Claude；省略则用 DeepSeek |
 | `ANTHROPIC_API_KEY` | 仅 `AI_PROVIDER=anthropic` 时需要 |
 
+### 4. 配置 AI 简报邮件发送（可选）
+
+如需在每次 `--ai` 生成 PDF 后自动发送邮件，在 `.env` 或运行环境中配置 SMTP。脚本只会把 `gcc_summary_*.pdf` 作为附件发送，Markdown、JSON、CSV 等其他输出文件不会进入邮件。
+
+```bash
+AI_BRIEF_EMAIL_TO=recipient@example.com
+AI_BRIEF_EMAIL_FROM=sender@example.com
+AI_BRIEF_EMAIL_FROM_NAME=GCC AI简报
+AI_BRIEF_SMTP_HOST=smtp.example.com
+AI_BRIEF_SMTP_PORT=587
+AI_BRIEF_SMTP_USER=sender@example.com
+AI_BRIEF_SMTP_PASSWORD=your_smtp_password_or_app_password
+AI_BRIEF_SMTP_STARTTLS=true
+```
+
+邮件主题默认为 `AI简报 YYYY-MM-DD`，正文会用约 250 字说明简报的阅读和引用方法。多个收件人可用逗号或分号分隔；如使用 465 端口，可设置 `AI_BRIEF_SMTP_USE_SSL=true`。
+
 ---
 
 ## 主抓取脚本
@@ -338,6 +355,8 @@ python gcc_thinktank_scraper_v2.py --keep-undated --debug
 | `--ai` | 关闭 | 启用 AI 筛选 + 翻译 + 研究简报（输出 MD + PDF） |
 | `--api-key` | 读环境变量 | AI API Key（DeepSeek 或 Anthropic，建议用环境变量代替） |
 | `--output-dir` | `./output` | 输出目录 |
+| `--email-summary-to` | `AI_BRIEF_EMAIL_TO` | AI简报PDF收件邮箱；可用逗号/分号分隔多个 |
+| `--no-email-summary` | 关闭 | 即使已配置收件邮箱，也跳过AI简报PDF邮件发送 |
 | `--max-per-tank` | `50` | 每个智库最多保留篇数 |
 | `--no-dedup` | 关闭 | 禁用 SQLite 增量去重 |
 | `--dedup-db` | `data/gcc_dedup.db` | 去重数据库路径 |
@@ -356,6 +375,8 @@ python gcc_thinktank_scraper_v2.py --keep-undated --debug
 | `gcc_research_YYYYMMDD_HHMM.json` | 完整数据，可导入飞书/Notion |
 | `gcc_summary_YYYYMMDD_HHMM.md` | AI 结构化研究简报：目录按两档分节（⭐ 推荐阅读 / 📄 中等相关）+ 逐篇解析（强相关章节标题加 ⭐）+ 趋势信号（仅 `--ai`） |
 | `gcc_summary_YYYYMMDD_HHMM.pdf` | 同上，排版后的 PDF 版本，可直接分发（仅 `--ai`，需 `reportlab`） |
+
+如已配置 `AI_BRIEF_EMAIL_TO` 和 SMTP 环境变量，`gcc_summary_*.pdf` 生成成功后会自动发送；邮件附件只包含该 PDF。
 
 ---
 
@@ -905,6 +926,12 @@ gcc_thinktank_scraper_v2.py
 | `FEISHU_APP_SECRET` | 飞书同步（可选） |
 | `FEISHU_APP_TOKEN` | 飞书同步（可选） |
 | `FEISHU_TABLE_ID` | 飞书同步（可选） |
+| `AI_BRIEF_EMAIL_TO` | AI简报PDF收件邮箱（可选） |
+| `AI_BRIEF_EMAIL_FROM` | 发件邮箱（可选） |
+| `AI_BRIEF_SMTP_HOST` | SMTP服务器地址（可选） |
+| `AI_BRIEF_SMTP_PORT` | SMTP端口，常用 `587` 或 `465`（可选） |
+| `AI_BRIEF_SMTP_USER` | SMTP登录账号（可选） |
+| `AI_BRIEF_SMTP_PASSWORD` | SMTP密码或应用专用密码（可选） |
 
 ### 输出文件位置
 
@@ -955,6 +982,12 @@ jobs:
       - run: python gcc_thinktank_scraper_v2.py --ai --days 7 --no-dedup --dry-run-keywords --output-dir output
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          AI_BRIEF_EMAIL_TO: ${{ secrets.AI_BRIEF_EMAIL_TO }}
+          AI_BRIEF_EMAIL_FROM: ${{ secrets.AI_BRIEF_EMAIL_FROM }}
+          AI_BRIEF_SMTP_HOST: ${{ secrets.AI_BRIEF_SMTP_HOST }}
+          AI_BRIEF_SMTP_PORT: ${{ secrets.AI_BRIEF_SMTP_PORT }}
+          AI_BRIEF_SMTP_USER: ${{ secrets.AI_BRIEF_SMTP_USER }}
+          AI_BRIEF_SMTP_PASSWORD: ${{ secrets.AI_BRIEF_SMTP_PASSWORD }}
       - run: python feishu_sync.py --auto
         env:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}

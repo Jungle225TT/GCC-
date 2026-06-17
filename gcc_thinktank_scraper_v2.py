@@ -15,10 +15,12 @@ AI Provider 切换（默认 DeepSeek）：
   export ANTHROPIC_API_KEY="sk-ant-xxxxx"
 """
 
-import json, re, os, time, logging, sqlite3, sys
+import json, re, os, time, logging, sqlite3, sys, smtplib, ssl
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field, asdict
+from email.message import EmailMessage
+from email.utils import formataddr
 from typing import Optional
 from pathlib import Path
 from urllib.parse import urlparse
@@ -32,6 +34,16 @@ def _bootstrap_local_venv_site_packages():
         sys.path.insert(0, str(site_packages))
 
 _bootstrap_local_venv_site_packages()
+
+def _load_project_env():
+    """Load optional .env values before AI/email configuration is read."""
+    try:
+        from dotenv import load_dotenv
+        load_dotenv(Path(__file__).resolve().parent / ".env")
+    except ImportError:
+        pass
+
+_load_project_env()
 
 import requests
 from bs4 import BeautifulSoup
@@ -107,6 +119,117 @@ def save_new_urls(articles, db_path=DEDUP_DB_PATH):
     conn.commit()
     conn.close()
     log.info(f"💾 已将 {len(articles)} 篇文章写入去重数据库 ({db_path})")
+
+def _env_first(*names: str, default: str = "") -> str:
+    for name in names:
+        value = os.environ.get(name)
+        if value:
+            return value
+    return default
+
+def _env_bool(*names: str, default: bool = False) -> bool:
+    value = _env_first(*names)
+    if value == "":
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+def _split_email_recipients(value: str) -> list[str]:
+    return [item.strip() for item in re.split(r"[;,]", value or "") if item.strip()]
+
+def _default_summary_email_body() -> str:
+    return (
+        "您好，附件为本次自动生成的 GCC 智库 AI 简报 PDF。使用时建议先看目录，"
+        "优先阅读“推荐阅读（强相关）”条目，再按议题查看逐篇解析、对 GCC 地区影响、"
+        "对华关联和本期趋势信号。简报用于会前预览、内部传阅和选题跟踪；文中"
+        "“AI推断”“待核实”内容请在正式引用、对外分享或形成报告前，点击原文链接"
+        "复核来源、日期和关键数据。如需沉淀成果，可将重点条目同步到飞书、研究台账"
+        "或后续周报。时间有限时，可先阅读趋势信号和强相关条目，随后再回看中等相关"
+        "文章，作为选题储备和背景补充。"
+    )
+
+def send_ai_summary_pdf(
+    pdf_path: str,
+    recipients: list[str],
+    generated_at: datetime,
+) -> tuple[bool, str]:
+    """Send only the generated AI summary PDF as an email attachment."""
+    if not recipients:
+        return False, "未配置收件人"
+    if not pdf_path or not os.path.exists(pdf_path):
+        return False, "AI简报PDF不存在"
+
+    ssl_config = _env_first("AI_BRIEF_SMTP_USE_SSL", "SMTP_USE_SSL")
+    use_ssl = _env_bool("AI_BRIEF_SMTP_USE_SSL", "SMTP_USE_SSL", default=False)
+    host = _env_first("AI_BRIEF_SMTP_HOST", "SMTP_HOST")
+    port_raw = _env_first(
+        "AI_BRIEF_SMTP_PORT",
+        "SMTP_PORT",
+        default="465" if use_ssl else "587",
+    )
+    user = _env_first("AI_BRIEF_SMTP_USER", "SMTP_USER")
+    password = _env_first("AI_BRIEF_SMTP_PASSWORD", "SMTP_PASSWORD")
+    from_addr = _env_first("AI_BRIEF_EMAIL_FROM", "SMTP_FROM", default=user)
+    from_name = _env_first("AI_BRIEF_EMAIL_FROM_NAME", default="GCC AI简报")
+
+    missing = []
+    if not host:
+        missing.append("AI_BRIEF_SMTP_HOST 或 SMTP_HOST")
+    if not from_addr:
+        missing.append("AI_BRIEF_EMAIL_FROM 或 SMTP_USER")
+    if user and not password:
+        missing.append("AI_BRIEF_SMTP_PASSWORD 或 SMTP_PASSWORD")
+    if password and not user:
+        missing.append("AI_BRIEF_SMTP_USER 或 SMTP_USER")
+    if missing:
+        return False, "缺少邮件配置：" + "、".join(missing)
+
+    try:
+        port = int(port_raw)
+    except ValueError:
+        return False, f"SMTP端口无效：{port_raw}"
+    if not ssl_config and port == 465:
+        use_ssl = True
+
+    date_str = generated_at.strftime("%Y-%m-%d")
+    subject_prefix = _env_first("AI_BRIEF_EMAIL_SUBJECT_PREFIX", default="AI简报")
+    subject = f"{subject_prefix} {date_str}".strip()
+
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = formataddr((from_name, from_addr))
+    msg["To"] = ", ".join(recipients)
+    msg.set_content(_default_summary_email_body())
+
+    with open(pdf_path, "rb") as f:
+        msg.add_attachment(
+            f.read(),
+            maintype="application",
+            subtype="pdf",
+            filename=os.path.basename(pdf_path),
+        )
+
+    try:
+        timeout = float(_env_first("AI_BRIEF_SMTP_TIMEOUT", "SMTP_TIMEOUT", default="30"))
+        context = ssl.create_default_context()
+        if use_ssl:
+            with smtplib.SMTP_SSL(host, port, timeout=timeout, context=context) as server:
+                if user:
+                    server.login(user, password)
+                server.send_message(msg)
+        else:
+            starttls = _env_bool("AI_BRIEF_SMTP_STARTTLS", "SMTP_STARTTLS", default=True)
+            with smtplib.SMTP(host, port, timeout=timeout) as server:
+                server.ehlo()
+                if starttls:
+                    server.starttls(context=context)
+                    server.ehlo()
+                if user:
+                    server.login(user, password)
+                server.send_message(msg)
+    except Exception as e:
+        return False, f"发送失败：{e}"
+
+    return True, f"已发送至 {', '.join(recipients)}（附件仅包含AI简报PDF）"
 
 @dataclass
 class Article:
@@ -2402,6 +2525,16 @@ if __name__ == "__main__":
                         help="AI简报分批生成的并发数（默认2；如遇API限流可设为1）")
     parser.add_argument("--api-key", default=None, help="Anthropic API Key（建议改用 ANTHROPIC_API_KEY 环境变量）")
     parser.add_argument("--output-dir", default="./output", help="输出目录")
+    parser.add_argument(
+        "--email-summary-to",
+        default=os.environ.get("AI_BRIEF_EMAIL_TO", ""),
+        help="AI简报PDF收件邮箱；可用逗号/分号分隔多个。也可设置 AI_BRIEF_EMAIL_TO",
+    )
+    parser.add_argument(
+        "--no-email-summary",
+        action="store_true",
+        help="即使已配置 AI_BRIEF_EMAIL_TO，也不发送AI简报PDF邮件",
+    )
     parser.add_argument("--max-per-tank", type=int, default=50, help="每个智库最多保留条数（默认50）")
     parser.add_argument("--no-dedup", action="store_true", help="禁用SQLite增量去重（每次全量处理）")
     parser.add_argument("--dedup-db", default=DEDUP_DB_PATH, help=f"去重数据库路径（默认: {DEDUP_DB_PATH}）")
@@ -2439,6 +2572,7 @@ if __name__ == "__main__":
     od = Path(args.output_dir)
     od.mkdir(parents=True, exist_ok=True)
     dedup_db = None if args.no_dedup else args.dedup_db
+    summary_email_recipients = [] if args.no_email_summary else _split_email_recipients(args.email_summary_to)
     t_total = time.time()
 
     # ── 抓取阶段（含增量去重） ──
@@ -2554,6 +2688,7 @@ if __name__ == "__main__":
         # ── AI简报阶段 ──
         t_summary = time.time()
         sp_md = sp_pdf = None
+        summary_email_result = None
         if args.ai:
             sm = generate_ai_summary(
                 articles,
@@ -2567,6 +2702,12 @@ if __name__ == "__main__":
                 with open(sp_md, "w", encoding="utf-8") as f:
                     f.write(sm)
                 sp_pdf = export_summary_pdf(sm, str(od / f"gcc_summary_{ts}.pdf"))
+                if sp_pdf and summary_email_recipients:
+                    summary_email_result = send_ai_summary_pdf(
+                        str(sp_pdf),
+                        summary_email_recipients,
+                        datetime.now(),
+                    )
         summary_sec = time.time() - t_summary if args.ai else 0
 
         # ── 写入去重数据库（所有处理完成后再标记，防止半途而废导致重复写入） ──
@@ -2582,6 +2723,13 @@ if __name__ == "__main__":
             if sp_md:
                 print(f"  🤖 AI简报(MD):   {sp_md}")
                 print(f"  📄 AI简报(PDF):  {sp_pdf if sp_pdf else '❌ PDF生成失败（pip install reportlab）'}")
+                if summary_email_recipients:
+                    if summary_email_result and summary_email_result[0]:
+                        print(f"  📧 AI简报邮件:   ✅ {summary_email_result[1]}")
+                    elif summary_email_result:
+                        print(f"  📧 AI简报邮件:   ❌ {summary_email_result[1]}")
+                    else:
+                        print("  📧 AI简报邮件:   ❌ 未发送（PDF生成失败或未进入发送流程）")
             else:
                 print("  🤖 AI研究简报:   ❌ 生成失败")
         print(f"\n⏱️  耗时统计:")
