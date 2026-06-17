@@ -51,8 +51,8 @@ jobs:
       AI_BRIEF_SMTP_PORT: ${{ secrets.AI_BRIEF_SMTP_PORT }}
       AI_BRIEF_SMTP_USER: ${{ secrets.AI_BRIEF_SMTP_USER }}
       AI_BRIEF_SMTP_PASSWORD: ${{ secrets.AI_BRIEF_SMTP_PASSWORD }}
-      AI_BRIEF_SMTP_USE_SSL: ${{ vars.AI_BRIEF_SMTP_USE_SSL || 'false' }}
-      AI_BRIEF_SMTP_STARTTLS: ${{ vars.AI_BRIEF_SMTP_STARTTLS || 'true' }}
+      AI_BRIEF_SMTP_USE_SSL: ${{ vars.AI_BRIEF_SMTP_USE_SSL || 'true' }}
+      AI_BRIEF_SMTP_STARTTLS: ${{ vars.AI_BRIEF_SMTP_STARTTLS || 'false' }}
 
     steps:
       - name: Check out repository
